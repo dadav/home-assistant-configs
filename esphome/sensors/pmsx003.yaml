@@ -1,0 +1,10 @@
+---
+# PMSX003 Particulate Matter Sensor
+#
+# https://esphome.io/components/sensor/pmsx003.html
+#
+platform: pmsx003
+type: PMS5003T
+pm_2_5:
+  id: "sensor_pm_2_5"
+  name: "${name} Particulate Matter <2.5µm Concentration"

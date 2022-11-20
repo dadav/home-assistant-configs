@@ -1,0 +1,7 @@
+---
+# SSD1306 OLED Display
+#
+# https://esphome.io/components/display/ssd1306.html
+#
+platform: ssd1306_i2c
+model: "SSD1306 64x48"

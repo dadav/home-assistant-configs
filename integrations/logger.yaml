@@ -1,0 +1,10 @@
+---
+logger:
+  default: warning
+  filters:
+    homeassistant.util.yaml.loader:
+      # I use YAML anchors and aliasses, causing duplicate keys in YAML.
+      # For this use-case, that is on purpose, as an alias is used, but
+      # with some overrides.
+      # While a good warning, I'm going to disable it.
+      - "contains duplicate key"

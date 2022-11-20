@@ -1,0 +1,3 @@
+---
+# set the key to enable the installation of ffmpeg
+ffmpeg: ~

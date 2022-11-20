@@ -1,0 +1,12 @@
+---
+# SenseAir CO_2 Sensor
+#
+# https://esphome.io/components/sensor/senseair.html
+#
+platform: senseair
+co2:
+  id: "sensor_co2"
+  name: "${name} CO2 value"
+  filters:
+    - lambda: if (x > 50000) return 0; else return x;
+  update_interval: 60s

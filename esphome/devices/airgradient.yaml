@@ -1,0 +1,61 @@
+---
+# https://www.jeffgeerling.com/blog/2021/airgradient-diy-air-quality-monitor-co2-pm25
+#
+packages:
+  <<: !include_dir_named ../common
+  board: !include ../boards/wemos_d1_mini.yaml
+
+api:
+  services:
+    - service: "${slug}_sensair_background_calibrate"
+      then:
+        - senseair.background_calibration: senseair_s8
+    - service: sensair_background_calibration_result
+      then:
+        - senseair.background_calibration_result: senseair_s8
+
+i2c:
+  sda: D2
+  scl: D1
+
+font:
+  - file: "fonts/monofont.ttf"
+    id: monofont
+    size: 10
+
+display:
+  - <<: !include ../displays/ssd1306.yaml
+    id: oled
+    pages:
+      - id: page1
+        lambda: |-
+          it.printf(0, 0, id(monofont), "CO2: %.0fppm", id(sensor_co2).state);
+          it.printf(0, 10, id(monofont), "PM25: %.0f", id(sensor_pm_2_5).state);
+          it.printf(0, 20, id(monofont), "Hmdty: %.0f", id(sensor_humidity).state);
+          it.printf(0, 30, id(monofont), "Temp: %.0fC", id(sensor_temperature).state);
+
+interval:
+  - interval: 5s
+    then:
+      - display.page.show_next: oled
+      - component.update: oled
+
+uart:
+  - rx_pin: D5
+    tx_pin: D6
+    baud_rate: 9600
+    id: uart1
+
+  - rx_pin: D4
+    tx_pin: D3
+    baud_rate: 9600
+    id: uart2
+
+sensor:
+  - <<: !include ./sensors/shtcx.yaml
+    address: 0x44
+  - <<: !include ./sensors/pmsx003.yaml
+    uart_id: uart1
+  - <<: !include ./sensors/senseair.yaml
+    id: senseair_s8
+    uart_id: uart2
