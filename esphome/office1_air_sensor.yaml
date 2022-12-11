@@ -3,12 +3,12 @@
 #
 # Monitors the air quality
 #
-substitutions:
-  slug: az1_airsensor
-  name: Office 1 Air sensor
-  description: Monitors the air quality in office 1.
-  api_password: !secret esphome_office1_air_sensor_api_password
-  ota_password: !secret esphome_office1_air_sensor_ota_password
+# substitutions:
+#   slug: az1_airsensor
+#   name: Office 1 Air sensor
+#   description: Monitors the air quality in office 1.
+#   api_password: !secret esphome_office1_air_sensor_api_password
+#   ota_password: !secret esphome_office1_air_sensor_ota_password
 
-packages:
-  device: !include devices/airgradient.yaml
+# packages:
+#   device: !include devices/airgradient.yaml
