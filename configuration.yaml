@@ -3,5 +3,6 @@
 # The configuration.yaml is only used to bootstrap the system.
 #
 homeassistant:
+  name: Main
   # Load packages
   packages: !include_dir_named integrations
