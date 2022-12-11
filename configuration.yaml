@@ -4,5 +4,14 @@
 #
 homeassistant:
   name: Main
+  latitude: !secret ha_loc_latitude
+  longitude: !secret ha_loc_longitude
+  elevation: 455
+  unit_system: metric
+  temperature_unit: C
+  time_zone: Europe/Berlin
+  currency: EUR
+  internal_url: http://homeassistant:8123/
+  external_url: !secret ha_ingress_url
   # Load packages
   packages: !include_dir_named integrations
