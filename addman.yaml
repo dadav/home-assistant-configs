@@ -85,7 +85,7 @@ addons:
       peers:
         - name: vps
           persistent_keep_alive: 30
-          endpoint: !secret wireguard_endpoint
+          endpoint: *secret_wireguard_endpoint
           addresses:
             - 10.8.0.101
           allowed_ips: []
