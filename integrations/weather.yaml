@@ -1,0 +1,3 @@
+---
+- platform: dwd_weather_warnings
+  region_name: !secret dwd_region_id
