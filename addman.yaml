@@ -1,0 +1,86 @@
+---
+# Add-on configurations
+#
+# The configuration of my small add-on manager. This allows me to keep
+# all the configs in git.
+#
+addon_defaults: &addon_defaults
+  auto_start: true
+  auto_restart: true
+  watchdog: true
+  auto_update: true
+  ingress_panel: false
+  boot: auto
+
+addons:
+  self:
+    <<: *addon_defaults
+    options:
+      check_interval: 600
+      check_updates_x_iterations: 6
+      config_file: /config/addman.yaml
+      log_level: info
+      watch_config_changes: true
+  core_git_pull:
+  cebe7a76_hassio_google_drive_backup:
+    <<: *addon_defaults
+    ingress_panel: true
+  core_samba:
+    <<: *addon_defaults
+    options:
+      username: homeassistant
+      password: homeassistant
+      workgroup: WORKGROUP
+      compatibility_mode: false
+      veto_files:
+        - ._*
+        - .DS_Store
+        - Thumbs.db
+        - icon?
+        - .Trashes
+      allow_hosts:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - fe80::/10
+  a0d7b954_vscode:
+    <<: *addon_defaults
+    ingress_panel: true
+  core_ssh:
+    <<: *addon_defaults
+    ingress_panel: true
+    options:
+      authorized_keys:
+        - >-
+          ssh-rsa
+          AAAAB3NzaC1yc2EAAAADAQABAAACAQC5vhWJ6QdicPKqcSyEwI7l61byIBg8Fxg2hk1tDpxcFtNLia95nTpvAr2QOdwyEuvr1Fzo0W1Zt0wRLrcqqfDFDSHL58eywGYBhs58+6a4QdGDt7bjew5dh10bqOaVYtNwd9laBCECvbceX5m69AK6wBaNGyXSzhuuP7dxr4oZdAzPi0fIiUduBEzAsfg19rXpM/+P8A7RFthC/D9wzHZKH9+vn+E9z3dGQTfcdKgfbEz8udkheqXLbwBWOcI4lhMlgdxfMPFXItznseYGjqHwYNh6/GSrzeLodGc21UDgcTNpxabXPWr1Ai+6ABSbHk0ez3QMVzoC8eqydC4aESVfQVZIGWuC4R66TZDw5Pzsx0Beg+mPC4YvtDXTH0faBMVGtWad56BisS8bfVSoI0DlzMchQWDdhNtLegExFibr6SqjPBPAnTA+6Vfjl3CQHRRLj3pOSYI7SLJZ0R+DrTnEvpTo82fnZvM85KQk953uXF9trdwktSaXeaMrninjwGy44jmG8DFujadCUFpFRyJ6MT9LfkWqpPuCTp3qYyrB7fyGVoubC1gpzuRNI+YTDcSoHNIVkcGQkg+grDu/cT/ONXvoW3gTh27k2uniXCztqved8O0cs8HFzVJoZxKvH+dEJadq46vvY/I1ajZ+Tm1XvWfI+FJ6dAZTWQWf4KETUQ==
+        - >-
+          ssh-rsa
+          AAAAB3NzaC1yc2EAAAADAQABAAACAQDcGoTrXH4RdriFiqAPAa80koThO166yTvw4wdjqdEWDulI5FyBOWu0aVowA+rSFuyxbJCqHhU4N3Feu3xGGMZ84cpidaJMqRpMePWUIZOSzFOxsgEEopT3SqL2nvi0rpSy1QUGiByra9d+1/FSuwHalRYlm8T2xDtpZnmohnC41IIhjOkLvA8haYj7cUYgY32evNOBPrcE8ZQDznPPpcjcRp/Hm9EyWQIJDVcJm4wF1Gm4Vi0aPgz60GPt+QtOwj2des6KS+oCEMNL3GAkliKFc8TiIb8S2GoTHoO28AklEn5gYJWAc5ffcX20ErqUBtXgblPgQo7ETlqtm69jVHzANUwwLqPfpf/CJjILdtSpbL16HsaUBr06CQsakMZpROf99G9PVrJEmhR4UkhR/35t1vbwauyshCYXYpSaAwqO1TLKdIjkckNN6Vbn9azdzrT/cUG/ZtLzPlCHYD029DtoKwjsp9DGHIPmPQ2N6ekcU7OjnxjoZ25XFvQFX60U6+DR8kZvw2mhGl1FvpbR5tW/UAu7QSG6Fg2fPVpV2BYACwvq+FtLjW+p6AOAh370kaViYzTSmilQiF8sxNYrtuyrJiEiQQLc362dbiw89C165rJ6Ih4Rta2/Fp46IBbo9SIcAdWVNy0eP9fxrPImboKFBuy7TEmJgtrjzkaHSyQqrw==
+      password: ""
+      apks: []
+      server:
+        tcp_forwarding: false
+  a0d7b954_wireguard:
+    <<: *addon_defaults
+    auto_update: false
+    options:
+      peers:
+        - name: vps
+          persistent_keep_alive: 30
+          endpoint: !secret wireguard_endpoint
+          addresses:
+            - 10.8.0.101
+          allowed_ips: []
+          public_key: Rb9r0N09UL9+GkwRfsu7s9SMvFM4ApU7an311E8gMUY=
+          client_allowed_ips:
+            - 10.8.0.102/32
+            - 10.8.0.104/32
+      server:
+        addresses:
+          - 10.8.0.102
+        dns: []
+        host: homeassistant
+repositories:
+  - https://github.com/dadav/hass-addon-addman
+  - https://github.com/sabeechen/hassio-google-drive-backup

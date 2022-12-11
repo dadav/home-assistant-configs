@@ -29,7 +29,6 @@ esphome/.*/
 aircast.xml
 airsonos.xml
 notebooks
-addman.yaml
 
 # Ignore files created by IDE's
 .vscode
