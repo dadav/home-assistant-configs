@@ -26,7 +26,7 @@ addons:
       repository: https://github.com/dadav/home-assistant-configs.git
       git_branch: main
       git_remote: origin
-      auto_restart: false
+      auto_restart: true
       restart_ignore:
         - ui-lovelace.yaml
         - .gitignore
@@ -37,8 +37,8 @@ addons:
       deployment_password: ""
       deployment_key_protocol: rsa
       repeat:
-        active: false
-        interval: 300
+        active: true
+        interval: 30
   cebe7a76_hassio_google_drive_backup:
     <<: *addon_defaults
     ingress_panel: true
