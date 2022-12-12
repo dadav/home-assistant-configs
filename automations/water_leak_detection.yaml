@@ -4,7 +4,7 @@ alias: "Water leak detected"
 
 trigger:
   - platform: state
-    entity_id: binary_sensors.ALL_WATER_DETECTORS
+    entity_id: binary_sensor.ALL_WATER_DETECTORS
     to: "on"
 
 action:
