@@ -11,7 +11,7 @@ homeassistant:
   temperature_unit: C
   time_zone: Europe/Berlin
   currency: EUR
-  internal_url: http://homeassistant:8123/
+  internal_url: http://homeassistant.local:8123/
   external_url: !secret ha_ingress_url
   # Load packages
   packages: !include_dir_named integrations
