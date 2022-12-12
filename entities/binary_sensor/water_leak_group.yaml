@@ -1,0 +1,11 @@
+---
+# This groups all the water leak detectors together.
+#
+# I use this to send an emergency notification if any water leak
+# was found.
+#
+platform: group
+name: ALL_WATER_DETECTORS
+device_class: moisture
+entities:
+  - binary_sensor.bath2_waterdetector_iaszone

@@ -1,0 +1,20 @@
+---
+alias: "Water leak detected"
+
+trigger:
+  - platform: state
+    entity_id: binary_sensors.ALL_WATER_DETECTORS
+    to: "on"
+
+action:
+  - service: notify.ALL_DEVICES
+    data:
+      title: "Water leak detected!"
+      message: "There is a water leak!"
+      data:
+        ttl: 0
+        priority: high
+        channel: alarm_stream
+        color: "red"
+        notification_icon: "mdi:water-alert"
+        tag: "water-leak"
