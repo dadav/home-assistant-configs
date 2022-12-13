@@ -11,7 +11,7 @@ alias: "Extractor hood power switcher"
 
 trigger:
   - platform: state
-    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
+    entity_id: binary_sensor.kitchen_door_opening
 
 action:
   - choose:
