@@ -1,0 +1,12 @@
+---
+# This will send an alert if any water leak was found
+#
+name: Water leak found
+done_message: Problem seems to be solved. Well done!
+entity_id: binary_sensor.ALL_WATER_DETECTORS
+state: "on"
+repeat: 30
+can_acknowledge: true
+skip_first: false
+notifiers:
+  - ALL_DEVICES

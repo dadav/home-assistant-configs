@@ -1,0 +1,6 @@
+---
+# This handles the loading of my alerts
+#
+# https://www.home-assistant.io/integrations/alert/
+#
+alert: !include_dir_named ../entities/alerts
