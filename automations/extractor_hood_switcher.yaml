@@ -1,0 +1,27 @@
+---
+# I use this automation to toggle the powerplug in the kitchen which
+# controls the extractor hood. This needs to be done because otherwise
+# the extractor would suck the smoke out of the oven.
+#
+# Currently I'm not detecting the oven state, but this could be a
+# future improvement...
+#
+id: "659d017f-b25c-447d-8651-488e1a8c3c54"
+alias: "Extractor hood power switcher"
+
+trigger:
+  - platform: state
+    entity_id: binary_sensor.lumi_lumi_sensor_magnet_aq2_opening_2
+
+action:
+  - choose:
+      - conditions: "{{trigger.to_state.state == 'on'}}"
+        sequence:
+          - service: homeassistant.turn_on
+            target:
+              entity_id: switch.kitchen_powerplug_switch
+      - conditions: "{{trigger.to_state.state == 'off'}}"
+        sequence:
+          - service: homeassistant.turn_off
+            target:
+              entity_id: switch.kitchen_powerplug_switch
