@@ -8,4 +8,4 @@ platform: group
 name: ALL_WATER_DETECTORS
 device_class: moisture
 entities:
-  - binary_sensor.bath2_waterdetector_iaszone
+  - binary_sensor.bath2_waterdetector
