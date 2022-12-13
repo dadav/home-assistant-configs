@@ -1,0 +1,44 @@
+---
+# Low battery detection automation
+#
+# This automation detects sensor with low battery and notifies me.
+#
+# Copied from blueprint: https://community.home-assistant.io/t/low-battery-level-detection-notification-for-all-battery-sensors
+#
+id: "727b293e-9ed4-40b2-ac34-9c4e14172f94"
+alias: "Low battery detection"
+
+variables:
+  threshold: "{{ states('input_number.low_battery_warning_threshold') | int }}"
+  exclude: []
+  sensors: >-
+    {% set result = namespace(sensors=[]) %}
+    {% for state in states.sensor | selectattr('attributes.device_class', '==', 'battery') %}
+      {% if 0 <= state.state | int(-1) < threshold | int and not state.entity_id in exclude %}
+        {% set result.sensors = result.sensors + [state.name ~ ' (' ~ state.state ~ ' %)'] %}
+      {% endif %}
+    {% endfor %}
+    {% for state in states.binary_sensor | selectattr('attributes.device_class', '==', 'battery') | selectattr('state', '==', 'on') %}
+      {% if not state.entity_id in exclude %}
+        {% set result.sensors = result.sensors + [state.name] %}
+      {% endif %}
+    {% endfor %}
+    {{result.sensors|join('\n')}}
+
+trigger:
+  - platform: time
+    at: "12:00:00"
+
+condition:
+  - condition: template
+    value_template: '{{ sensors != '''' and now().isoweekday() == 0 }}'
+
+action:
+  - service: notify.pixel4a
+    data:
+      title: "Some sensors are low on battery, check them out!"
+      data:
+        message: >-
+          These are the sensors: {{sensors}}
+        color: "yellow"
+        notification_icon: "mdi:battery-alert"
