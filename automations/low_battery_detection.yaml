@@ -39,8 +39,6 @@ action:
       title: "Some sensors are low on battery, check them out!"
       message: >-
         These are the sensors: {{sensors}}
-      color: "yellow"
-      notification_icon: "mdi:battery-alert"
   - service: notify.persistent_notification
     data:
       title: "Some sensors are low on battery, check them out!"
