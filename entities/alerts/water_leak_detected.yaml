@@ -10,3 +10,9 @@ can_acknowledge: true
 skip_first: false
 notifiers:
   - ALL_DEVICES
+data:
+  ttl: 0
+  priority: high
+  channel: alarm_stream
+  color: red
+  notification_icon: "mdi:water-alert"
