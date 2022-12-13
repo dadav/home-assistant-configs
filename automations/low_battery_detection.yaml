@@ -37,14 +37,12 @@ action:
   - service: notify.mobile_app_pixel4a
     data:
       title: "Some sensors are low on battery, check them out!"
-      data:
-        message: >-
-          These are the sensors: {{sensors}}
-        color: "yellow"
-        notification_icon: "mdi:battery-alert"
+      message: >-
+        These are the sensors: {{sensors}}
+      color: "yellow"
+      notification_icon: "mdi:battery-alert"
   - service: notify.persistent_notification
     data:
       title: "Some sensors are low on battery, check them out!"
-      data:
-        message: >-
-          These are the sensors: {{sensors}}
+      message: >-
+        These are the sensors: {{sensors}}
