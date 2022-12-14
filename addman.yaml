@@ -22,6 +22,7 @@ addons:
       log_level: info
       watch_config_changes: true
   core_git_pull:
+    auto_update: false
     options:
       repository: https://github.com/dadav/home-assistant-configs.git
       git_branch: main
@@ -41,6 +42,7 @@ addons:
         interval: 30
   cebe7a76_hassio_google_drive_backup:
     <<: *addon_defaults
+    auto_update: false
     ingress_panel: true
   core_samba:
     <<: *addon_defaults
