@@ -4,4 +4,4 @@ device_tracker:
     track_new_devices: false
     track_battery: true
     new_device_defaults:
-      track_new_devices: false
+      track_new_devices: true
