@@ -1,0 +1,12 @@
+---
+- platform: fritz
+  host: 192.168.178.1
+  username: !secret fritz_username
+  password: !secret fritz_password
+  new_device_defaults:
+    track_new_devices: false
+    hide_if_away: false
+
+- platform: bluetooth_le_tracker
+  track_new_devices: false
+  track_battery: true
