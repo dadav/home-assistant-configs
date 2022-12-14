@@ -1,0 +1,22 @@
+---
+# Mailbox motion detection automation
+#
+# This automation detects motion in my mailbox. It's using an aqara
+# vibration sensor which I put on the highest sensivity level (1).
+# It's not always guaranteed to be triggered, but better than nothing?!
+#
+id: "75b764af-1a7e-4443-b646-b9fb24c31bb0"
+alias: "Mailbox motion detection"
+
+trigger:
+  - platform: state
+    entity_id: binary_sensor.entrance_mail_vibration
+    to: "on"
+
+action:
+  - service: notify.mobile_app_pixel4a
+    data:
+      title: "Movement in the mailbox detected!"
+      message: "Maybe it's the thing you waiting for..."
+      data:
+        notification_icon: "mdi:mailbox"
