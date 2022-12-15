@@ -1,5 +1,5 @@
 ---
 device_tracker:
   - platform: bluetooth_le_tracker
-    track_new_devices: true
+    track_new_devices: false
     track_battery: true
