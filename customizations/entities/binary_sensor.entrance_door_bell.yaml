@@ -1,0 +1,4 @@
+---
+friendly_name: Door bell sensor
+device_class: sound
+icon: mdi:bell-alert

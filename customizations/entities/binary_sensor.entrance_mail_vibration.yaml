@@ -1,4 +1,0 @@
----
-friendly_name: Entrace mail sensor
-device_class: motion
-icon: mdi:mailbox
