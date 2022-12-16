@@ -4,6 +4,7 @@
 # This automation detects a high humidity value in baths.
 #
 id: "6b0f392f-9afd-4db4-bde7-f961f5391ada"
+mode: single
 alias: "High humdity in baths detection"
 description: |-
   This automation detects high humidity in my bathrooms.
@@ -15,13 +16,14 @@ description: |-
   high.
 
 variables:
+  action_cooldown: "{{ 'COOLDOWN_' ~ context.id }}"
   high_humidity: "{{ states('input_number.bathroom_setting_humidity_high') | int }}"
   bath_sensors: &bath_sensors
     - sensor.bath1_temp_humidity
   high_bath_sensors: |-
     {% for i in bath_sensors %}
       {% if states(i) | int >= high_humidity %}
-        - {{ states[i].attributes.friendly_name }}
+        - {{ states[i].attributes.friendly_name }} ({{ states[i] }}%)
       {% endif %}
     {% endfor %}
 
@@ -42,3 +44,14 @@ action:
       data:
         color: "yellow"
         notification_icon: "mdi:water-percent"
+        actions:
+          - action: "{{ action_cooldown }}"
+            title: Ok, give me 15 mins
+  - wait_for_trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_cooldown }}"
+    timeout: "00:01:00"
+    continue_on_timeout: false
+  - delay: "00:15"
