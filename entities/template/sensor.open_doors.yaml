@@ -11,7 +11,6 @@ sensor:
     unique_id: "3ee4701c-9701-4c4d-a1f7-499796ad1745"
     icon: "mdi:door-open"
     state: |-
-      Doors:
-      {% for door in states.binary_sensors.all_doors.attributes.entity_id if is_state(door, 'on') %}
-        {{ door.name }}
+      {% for door in states.binary_sensor.all_doors.attributes.entity_id if is_state(door, 'on') %}
+      {{ door }}
       {% endfor %}
