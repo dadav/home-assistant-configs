@@ -16,7 +16,6 @@ description: |-
   high.
 
 variables:
-  action_cooldown: "{{ 'COOLDOWN_' ~ context.id }}"
   high_humidity: "{{ states('input_number.bathroom_setting_humidity_high') | int }}"
   bath_sensors: &bath_sensors
     - sensor.bath1_temp_humidity
@@ -36,6 +35,8 @@ condition:
     value_template: "{{ high_bath_sensors != '' }}"
 
 action:
+  - variables:
+      action_cooldown: "{{ 'COOLDOWN_' ~ context.id }}"
   - service: notify.mobile_app_pixel4a
     data:
       title: "Some sensors with high humidity have been found!"
