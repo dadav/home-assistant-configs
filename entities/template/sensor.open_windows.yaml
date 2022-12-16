@@ -2,9 +2,6 @@
 #
 # Small sensor which contains names of open windows.
 #
-# trigger:
-#   - platform: state
-#     entity_id: binary_sensor.all_windows
 
 sensor:
   - name: Open windows
