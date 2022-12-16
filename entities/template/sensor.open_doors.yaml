@@ -2,9 +2,9 @@
 #
 # Small sensor which contains names of open doors.
 #
-trigger:
-  - platform: state
-    entity_id: binary_sensor.all_doors
+# trigger:
+#   - platform: state
+#     entity_id: binary_sensor.all_doors
 
 sensor:
   - name: Open doors
