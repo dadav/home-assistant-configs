@@ -8,6 +8,5 @@
 #
 platform: tod
 name: Work hours
-unique_id: "cb92ac45-c561-4795-b3cf-94f9db66b92d"
 after: "07:30"
 before: "16:00"
