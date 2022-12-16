@@ -1,9 +1,9 @@
-# Notification Group: ALL_DEVICES
+---
+# Notification Group: All devices
 #
 # This group combines all devices and is used for emergencies.
 #
----
-name: ALL_DEVICES
+name: All devices
 platform: group
 services:
   - service: mobile_app_pixel4a

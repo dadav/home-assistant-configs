@@ -1,0 +1,12 @@
+---
+# This groups all the windows together.
+#
+# I use this to remind me to close the windows when leaving.
+#
+platform: group
+name: All windows
+device_class: opening
+entities:
+  - binary_sensor.bath1_window_opening
+  - binary_sensor.bedroom_window_opening
+  - binary_sensor.office1_window_opening

@@ -5,7 +5,7 @@
 # was found.
 #
 platform: group
-name: ALL_WATER_DETECTORS
+name: All water detectors
 device_class: moisture
 entities:
   - binary_sensor.bath2_waterdetector_leak

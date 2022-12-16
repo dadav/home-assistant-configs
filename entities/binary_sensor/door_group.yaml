@@ -1,0 +1,14 @@
+---
+# This groups all the doors together.
+#
+# I use this to remind me to close the doors when leaving.
+#
+platform: group
+name: All doors
+device_class: opening
+entities:
+  - binary_sensor.bedroom_door_opening
+  - binary_sensor.entrace_door_opening
+  - binary_sensor.kitchen_door_opening
+  - binary_sensor.lunch_door_opening
+  - binary_sensor.wintergarden_door_opening

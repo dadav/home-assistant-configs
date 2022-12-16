@@ -1,0 +1,13 @@
+---
+#
+# Small binary sensor to tell me if all windows and doors are closed.
+#
+binary_sensor:
+  - name: Everything closed
+    unique_id: "eba94cc0-8cb5-4180-bba7-380cca7bac1c"
+    icon: "mdi:lock"
+    state: >-
+      {{
+        is_state('binary_sensor.all_windows', 'off')
+        and is_state('binary_sensor.all_doors', 'off')
+      }}
