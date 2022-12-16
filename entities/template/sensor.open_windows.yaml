@@ -12,5 +12,5 @@ sensor:
     icon: "mdi:window-open"
     state: |-
       {% for window in states.binary_sensor.all_windows.attributes.entity_id if is_state(window, 'on') %}
-      {{ window }}
+      - {{ states[window].attributes.friendly_name }}
       {% endfor %}

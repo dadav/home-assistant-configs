@@ -12,5 +12,5 @@ sensor:
     icon: "mdi:door-open"
     state: |-
       {% for door in states.binary_sensor.all_doors.attributes.entity_id if is_state(door, 'on') %}
-      {{ door }}
+      - {{ states[door].attributes.friendly_name }}
       {% endfor %}
