@@ -1,5 +1,5 @@
 ---
-# Input boolean: House Away Mode
+# Input boolean: Away Mode
 #
 # With this input boolean the system know we are all away from home. Nobody is
 # here.
@@ -8,5 +8,5 @@
 # way to detect this, got a new alarm system, or would want to control this
 # manually for once, this makes that possible.
 #
-name: "House Away Mode"
+name: "Away Mode"
 icon: "mdi:human-greeting"
