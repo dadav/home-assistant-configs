@@ -15,4 +15,8 @@ sensor:
       {% for door in states.binary_sensors.all_doors.attributes.entity_id if is_state(door, 'on') %}
         {% set result.open_doors = result.open_doors + [door.name] %}
       {% endfor %}
-      {{ result.open_doors | join('\n') }}
+      {% if result.open_doors|length > 0 %}
+        {{ result.open_doors | join('\n') }}
+      {% else %}
+        -
+      {% endif %}
