@@ -10,13 +10,7 @@ sensor:
   - name: Open windows
     unique_id: "170ae53a-02bf-4882-bf3d-1b391cabae43"
     icon: "mdi:window-open"
-    state: >-
-      {% set result = namespace(open_windows=[]) %}
+    state: |-
       {% for window in states.binary_sensors.all_windows.attributes.entity_id if is_state(window, 'on') %}
-        {% set result.open_windows = result.open_windows + [window.name] %}
+        {{ window.name }}
       {% endfor %}
-      {% if result.open_windows|length > 0 %}
-        {{ result.open_windows | join('\n') }}
-      {% else %}
-        -
-      {% endif %}

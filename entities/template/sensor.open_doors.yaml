@@ -10,13 +10,7 @@ sensor:
   - name: Open doors
     unique_id: "3ee4701c-9701-4c4d-a1f7-499796ad1745"
     icon: "mdi:door-open"
-    state: >-
-      {% set result = namespace(open_doors=[]) %}
+    state: |-
       {% for door in states.binary_sensors.all_doors.attributes.entity_id if is_state(door, 'on') %}
-        {% set result.open_doors = result.open_doors + [door.name] %}
+        {{ door.name }}
       {% endfor %}
-      {% if result.open_doors|length > 0 %}
-        {{ result.open_doors | join('\n') }}
-      {% else %}
-        -
-      {% endif %}
