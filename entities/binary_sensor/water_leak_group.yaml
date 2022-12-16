@@ -6,6 +6,7 @@
 #
 platform: group
 name: ALL_WATER_DETECTORS
+unique_id: "c9fed6ee-146d-463a-a3c1-881270654af1"
 device_class: moisture
 entities:
   - binary_sensor.bath2_waterdetector_leak

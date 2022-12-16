@@ -1,0 +1,7 @@
+---
+# Input boolean: Vacation Mode
+#
+# With this input boolean I can check if I'm currently on vacation.
+#
+name: "Vacation Mode"
+icon: "mdi:rabbit-variant"
