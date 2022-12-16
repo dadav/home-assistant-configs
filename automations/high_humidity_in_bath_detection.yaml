@@ -20,7 +20,7 @@ variables:
     - sensor.bath1_temp_humidity
   high_bath_sensors: |-
     {% for i in bath_sensors %}
-      {% if state(i) | int >= high_humidity %}
+      {% if states(i) | int >= high_humidity %}
         - {{ states[i].attributes.friendly_name }}
       {% endif %}
     {% endfor %}
@@ -29,9 +29,7 @@ trigger:
   - platform: state
     entity_id: *bath_sensors
 
-condition:
-  - condition: template
-    value_template: "{{ high_bath_sensors != '' }}"
+condition: "{{ high_bath_sensors != '' }}"
 
 action:
   - service: notify.mobile_app_pixel4a
