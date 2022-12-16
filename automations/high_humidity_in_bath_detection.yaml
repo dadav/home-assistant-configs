@@ -31,7 +31,9 @@ trigger:
   - platform: state
     entity_id: *bath_sensors
 
-condition: "{{ high_bath_sensors != '' }}"
+condition:
+  - condition: template
+    value_template: "{{ high_bath_sensors != '' }}"
 
 action:
   - service: notify.mobile_app_pixel4a
