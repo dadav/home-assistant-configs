@@ -22,7 +22,7 @@ variables:
   high_bath_sensors: |-
     {% for i in bath_sensors %}
       {% if states(i) | int >= high_humidity %}
-        - {{ states[i].attributes.friendly_name }} ({{ states[i] }}%)
+        - {{ states[i].attributes.friendly_name }} ({{ states(i) }}%)
       {% endif %}
     {% endfor %}
 
