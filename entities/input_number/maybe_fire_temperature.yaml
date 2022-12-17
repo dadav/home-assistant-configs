@@ -1,0 +1,13 @@
+---
+# Input number: Maybe Fire Temperature
+#
+# This is an automation control/setting to indicate when
+# a temperature should be considered to be a possible fire.
+#
+name: "Maybe Fire Temperature"
+icon: "mdi:fire"
+unit_of_measurement: "%"
+min: 0
+max: 100
+step: 1
+mode: slider
