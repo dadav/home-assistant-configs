@@ -100,6 +100,16 @@ addons:
           - 10.8.0.102
         dns: []
         host: homeassistant
+  ad61c150_dss_voip:
+    <<: *addon_defaults
+    auto_update: false
+    options:
+      caller_id_uri: *secret_voip_uri
+      realm: "*"
+      username: *secret_voip_username
+      password: *secret_voip_password
+      pjsua_custom_options: '--ip-addr 192.168.178.27'
+
 repositories:
   - https://github.com/dadav/hass-addon-addman
   - https://github.com/sabeechen/hassio-google-drive-backup
