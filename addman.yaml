@@ -103,3 +103,4 @@ addons:
 repositories:
   - https://github.com/dadav/hass-addon-addman
   - https://github.com/sabeechen/hassio-google-drive-backup
+  - https://github.com/dadav/voip-hassio-addons
