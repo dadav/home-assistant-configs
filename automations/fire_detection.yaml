@@ -1,0 +1,45 @@
+---
+# Intrusion detection automation
+#
+# This automation detects suspicious activity and notifys me.
+#
+id: "0f2f1eeb-b028-470e-b835-cf2a0fb23a1d"
+mode: queued
+max_exceeded: silent
+alias: "Fire detection automation"
+description: >-
+  This automation detects unusualy high temperatures and sends
+  me a notification in multiple ways.
+
+trigger:
+  - platform: event
+    event_type: state_changed
+
+condition:
+  - condition: template
+    value_template: >-
+      {{
+        trigger.event.data.entity_id is match('^sensor\.[a-z_]+_(?:door|window|temp)_temperature')
+        and trigger.event.data.new_state | float >= 40.0
+      }}
+
+action:
+  - service: notify.mobile_app_pixel4a
+    data:
+      title: "Possible fire detected!"
+      message: >-
+        This entity triggered the automation was: {{trigger.event.data.event_id}}
+      data:
+        ttl: 0
+        priority: high
+        channel: alarm_stream
+        notification_icon: "mdi:alarm-light"
+        color: red
+  - service: hassio.addon_stdin
+    data:
+      addon: ad61c150_dss_voip
+      input:
+        call_sip_uri: !secret emergency_sip_uri
+        message_tts: >-
+          The sensor {{states(trigger.event.data.event_id).attributes.friendly_name}}
+          is getting really hot. Please check it out.
