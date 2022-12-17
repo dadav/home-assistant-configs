@@ -29,9 +29,7 @@ trigger:
   - platform: time
     at: "12:00:00"
 
-condition:
-  - condition: template
-    value_template: '{{ sensors != '''' and now().isoweekday() == 0 }}'
+condition: "{{ sensors != '' and now().isoweekday() == 0 }}"
 
 action:
   - service: notify.mobile_app_pixel4a
