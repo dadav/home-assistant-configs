@@ -41,5 +41,5 @@ action:
       input:
         call_sip_uri: !secret emergency_sip_uri
         message_tts: >-
-          The sensor {{states(trigger.event.data.event_id).attributes.friendly_name}}
+          The sensor {{states[trigger.event.data.event_id].attributes.friendly_name}}
           is getting really hot. Please check it out.
