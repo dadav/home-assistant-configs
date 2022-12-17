@@ -19,7 +19,7 @@ variables:
   high_humidity: "{{ states('input_number.bathroom_setting_humidity_high') | int }}"
   bath_sensors: &bath_sensors
     - sensor.bath1_temp_humidity
-  high_bath_sensors: |-
+  high_humidity_sensors: |-
     {% for i in bath_sensors %}
       {% if states(i) | int >= high_humidity %}
         - {{ states[i].attributes.friendly_name }} ({{ states(i) }}%)
@@ -30,9 +30,7 @@ trigger:
   - platform: state
     entity_id: *bath_sensors
 
-condition:
-  - condition: template
-    value_template: "{{ high_bath_sensors != '' }}"
+condition: "{{ high_humidity_sensors != '' }}"
 
 action:
   - variables:
@@ -43,7 +41,7 @@ action:
       message: |-
         The humidity of the following sensors are
         higher than {{high_humidity}}%:
-          {{high_bath_sensors}}
+          {{high_humidity_sensors}}
       data:
         color: "yellow"
         notification_icon: "mdi:water-percent"
