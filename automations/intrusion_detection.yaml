@@ -36,4 +36,8 @@ action:
       message: >-
         This entity triggered the automation: {{trigger.event.data.event_id}}
       data:
+        ttl: 0
+        priority: high
+        channel: alarm_stream
         notification_icon: "mdi:alarm-light"
+        color: red
