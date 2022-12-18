@@ -8,3 +8,4 @@ name: "Max open window or door time"
 icon: "mdi:window-open"
 has_time: true
 has_date: false
+initial: "00:10"
