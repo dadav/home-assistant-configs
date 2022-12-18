@@ -6,8 +6,9 @@
 #
 name: "Maybe Fire Temperature"
 icon: "mdi:fire"
-unit_of_measurement: "%"
+unit_of_measurement: "°C"
 min: 0
 max: 100
 step: 1
 mode: slider
+initial: 40
