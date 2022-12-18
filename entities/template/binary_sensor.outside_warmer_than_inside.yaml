@@ -1,0 +1,13 @@
+---
+#
+# Small binary sensor to tell me if it's outside warmer than inside
+#
+binary_sensor:
+  - name: Outside warmer than inside
+    unique_id: "f06752c7-c7a4-470f-99e5-99ec6fe8fb3b"
+    icon: "mdi:weather-sunny"
+    state: >-
+      {{
+        states('sensor.wintergarden_temp_temperature')|float
+        > states('sensor.living_temp_temperature')|float
+      }}

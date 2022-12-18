@@ -1,0 +1,10 @@
+---
+# Input datetime: Max open window or door time
+#
+# This is an automation control/setting to indicate when an open window
+# or door should be consiered as open for too long.
+#
+name: "Max open window or door time"
+icon: "mdi:window-open"
+has_time: true
+has_date: false

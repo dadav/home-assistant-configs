@@ -1,0 +1,51 @@
+---
+# Window or door open for too long reminder automation
+#
+# This automation reminds me if I left some window or door open
+# for too long.
+#
+id: "8511c2ca-4ea3-429f-b3a3-e35bd6289e67"
+mode: single
+alias: "Window or door open for too long reminder"
+description: |-
+  This automation reminds me to close an open window or door.
+
+  Sometimes I open a window or door to let some fresh air in
+  and forget to close it again. This automations aims to prevent
+  this.
+
+variables:
+  max_open_time: "{{ states('input_datetime.max_open_window_or_door_time') }}"
+
+trigger:
+  - platform: state
+    entity_id: binary_sensor.everything_closed
+    to: "off"
+    for: "{{ max_open_time }}"
+
+condition: "{{ is_state('binary_sensor.outside_warmer_than_inside', 'off') }}"
+
+action:
+  - variables:
+      action_cooldown: "{{ 'CLOSE_COOLDOWN_' ~ context.id }}"
+  - service: notify.mobile_app_pixel4a
+    data:
+      title: "It's cold outside...maybe close all windows?"
+      message: |-
+        The following entities are still open, you might want to close them:
+          {{ states.sensor.open_windows }}
+          {{ states.sensor.open_doors }}
+      data:
+        color: "yellow"
+        notification_icon: "mdi:window-open"
+        actions:
+          - action: "{{ action_cooldown }}"
+            title: Ok, give me 15 mins
+  - wait_for_trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_cooldown }}"
+    timeout: "00:01:00"
+    continue_on_timeout: false
+  - delay: "00:15"
