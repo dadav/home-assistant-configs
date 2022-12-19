@@ -15,7 +15,7 @@ description: |-
   this.
 
 variables:
-  max_open_time: "{{ states('input_datetime.max_open_window_or_door_time') }}"
+  max_open_time: "{{ states('input_text.max_open_window_or_door_time') }}"
 
 trigger:
   - platform: state
