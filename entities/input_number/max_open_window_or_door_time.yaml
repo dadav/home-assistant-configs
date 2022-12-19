@@ -6,7 +6,7 @@
 # open for too long.
 #
 name: "Max open window or door time"
-icon: "mdi:fire"
+icon: "mdi:window-open"
 unit_of_measurement: "Mins"
 min: 0
 max: 59
