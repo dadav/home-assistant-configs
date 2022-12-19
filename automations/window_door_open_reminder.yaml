@@ -21,7 +21,7 @@ trigger:
   - platform: state
     entity_id: binary_sensor.everything_closed
     to: "off"
-    for: "00:{{ max_open_time_mins }}:00"
+    for: "00:{{ '%0.2d' | format(max_open_time_mins|int) }}:00"
 
 condition: "{{ is_state('binary_sensor.outside_warmer_than_inside', 'off') }}"
 
