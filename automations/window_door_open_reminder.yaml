@@ -15,13 +15,13 @@ description: |-
   this.
 
 variables:
-  max_open_time: "{{ states('input_text.max_open_window_or_door_time') }}"
+  max_open_time_mins: "{{ states('input_number.max_open_window_or_door_time') }}"
 
 trigger:
   - platform: state
     entity_id: binary_sensor.everything_closed
     to: "off"
-    for: "{{ max_open_time }}"
+    for: "00:{{ max_open_time_mins }}:00"
 
 condition: "{{ is_state('binary_sensor.outside_warmer_than_inside', 'off') }}"
 
