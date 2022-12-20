@@ -113,6 +113,7 @@ addons:
   45df7312_zigbee2mqtt:
     <<: *addon_defaults
     auto_update: false
+    ingress_panel: true
     options:
       serial:
         port: /dev/ttyACM0
