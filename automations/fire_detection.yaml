@@ -31,7 +31,7 @@ action:
     data:
       title: "Possible fire detected!"
       message: >-
-        This entity triggered the automation was: {{trigger.event.data.event_id}}
+        This entity triggered the automation was: {{trigger.event.data.entity_id}}
       data:
         ttl: 0
         priority: high
@@ -44,5 +44,5 @@ action:
       input:
         call_sip_uri: !secret emergency_sip_uri
         message_tts: >-
-          The sensor {{states[trigger.event.data.event_id].attributes.friendly_name}}
+          The sensor {{states[trigger.event.data.entity_id].attributes.friendly_name}}
           is getting really hot. Please check it out.

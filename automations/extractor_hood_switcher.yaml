@@ -11,7 +11,7 @@ alias: "Extractor hood power switcher"
 
 trigger:
   - platform: state
-    entity_id: binary_sensor.kitchen_door_opening
+    entity_id: binary_sensor.kitchen_door_contact
 
 action:
   - choose:
@@ -19,9 +19,9 @@ action:
         sequence:
           - service: homeassistant.turn_on
             target:
-              entity_id: switch.kitchen_powerplug_switch
+              entity_id: switch.kitchen_powerplug
       - conditions: "{{trigger.to_state.state == 'off'}}"
         sequence:
           - service: homeassistant.turn_off
             target:
-              entity_id: switch.kitchen_powerplug_switch
+              entity_id: switch.kitchen_powerplug
