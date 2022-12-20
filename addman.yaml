@@ -110,8 +110,19 @@ addons:
         username: *secret_voip_username
         password: *secret_voip_password
       pjsua_custom_options: '--ip-addr 192.168.178.27'
+  45df7312_zigbee2mqtt:
+    <<: *addon_defaults
+    auto_update: false
+    options:
+      serial:
+        port: /dev/ttyACM0
+        adapter: deconz
+  core_mosquitto:
+    <<: *addon_defaults
+    auto_update: false
 
 repositories:
   - https://github.com/dadav/hass-addon-addman
   - https://github.com/sabeechen/hassio-google-drive-backup
   - https://github.com/dadav/voip-hassio-addons
+  - https://github.com/zigbee2mqtt/hassio-zigbee2mqtt
