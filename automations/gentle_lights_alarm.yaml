@@ -12,7 +12,7 @@ description: >-
 
 variables:
   trigger_time: >-
-    {% if states('binary_sensor.must_work_today') == 'on' %}
+    {% if is_state('binary_sensor.must_work_today', 'on') %}
       {{ states('input_datetime.wakeup_time_workday') }}
     {% else %}
       {{ states('input_datetime.wakeup_time') }}

@@ -8,6 +8,6 @@ binary_sensor:
     icon: "mdi:weather-sunny"
     state: >-
       {{
-        states('sensor.wintergarden_temp_temperature')|float
-        > states('sensor.living_temp_temperature')|float
+        states('sensor.wintergarden_temp_temperature')|float(0.0)
+        > states('sensor.living_temp_temperature')|float(0.0)
       }}
