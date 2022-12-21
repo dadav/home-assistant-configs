@@ -18,13 +18,13 @@ variables:
 trigger:
   - platform: state
     entity_id:
-      - sensor.office1_door_contact
+      - binary_sensor.office1_door_contact
     from: "off"
     to: "on"
     id: Door opened
   - platform: state
     entity_id:
-      - sensor.office1_door_contact
+      - binary_sensor.office1_door_contact
     from: "on"
     to: "off"
     id: Door closed
