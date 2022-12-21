@@ -43,7 +43,8 @@ action:
   - choose:
       - conditions:
           - alias: "Someone is in the office, need light but its off"
-            and:
+            condition: and
+            conditions:
               - condition: trigger
                 id: Need light
               - condition: state
@@ -60,7 +61,8 @@ action:
               entity_id: light.office1_light
       - conditions:
           - alias: "Dont need light, turn off if on"
-            and:
+            condition: and
+            conditions:
               - condition: trigger
                 id: Dont need light
               - condition: state
@@ -73,7 +75,8 @@ action:
               entity_id: light.office1_light
       - conditions:
           - alias: "Door opened and need light"
-            and:
+            condition: and
+            conditions:
               - condition: trigger
                 id: Door opened
               - condition: state
@@ -86,7 +89,8 @@ action:
               entity_id: light.office1_light
       - conditions:
           - alias: "Someone is leaving the room"
-            and:
+            condition: and
+            conditions:
               - condition: trigger
                 id: Door closed
               - condition: state
