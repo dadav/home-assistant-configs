@@ -38,6 +38,14 @@ trigger:
       - binary_sensor.need_light
     to: "off"
     id: Dont need light
+  - platform: state
+    entity_id: *office_devices
+    from: "off"
+    to: "on"
+    id: Device turned on
+  - platform: state
+    entity_id: sensor.office1_chair_action
+    id: Sat down
 
 condition:
   - condition: state
@@ -65,11 +73,45 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Dont need light, turn off if on"
+          - alias: "Dont need light, turn light"
             condition: and
             conditions:
               - condition: trigger
                 id: Dont need light
+              - condition: state
+                entity_id: light.office1_light
+                state: "on"
+        sequence:
+          - alias: "Turn off the lights"
+            service: light.turn_off
+            target:
+              entity_id: light.office1_light
+      - conditions:
+          - alias: "Device turned on, turn light off"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Device turned on
+              - condition: state
+                entity_id: input_boolean.office1_device_on_lights_off
+                state: "on"
+              - condition: state
+                entity_id: light.office1_light
+                state: "on"
+        sequence:
+          - alias: "Turn off the lights"
+            service: light.turn_off
+            target:
+              entity_id: light.office1_light
+      - conditions:
+          - alias: "Sat down, turn light off"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Sat down
+              - condition: state
+                entity_id: input_boolean.office1_when_sitting_lights_off
+                state: "on"
               - condition: state
                 entity_id: light.office1_light
                 state: "on"

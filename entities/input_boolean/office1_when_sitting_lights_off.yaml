@@ -1,0 +1,12 @@
+---
+# Input boolean: Office1 when sitting lights off
+#
+# Changes the behaviour of the lights switcher automation for
+# my office. If this is on, the lights in my office will go off
+# as soon as I sit on my chair.
+#
+# This helps me to navigate through my office If it was hit by
+# a bomb..
+#
+name: "Office1 When Sitting Lights Off"
+icon: "mdi:chair-rolling"

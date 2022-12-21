@@ -1,0 +1,9 @@
+---
+# Input boolean: Office1 device on lights off
+#
+# Changes the behaviour of the lights switcher automation for
+# my office. If this is on, the lights in my office will go off
+# as soon as I started one of my devices.
+#
+name: "Office1 Device On Lights Off"
+icon: "mdi:laptop"
