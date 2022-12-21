@@ -21,7 +21,7 @@ variables:
     {{
       states('input_number.wakeup_transition_minutes') | int * 60
     }}
-  wakeup_brightness:
+  wakeup_brightness: >-
     {{
       states('input_number.wakeup_brightness') | int
     }}
