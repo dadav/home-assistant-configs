@@ -11,12 +11,6 @@ description: >-
   to help me wake up in a gentle way.
 
 variables:
-  trigger_time: >-
-    {% if is_state('binary_sensor.must_work_today', 'on') %}
-      {{ states('input_datetime.wakeup_time_workday') }}
-    {% else %}
-      {{ states('input_datetime.wakeup_time') }}
-    {% endif %}
   transition_seconds: >-
     {{
       states('input_number.wakeup_transition_minutes') | int * 60
@@ -28,7 +22,12 @@ variables:
 
 trigger:
   - platform: time
-    at: "{{ trigger_time }}"
+    at: >-
+      {% if is_state('binary_sensor.must_work_today', 'on') %}
+        {{ states('input_datetime.wakeup_time_workday') }}
+      {% else %}
+        {{ states('input_datetime.wakeup_time') }}
+      {% endif %}
 
 condition:
   - condition: template
