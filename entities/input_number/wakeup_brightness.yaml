@@ -5,7 +5,7 @@
 # brightness of the bedroom lights when they slowly
 # turn on.
 #
-name: "Wakeup transition minutes"
+name: "Wakeup brightness"
 icon: "mdi:brightness-percent"
 unit_of_measurement: "%"
 min: 1
