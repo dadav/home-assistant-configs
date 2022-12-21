@@ -13,21 +13,16 @@ description: >-
 variables:
   transition_seconds: >-
     {{
-      states('input_number.wakeup_transition_minutes') | int * 60
+      states('input_number.wakeup_transition_minutes') | int(1) * 60
     }}
   wakeup_brightness: >-
     {{
-      states('input_number.wakeup_brightness') | int
+      states('input_number.wakeup_brightness') | int(1)
     }}
 
 trigger:
   - platform: time
-    at: >-
-      {% if is_state('binary_sensor.must_work_today', 'on') %}
-        {{ states('input_datetime.wakeup_time_workday') }}
-      {% else %}
-        {{ states('input_datetime.wakeup_time') }}
-      {% endif %}
+    at: sensor.wakeup_time
 
 condition:
   - condition: template

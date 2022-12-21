@@ -7,8 +7,8 @@ binary_sensor:
     unique_id: "72deed63-55b7-43f6-8ad6-96d60fcb7bfd"
     icon: "mdi:lightbulb-question"
     state: >-
-      {% set sun_azi = state_attr('sun.sun', 'azimuth') | int %}
+      {% set sun_azi = state_attr('sun.sun', 'azimuth') | int(0) %}
       {{
-        sun_azi >= states('input_number.need_light_azimuth_start')|int
-        and sun_azi =< states('input_number.need_light_azimuth_end')|int
+        sun_azi >= states('input_number.need_light_azimuth_start')|int(0)
+        and sun_azi <= states('input_number.need_light_azimuth_end')|int(0)
       }}
