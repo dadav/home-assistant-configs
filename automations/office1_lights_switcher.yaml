@@ -51,7 +51,7 @@ action:
                 entity_id: light.office1_light
                 state: "off"
               - condition: state
-                entity_id: *office_devices
+                entity_id: "{{ office_devices }}"
                 match: any
                 state: "home"
         sequence:
@@ -94,7 +94,7 @@ action:
               - condition: trigger
                 id: Door closed
               - condition: state
-                entity_id: *office_devices
+                entity_id: "{{ office_devices }}"
                 state: "not_home"
               - alias: "Last movement in chair was within 5 mins"
                 condition: template
