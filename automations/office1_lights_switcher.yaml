@@ -39,6 +39,11 @@ trigger:
     to: "off"
     id: Dont need light
 
+condition:
+  - condition: state
+    entity_id: input_boolean.office1_manage_lights
+    state: "on"
+
 action:
   - choose:
       - conditions:

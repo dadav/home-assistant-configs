@@ -1,0 +1,8 @@
+---
+# Input boolean: Office1 Manage Lights
+#
+# Weather the light management automation should
+# be enabled or not.
+#
+name: "Office1 Manage Lights"
+icon: "mdi:home-lightbulb"
