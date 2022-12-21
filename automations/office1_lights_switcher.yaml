@@ -61,7 +61,7 @@ action:
                 state: "home"
         sequence:
           - alias: "Turn on the lights"
-            service: lights.turn_on
+            service: light.turn_on
             target:
               entity_id: light.office1_light
       - conditions:
@@ -75,7 +75,7 @@ action:
                 state: "on"
         sequence:
           - alias: "Turn off the lights"
-            service: lights.turn_off
+            service: light.turn_off
             target:
               entity_id: light.office1_light
       - conditions:
@@ -89,7 +89,7 @@ action:
                 state: "on"
         sequence:
           - alias: "Turn on the lights"
-            service: lights.turn_on
+            service: light.turn_on
             target:
               entity_id: light.office1_light
       - conditions:
@@ -109,6 +109,6 @@ action:
                   }}
         sequence:
           - alias: "Turn off the lights"
-            service: lights.turn_off
+            service: light.turn_off
             target:
               entity_id: light.office1_light
