@@ -1,0 +1,9 @@
+---
+# Input datetime: The time I usually wake up
+#
+# This is used by the gentle lights alarm automation.
+#
+name: "Wakeup time"
+icon: "mdi:alarm"
+has_date: false
+has_time: true

@@ -1,0 +1,8 @@
+---
+# Input boolean: No wakeup mode
+#
+# With this input boolean the system knows I dont want to wake up,
+# so don't be noisy. Thanks.
+#
+name: "No wakeup mode"
+icon: "mdi:bell-sleep"

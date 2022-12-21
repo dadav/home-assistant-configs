@@ -1,0 +1,13 @@
+---
+# Input number: Need light azimuth start
+#
+# This is the azimuth value when it's necessary to turn
+# on the lights.
+#
+name: "Need Light Azimuth Start"
+icon: "mdi:lightbulb-on"
+unit_of_measurement: "°"
+min: 0
+max: 359
+step: 1
+mode: slider

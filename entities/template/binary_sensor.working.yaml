@@ -8,8 +8,6 @@ binary_sensor:
     icon: "mdi:briefcase"
     state: >
       {{
-         is_state('binary_sensor.workday', 'on')
+         is_state('binary_sensor.must_work_today', 'on')
          and is_state('binary_sensor.work_hours', 'on')
-         and is_state('input_boolean.vacation_mode', 'off')
-         and is_state('binary_sensor.holiday', 'off')
       }}

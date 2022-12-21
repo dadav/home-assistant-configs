@@ -1,0 +1,14 @@
+---
+#
+# Small binary sensor to tell me if I must work today
+#
+binary_sensor:
+  - name: Must work today
+    unique_id: "60fddbc4-8ef9-484b-a66b-040a98b27f02"
+    icon: "mdi:briefcase"
+    state: >
+      {{
+         is_state('binary_sensor.workday', 'on')
+         and is_state('input_boolean.vacation_mode', 'off')
+         and is_state('binary_sensor.holiday', 'off')
+      }}

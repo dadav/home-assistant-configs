@@ -1,0 +1,13 @@
+---
+# Bedroom lights
+#
+# This is a group for my bedroom lights. It's a
+# lamp with 3 separate lights which I mostly
+# want to turn on at the same time.
+#
+platform: group
+name: bedroom_lights
+entities:
+  - light.bedroom_light1
+  - light.bedroom_light2
+  - light.bedroom_light3

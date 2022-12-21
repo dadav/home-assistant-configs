@@ -1,0 +1,105 @@
+---
+# Office 1 light switcher automation
+#
+# This automation switches the lights on and off in
+# my office.
+#
+id: "40c147c1-b3a1-4214-b002-7bf7d4af65d0"
+alias: "Office 1 light switcher"
+description: >-
+  This automation tries to predict how much light I need
+  in my office and sets up the lights as needed.
+
+variables:
+  office_devices:
+    - device_tracker.daniel-tower
+    - device_tracker.daniel-laptop-arbeit
+
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.office1_door_contact
+    from: "off"
+    to: "on"
+    id: Door opened
+  - platform: state
+    entity_id:
+      - sensor.office1_door_contact
+    from: "on"
+    to: "off"
+    id: Door closed
+  - platform: state
+    entity_id:
+      - binary_sensor.need_light
+    to: "on"
+    id: Need light
+  - platform: state
+    entity_id:
+      - binary_sensor.need_light
+    to: "off"
+    id: Dont need light
+
+action:
+  - choose:
+      - conditions:
+          - alias: "Someone is in the office, need light but its off"
+            condition:
+              - condition: trigger
+                id: Need light
+              - condition: state
+                entity_id: light.office1_light
+                state: "off"
+              - condition: state
+                entity_id: "{{ office_devices }}"
+                match: any
+                state: "home"
+        sequence:
+          - alias: "Turn on the lights"
+            service: lights.turn_on
+            target:
+              entity_id: light.office1_light
+      - conditions:
+          - alias: "Dont need light, turn off if on"
+            condition:
+              - condition: trigger
+                id: Dont need light
+              - condition: state
+                entity_id: light.office1_light
+                state: "on"
+        sequence:
+          - alias: "Turn off the lights"
+            service: lights.turn_off
+            target:
+              entity_id: light.office1_light
+      - conditions:
+          - alias: "Door opened and need light"
+            condition:
+              - condition: trigger
+                id: Door opened
+              - condition: state
+                entity_id: binary_sensor.need_light
+                state: "on"
+        sequence:
+          - alias: "Turn on the lights"
+            service: lights.turn_on
+            target:
+              entity_id: light.office1_light
+      - conditions:
+          - alias: "Someone is leaving the room"
+            condition:
+              - condition: trigger
+                id: Door closed
+              - condition: state
+                entity_id: "{{ office_devices }}"
+                state: "not_home"
+              - alias: "Last movement in chair was within 5 mins"
+                condition: template
+                value_template: >-
+                  {{
+                    (as_timestamp(now()) - as_timestamp(states.sensor.office1_chair_action.last_changed)) | int < 900
+                  }}
+        sequence:
+          - alias: "Turn off the lights"
+            service: lights.turn_off
+            target:
+              entity_id: light.office1_light

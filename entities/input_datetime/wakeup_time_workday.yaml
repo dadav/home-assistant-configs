@@ -1,0 +1,9 @@
+---
+# Input datetime: Wakeup time workday
+#
+# This is used by the gentle lights alarm automation.
+#
+name: "Wakeup time workday"
+icon: "mdi:alarm"
+has_date: false
+has_time: true

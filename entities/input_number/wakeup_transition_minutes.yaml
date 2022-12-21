@@ -1,0 +1,13 @@
+---
+# Input number: Wakeup transition minutes
+#
+# This is an automation control/setting to indicate how
+# long the lights should take to be in full brightness.
+#
+name: "Wakeup transition minutes"
+icon: "mdi:clock"
+unit_of_measurement: "mins"
+min: 0
+max: 60
+step: 1
+mode: slider

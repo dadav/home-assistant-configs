@@ -1,0 +1,48 @@
+---
+# Gentle lights alarm automation
+#
+# This automation wakes me up in a gentle way :) It basically
+# slowly turns on one light after another (there are three).
+#
+id: "20f819ae-a995-4690-b73f-ecab935f5405"
+alias: "Gentle lights alarm automation"
+description: >-
+  This automation slowly turns on the lights in my bedroom
+  to help me wake up in a gentle way.
+
+variables:
+  trigger_time: >-
+    {% if states('binary_sensor.must_work_today') == 'on' %}
+      {{ states('input_datetime.wakeup_time_workday') }}
+    {% else %}
+      {{ states('input_datetime.wakeup_time') }}
+    {% endif %}
+  transition_seconds: >-
+    {{
+      states('input_number.wakeup_transition_minutes') | int * 60
+    }}
+  wakeup_brightness:
+    {{
+      states('input_number.wakeup_brightness') | int
+    }}
+
+trigger:
+  - platform: time
+    at: "{{ trigger_time }}"
+
+condition:
+  - condition: template
+    value_template: >-
+      {{
+        is_state('light.bedroom_lights', 'off')
+        and is_state('input_boolean.away_mode', 'off')
+        and is_state('input_boolean.no_wakeup_mode', 'off')
+      }}
+
+action:
+  - service: lights.turn_on
+    target:
+      entity_id: light.bedroom_lights
+    data:
+      brightness_pct: "{{ wakeup_brightness }}"
+      transition: "{{ transition_seconds }}"

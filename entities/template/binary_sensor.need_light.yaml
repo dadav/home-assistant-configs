@@ -1,0 +1,14 @@
+---
+#
+# Small binary sensor to tell me if light is necessary.
+#
+binary_sensor:
+  - name: Need light
+    unique_id: "72deed63-55b7-43f6-8ad6-96d60fcb7bfd"
+    icon: "mdi:lightbulb-question"
+    state: >-
+      {% set sun_azi = state_attr('sun.sun', 'azimuth') | int %}
+      {{
+        sun_azi >= states('input_number.need_light_azimuth_start')|int
+        and sun_azi =< states('input_number.need_light_azimuth_end')|int
+      }}
