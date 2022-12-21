@@ -9,6 +9,6 @@ binary_sensor:
     state: >-
       {% set sun_azi = state_attr('sun.sun', 'azimuth') | int(0) %}
       {{
-        sun_azi >= states('input_number.need_light_azimuth_start')|int(0)
-        and sun_azi <= states('input_number.need_light_azimuth_end')|int(0)
+        sun_azi >= states('input_number.need_light_azimuth')|int(0)
+        or sun_azi <= states('input_number.dont_need_light_azimuth')|int(0)
       }}

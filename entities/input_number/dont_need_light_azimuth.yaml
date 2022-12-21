@@ -1,10 +1,10 @@
 ---
-# Input number: Need light azimuth end
+# Input number: Dont need light azimuth
 #
 # This is the azimuth value when it's ok to turn
 # off the lights.
 #
-name: "Need Light Azimuth End"
+name: "Dont Need Light Azimuth"
 icon: "mdi:lightbulb-off"
 unit_of_measurement: "°"
 min: 0
