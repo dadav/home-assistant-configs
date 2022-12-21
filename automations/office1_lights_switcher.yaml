@@ -11,9 +11,9 @@ description: >-
   in my office and sets up the lights as needed.
 
 variables:
-  office_devices: &office_devices
-    - device_tracker.daniel-tower
-    - device_tracker.daniel-laptop-arbeit
+  office_devices:
+    - device_tracker.daniel_tower
+    - device_tracker.daniel_laptop_arbeit
 
 trigger:
   - platform: state
