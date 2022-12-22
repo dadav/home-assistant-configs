@@ -7,7 +7,7 @@
 #
 platform: derivative
 source: sensor.bath1_temp_humidity
-name: Humidity change per minute
+name: Bath1 Humidity Derivative
 round: 1
 unit_time: min
 time_window: "00:05:00"
