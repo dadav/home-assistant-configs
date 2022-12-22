@@ -40,8 +40,8 @@ trigger:
     id: Dont need light
   - platform: state
     entity_id: *office_devices
-    from: "off"
-    to: "on"
+    from: "not_home"
+    to: "home"
     id: Device turned on
   - platform: state
     entity_id: sensor.office1_chair_action
