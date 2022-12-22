@@ -37,7 +37,8 @@ action:
             service: light.toggle
             target:
               entity_id: light.office2_light
-            brightness_pct: 100
+            data:
+              brightness_pct: 100
       - conditions:
           - condition: trigger
             id: Double Click
@@ -46,7 +47,8 @@ action:
             service: light.toggle
             target:
               entity_id: light.office2_light
-            brightness_pct: 50
+            date:
+              brightness_pct: 50
       - conditions:
           - condition: trigger
             id: Double Click
@@ -55,4 +57,5 @@ action:
             service: light.toggle
             target:
               entity_id: light.office2_light
-            brightness_pct: 25
+            data:
+              brightness_pct: 25
