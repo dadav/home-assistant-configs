@@ -8,7 +8,6 @@
 platform: derivative
 source: sensor.bath1_temp_humidity
 name: Bath1 Humidity Derivative
-unique_id: bath1_humidity_derivative
 round: 1
 unit_time: min
 time_window: "00:05:00"
