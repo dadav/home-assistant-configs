@@ -1,0 +1,58 @@
+---
+# Office 2 light switcher automation
+#
+# This automation switches the lights on and off in
+# the other office.
+#
+id: "379f4de2-2c0d-412e-a1e4-0626b5713ece"
+alias: "Office 2 light switcher"
+description: >-
+  This automation is a simple button / light
+  connector.
+
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.office2_button_action
+    to: "single"
+    id: Single Click
+  - platform: state
+    entity_id:
+      - sensor.office2_button_action
+    to: "double"
+    id: Double Click
+  - platform: state
+    entity_id:
+      - sensor.office2_button_action
+    to: "triple"
+    id: Triple Click
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: Single Click
+        sequence:
+          - alias: "Toggle the lights"
+            service: light.toggle
+            target:
+              entity_id: light.office2_light
+            brightness_pct: 100
+      - conditions:
+          - condition: trigger
+            id: Double Click
+        sequence:
+          - alias: "Toggle the lights"
+            service: light.toggle
+            target:
+              entity_id: light.office2_light
+            brightness_pct: 50
+      - conditions:
+          - condition: trigger
+            id: Double Click
+        sequence:
+          - alias: "Toggle the lights"
+            service: light.toggle
+            target:
+              entity_id: light.office2_light
+            brightness_pct: 25
