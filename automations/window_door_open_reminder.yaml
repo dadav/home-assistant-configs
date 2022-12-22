@@ -15,13 +15,13 @@ description: |-
   this.
 
 variables:
-  max_open_time_mins: "{{ states('input_number.max_open_window_or_door_time') }}"
+  max_open_time_mins: &max_open "{{ states('input_number.max_open_window_or_door_time') }}"
 
 trigger:
   - platform: state
     entity_id: binary_sensor.everything_closed
     to: "off"
-    for: "00:{{ '%0.2d' | format(max_open_time_mins|int) }}:00"
+    for: "00:{{ '%0.2d' | format(*max_open|int) }}:00"
 
 condition: "{{ is_state('binary_sensor.outside_warmer_than_inside', 'off') }}"
 
@@ -33,8 +33,8 @@ action:
       title: "It's cold outside...maybe close all windows?"
       message: |-
         The following entities are still open, you might want to close them:
-          {{ states.sensor.open_windows }}
-          {{ states.sensor.open_doors }}
+          {{ states('sensor.open_windows') }}
+          {{ states('sensor.open_doors') }}
       data:
         color: "yellow"
         notification_icon: "mdi:window-open"
