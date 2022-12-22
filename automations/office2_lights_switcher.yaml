@@ -47,7 +47,7 @@ action:
             service: light.toggle
             target:
               entity_id: light.office2_light
-            date:
+            data:
               brightness_pct: 50
       - conditions:
           - condition: trigger
