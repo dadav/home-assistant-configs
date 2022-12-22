@@ -44,6 +44,11 @@ trigger:
     to: "home"
     id: Device turned on
   - platform: state
+    entity_id: *office_devices
+    from: "home"
+    to: "not_home"
+    id: Device turned off
+  - platform: state
     entity_id: sensor.office1_chair_action
     id: Sat down
 
@@ -73,7 +78,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Dont need light, turn light"
+          - alias: "Sun should be enough, turn off the light"
             condition: and
             conditions:
               - condition: trigger
@@ -127,6 +132,9 @@ action:
               - condition: trigger
                 id: Door opened
               - condition: state
+                entity_id: *office_devices
+                state: "not_home"
+              - condition: state
                 entity_id: binary_sensor.need_light
                 state: "on"
         sequence:
@@ -135,7 +143,24 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Someone is leaving the room"
+          - alias: "I want to leave the room"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Device turned off
+              - condition: state
+                entity_id: binary_sensor.need_light
+                state: "on"
+              - condition: state
+                entity_id: light.office1_light
+                state: "off"
+        sequence:
+          - alias: "Turn on the lights"
+            service: light.turn_on
+            target:
+              entity_id: light.office1_light
+      - conditions:
+          - alias: "I left the room"
             condition: and
             conditions:
               - condition: trigger
