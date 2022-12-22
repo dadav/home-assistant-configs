@@ -51,7 +51,7 @@ action:
               brightness_pct: 50
       - conditions:
           - condition: trigger
-            id: Double Click
+            id: Triple Click
         sequence:
           - alias: "Toggle the lights"
             service: light.toggle
