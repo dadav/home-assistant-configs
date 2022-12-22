@@ -14,14 +14,11 @@ description: |-
   and forget to close it again. This automations aims to prevent
   this.
 
-variables:
-  max_open_time_mins: &max_open "{{ states('input_number.max_open_window_or_door_time') }}"
-
 trigger:
   - platform: state
     entity_id: binary_sensor.everything_closed
     to: "off"
-    for: "00:{{ '%0.2d' | format(*max_open|int) }}:00"
+    for: "00:{{ '%0.2d' | format(states('input_number.max_open_window_or_door_time')|int) }}:00"
 
 condition: "{{ is_state('binary_sensor.outside_warmer_than_inside', 'off') }}"
 
