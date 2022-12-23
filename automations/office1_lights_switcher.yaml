@@ -168,12 +168,6 @@ action:
               - condition: state
                 entity_id: *office_devices
                 state: "not_home"
-              # - alias: "Last movement in chair was within 5 mins"
-              #   condition: template
-              #   value_template: >-
-              #     {{
-              #       (as_timestamp(now()) - as_timestamp(states.sensor.office1_chair_action.last_changed)) | int < 900
-              #     }}
         sequence:
           - alias: "Turn off the lights"
             service: light.turn_off
