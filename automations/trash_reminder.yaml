@@ -1,0 +1,104 @@
+---
+# Trash reminder automation
+#
+# This automation reminds me to put the trash outside
+#
+id: "356696e4-4423-4863-8f28-a02ec1ef18ac"
+mode: queued
+alias: "Trash reminder"
+description: |-
+  This automation reminds me to put the trash outside
+
+trigger:
+  - platform: calendar
+    event: start
+    entity_id: calendar.trash_bio
+    offset: -06:00:00
+    id: Bio
+  - platform: calendar
+    event: start
+    entity_id: calendar.trash_yellow
+    offset: -06:00:00
+    id: Yellow
+  - platform: calendar
+    event: start
+    entity_id: calendar.trash_rest
+    offset: -06:00:00
+    id: Rest
+  - platform: calendar
+    event: start
+    entity_id: calendar.trash_blue
+    offset: -06:00:00
+    id: Blue
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: Bio
+        sequence:
+          - service: notify.mobile_app_pixel4a
+            data:
+              title: "Put the bio trash outside!"
+              message: >-
+                It's time to put the bio trash outside.
+              data:
+                color: "green"
+                notification_icon: "mdi:trash-can"
+          - service: persistent_notification.create
+            data:
+              title: "Put the bio trash outside!"
+              message: >-
+                It's time to put the bio trash outside.
+
+      - conditions:
+          - condition: trigger
+            id: Yellow
+        sequence:
+          - service: notify.mobile_app_pixel4a
+            data:
+              title: "Put the yellow trash outside!"
+              message: >-
+                It's time to put the yellow trash outside.
+              data:
+                color: "yellow"
+                notification_icon: "mdi:trash-can"
+          - service: persistent_notification.create
+            data:
+              title: "Put the yellow trash outside!"
+              message: >-
+                It's time to put the yellow trash outside.
+      - conditions:
+          - condition: trigger
+            id: Blue
+        sequence:
+          - service: notify.mobile_app_pixel4a
+            data:
+              title: "Put the blue trash outside!"
+              message: >-
+                It's time to put the blue trash outside.
+              data:
+                color: "blue"
+                notification_icon: "mdi:trash-can"
+          - service: persistent_notification.create
+            data:
+              title: "Put the blue trash outside!"
+              message: >-
+                It's time to put the blue trash outside.
+      - conditions:
+          - condition: trigger
+            id: Rest
+        sequence:
+          - service: notify.mobile_app_pixel4a
+            data:
+              title: "Put the rest trash outside!"
+              message: >-
+                It's time to put the rest trash outside.
+              data:
+                color: "black"
+                notification_icon: "mdi:trash-can"
+          - service: persistent_notification.create
+            data:
+              title: "Put the rest trash outside!"
+              message: >-
+                It's time to put the rest trash outside.
