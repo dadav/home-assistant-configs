@@ -1,0 +1,14 @@
+---
+# Input number: Trash Offset
+#
+# This is an automation control/setting used in the
+# trash reminder automation. It contains the hours
+# I want to notified ahead before the trash guys come.
+#
+name: "Trash Offset"
+icon: "mdi:trash-can"
+unit_of_measurement: "Hours"
+min: 0
+max: 24
+step: 1
+mode: slider
