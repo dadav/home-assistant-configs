@@ -13,22 +13,22 @@ trigger:
   - platform: calendar
     event: start
     entity_id: calendar.trash_bio
-    offset: -06:00:00
+    offset: "-06:00:00"
     id: Bio
   - platform: calendar
     event: start
     entity_id: calendar.trash_yellow
-    offset: -06:00:00
+    offset: "-06:00:00"
     id: Yellow
   - platform: calendar
     event: start
     entity_id: calendar.trash_rest
-    offset: -06:00:00
+    offset: "-06:00:00"
     id: Rest
   - platform: calendar
     event: start
     entity_id: calendar.trash_blue
-    offset: -06:00:00
+    offset: "-06:00:00"
     id: Blue
 
 action:
