@@ -2,7 +2,7 @@
 # Sensor: Bath1 humidity derivative
 #
 # This sensor measures the derivative of the humidity
-# over the last minute. If a certain threshold is reached
+# over the last two minutes. If a certain threshold is reached
 # we know that someone is taking a shower.
 #
 platform: derivative
@@ -10,4 +10,4 @@ source: sensor.bath1_temp_humidity
 name: Bath1 Humidity Derivative
 round: 1
 unit_time: min
-time_window: "00:05:00"
+time_window: "00:01:00"
