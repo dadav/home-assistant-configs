@@ -24,7 +24,9 @@ condition: "{{ is_state('binary_sensor.outside_warmer_than_inside', 'off') }}"
 
 action:
   - variables:
-      action_cooldown: "{{ 'CLOSE_COOLDOWN_' ~ context.id }}"
+      action_cooldown15: "{{ 'CLOSE_COOLDOWN15_' ~ context.id }}"
+      action_cooldown60: "{{ 'CLOSE_COOLDOWN60_' ~ context.id }}"
+      action_cooldown300: "{{ 'CLOSE_COOLDOWN300_' ~ context.id }}"
   - service: notify.mobile_app_pixel4a
     data:
       title: "It's cold outside...maybe close all windows?"
@@ -36,13 +38,37 @@ action:
         color: "yellow"
         notification_icon: "mdi:window-open"
         actions:
-          - action: "{{ action_cooldown }}"
+          - action: "{{ action_cooldown15 }}"
             title: Ok, give me 15 mins
+          - action: "{{ action_cooldown60 }}"
+            title: Ok, give me 1 hour
+          - action: "{{ action_cooldown300 }}"
+            title: Ok, give me 3 hours
   - wait_for_trigger:
       - platform: event
         event_type: mobile_app_notification_action
         event_data:
-          action: "{{ action_cooldown }}"
-    timeout: "00:01:00"
+          action: "{{ action_cooldown15 }}"
+        id: 'Option One'
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_cooldown60 }}"
+        id: 'Option Two'
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_cooldown300 }}"
+        id: 'Option Three'
+    timeout: "01:00:00"
     continue_on_timeout: false
-  - delay: "00:15"
+  - choose:
+      - conditions: "{{ wait.trigger.id == 'Option One' }}"
+        sequence:
+          - delay: "00:15"
+      - conditions: "{{ wait.trigger.id == 'Option Two' }}"
+        sequence:
+          - delay: "01:00"
+      - conditions: "{{ wait.trigger.id == 'Option Three' }}"
+        sequence:
+          - delay: "03:00"
