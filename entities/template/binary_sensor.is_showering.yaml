@@ -8,5 +8,5 @@ binary_sensor:
     icon: "mdi:shower-head"
     state: >-
       {{
-        states('sensor.bath1_humidity_derivative')|int(0) > 1
+        states('sensor.bath1_humidity_derivative')|int(0) > 4
       }}
