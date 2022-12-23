@@ -60,7 +60,7 @@ condition:
 action:
   - choose:
       - conditions:
-          - alias: "Someone is in the office, need light but its off"
+          - alias: "Need light, I'm in the office, but its off"
             condition: and
             conditions:
               - condition: trigger
@@ -78,7 +78,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Sun should be enough, turn off the light"
+          - alias: "Dont need light anymore, turn off the light"
             condition: and
             conditions:
               - condition: trigger
@@ -143,7 +143,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "I want to leave the room"
+          - alias: "Device turned off, I want to leave the room, so turn on the lights"
             condition: and
             conditions:
               - condition: trigger
@@ -160,7 +160,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "I left the room"
+          - alias: "Door closed, no device online, I therefore left the room"
             condition: and
             conditions:
               - condition: trigger
