@@ -60,7 +60,7 @@ condition:
 action:
   - choose:
       - conditions:
-          - alias: "Need light, I'm in the office, but its off"
+          - alias: "Night light, cuz sun is gone now, I'm in the office, but light is off"
             condition: and
             conditions:
               - condition: trigger
@@ -78,7 +78,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Dont need light anymore, turn off the light"
+          - alias: "Dont need light anymore, sun is enough, turn off the light"
             condition: and
             conditions:
               - condition: trigger
@@ -109,7 +109,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Sat down, turn light off"
+          - alias: "Sat down, turn light off when device is on"
             condition: and
             conditions:
               - condition: trigger
@@ -120,6 +120,10 @@ action:
               - condition: state
                 entity_id: light.office1_light
                 state: "on"
+              - condition: state
+                entity_id: *office_devices
+                match: any
+                state: "home"
         sequence:
           - alias: "Turn off the lights"
             service: light.turn_off
@@ -132,9 +136,6 @@ action:
               - condition: trigger
                 id: Door opened
               - condition: state
-                entity_id: *office_devices
-                state: "not_home"
-              - condition: state
                 entity_id: binary_sensor.need_light
                 state: "on"
         sequence:
@@ -143,7 +144,8 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Device turned off, I want to leave the room, so turn on the lights"
+          - alias: >-
+              Device turned off, I want to leave the room, so turn on the lights
             condition: and
             conditions:
               - condition: trigger
@@ -165,6 +167,9 @@ action:
             conditions:
               - condition: trigger
                 id: Door closed
+              - condition: state
+                entity_id: light.office1_light
+                state: "on"
               - condition: state
                 entity_id: *office_devices
                 state: "not_home"

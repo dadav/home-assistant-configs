@@ -44,7 +44,7 @@ action:
             id: Double Click
         sequence:
           - alias: "Toggle the lights"
-            service: light.toggle
+            service: light.turn_on
             target:
               entity_id: light.office2_light
             data:
@@ -54,7 +54,7 @@ action:
             id: Triple Click
         sequence:
           - alias: "Toggle the lights"
-            service: light.toggle
+            service: light.turn_on
             target:
               entity_id: light.office2_light
             data:
