@@ -162,7 +162,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Door closed and devices went offline within 5 mins ago"
+          - alias: "Door closed and devices went offline 2 mins ago"
             condition: and
             conditions:
               - condition: trigger
@@ -177,7 +177,7 @@ action:
                 value_template: >-
                   {% set now_ts = as_timestamp(now()) %}
                   {% for dev in office_devices %}
-                    {% if (now_ts - as_timestamp(state_attr(dev, "last_time_reachable"))) < 300 %}
+                    {% if (now_ts - as_timestamp(state_attr(dev, "last_time_reachable"))) < 120 %}
                       {{ true }}
                     {% endif %}
                   {% endfor %}
@@ -212,3 +212,21 @@ action:
                     service: light.turn_off
                     target:
                       entity_id: light.office1_light
+      - conditions:
+          - alias: "Door closed and devices are still online"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Door closed
+              - condition: state
+                entity_id: light.office1_light
+                state: "on"
+              - condition: state
+                entity_id: *office_devices
+                match: any
+                state: "home"
+        sequence:
+          - alias: "Turn off the lights"
+            service: light.turn_off
+            target:
+              entity_id: light.office1_light
