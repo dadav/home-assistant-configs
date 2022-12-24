@@ -60,7 +60,7 @@ condition:
 action:
   - choose:
       - conditions:
-          - alias: "Night light, cuz sun is gone now, I'm in the office, but light is off"
+          - alias: "Sun is gone, need light"
             condition: and
             conditions:
               - condition: trigger
@@ -78,7 +78,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Dont need light anymore, sun is enough, turn off the light"
+          - alias: "Sun came, dont need light"
             condition: and
             conditions:
               - condition: trigger
@@ -109,7 +109,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Sat down, turn light off when device is on"
+          - alias: "Chair movement detected, turn light off when device is on"
             condition: and
             conditions:
               - condition: trigger
@@ -130,7 +130,7 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Door opened and need light"
+          - alias: "Door opened"
             condition: and
             conditions:
               - condition: trigger
@@ -162,7 +162,32 @@ action:
             target:
               entity_id: light.office1_light
       - conditions:
-          - alias: "Door closed, no device online, I therefore left the room"
+          - alias: "Door closed and devices went offline within 5 mins ago"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Door closed
+              - condition: state
+                entity_id: light.office1_light
+                state: "on"
+              - condition: state
+                entity_id: *office_devices
+                state: "not_home"
+              - condition: template
+                value_template: >-
+                  {% set now_ts = as_timestamp(now()) %}
+                  {% for dev in office_devices %}
+                    {% if (now_ts - as_timestamp(state_attr(dev, "last_time_reachable"))) < 300 %}
+                      {{ true }}
+                    {% endif %}
+                  {% endfor %}
+        sequence:
+          - alias: "Turn off the lights"
+            service: light.turn_off
+            target:
+              entity_id: light.office1_light
+      - conditions:
+          - alias: "Door closed and devices are offline"
             condition: and
             conditions:
               - condition: trigger
@@ -174,7 +199,16 @@ action:
                 entity_id: *office_devices
                 state: "not_home"
         sequence:
-          - alias: "Turn off the lights"
-            service: light.turn_off
-            target:
-              entity_id: light.office1_light
+          - alias: "Wait 2 mins"
+            delay: 120
+          - alias: "Check if devices are still offline"
+            choose:
+              - conditions:
+                  - condition: state
+                    entity_id: *office_devices
+                    state: "not_home"
+                sequence:
+                  - alias: "Turn off the lights"
+                    service: light.turn_off
+                    target:
+                      entity_id: light.office1_light
