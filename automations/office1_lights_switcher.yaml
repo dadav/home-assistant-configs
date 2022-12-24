@@ -44,13 +44,8 @@ trigger:
     to: "home"
     id: Device turned on
   - platform: state
-    entity_id: *office_devices
-    from: "home"
-    to: "not_home"
-    id: Device turned off
-  - platform: state
     entity_id: sensor.office1_chair_action
-    id: Sat down
+    id: Chair movement
 
 condition:
   - condition: state
@@ -113,7 +108,7 @@ action:
             condition: and
             conditions:
               - condition: trigger
-                id: Sat down
+                id: Chair movement
               - condition: state
                 entity_id: input_boolean.office1_when_sitting_lights_off
                 state: "on"
@@ -138,24 +133,6 @@ action:
               - condition: state
                 entity_id: binary_sensor.need_light
                 state: "on"
-        sequence:
-          - alias: "Turn on the lights"
-            service: light.turn_on
-            target:
-              entity_id: light.office1_light
-      - conditions:
-          - alias: >-
-              Device turned off, I want to leave the room, so turn on the lights
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Device turned off
-              - condition: state
-                entity_id: binary_sensor.need_light
-                state: "on"
-              - condition: state
-                entity_id: light.office1_light
-                state: "off"
         sequence:
           - alias: "Turn on the lights"
             service: light.turn_on
