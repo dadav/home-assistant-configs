@@ -4,6 +4,7 @@ device_tracker:
     track_new_devices: false
     track_battery: true
   - platform: ping
+    interval_seconds: 10
     hosts:
       daniel_phone: 192.168.178.29
       daniel_tower: 192.168.178.39
