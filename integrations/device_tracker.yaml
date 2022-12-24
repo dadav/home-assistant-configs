@@ -3,14 +3,3 @@ device_tracker:
   - platform: bluetooth_le_tracker
     track_new_devices: false
     track_battery: true
-  # - platform: ping
-  #   interval_seconds: 10
-  #   hosts:
-  #     daniel_phone: 192.168.178.29
-  #     daniel_tower: 192.168.178.39
-  #     daniel_laptop_private: 192.168.178.20
-  #     daniel_laptop_work: 192.168.178.30
-  #     corinna_tower: 192.168.178.24
-  #     corinna_laptop_work: 192.168.178.25
-  #     corinna_laptop_private: 192.168.178.26
-  #     firetv: 192.168.178.34
