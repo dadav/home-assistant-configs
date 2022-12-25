@@ -16,34 +16,40 @@ variables:
     - device_tracker.daniel_laptop_work
 
 trigger:
-  - platform: state
+  - alias: Door opened
+    platform: state
     entity_id:
       - binary_sensor.office1_door_contact
     from: "off"
     to: "on"
     id: Door opened
-  - platform: state
+  - alias: Door closed
+    platform: state
     entity_id:
       - binary_sensor.office1_door_contact
     from: "on"
     to: "off"
     id: Door closed
-  - platform: state
+  - alias: Sun is gone, need light
+    platform: state
     entity_id:
       - binary_sensor.need_light
     to: "on"
     id: Need light
-  - platform: state
+  - alias: Sun is up, don't need light
+    platform: state
     entity_id:
       - binary_sensor.need_light
     to: "off"
     id: Dont need light
-  - platform: state
+  - alias: Device turned on
+    platform: state
     entity_id: *office_devices
     from: "not_home"
     to: "home"
     id: Device turned on
-  - platform: state
+  - alias: Chair moved
+    platform: state
     entity_id: sensor.office1_chair_action
     id: Chair movement
 
