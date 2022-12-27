@@ -34,12 +34,14 @@ trigger:
     platform: state
     entity_id:
       - binary_sensor.need_light
+    from: "off"
     to: "on"
     id: Need light
   - alias: Sun is up, don't need light
     platform: state
     entity_id:
       - binary_sensor.need_light
+    from: "on"
     to: "off"
     id: Dont need light
   - alias: Device turned on
@@ -60,38 +62,6 @@ condition:
 
 action:
   - choose:
-      - conditions:
-          - alias: "Sun is gone, need light"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Need light
-              - condition: state
-                entity_id: light.office1_light
-                state: "off"
-              - condition: state
-                entity_id: *office_devices
-                match: any
-                state: "home"
-        sequence:
-          - alias: "Turn on the lights"
-            service: light.turn_on
-            target:
-              entity_id: light.office1_light
-      - conditions:
-          - alias: "Sun came, dont need light"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Dont need light
-              - condition: state
-                entity_id: light.office1_light
-                state: "on"
-        sequence:
-          - alias: "Turn off the lights"
-            service: light.turn_off
-            target:
-              entity_id: light.office1_light
       - conditions:
           - alias: "Device turned on, turn light off"
             condition: and
@@ -159,11 +129,15 @@ action:
               - condition: template
                 value_template: >-
                   {% set now_ts = as_timestamp(now()) %}
+                  {% set found_device = false %}
                   {% for dev in office_devices %}
                     {% if (now_ts - as_timestamp(state_attr(dev, "last_time_reachable"))) < 120 %}
-                      {{ true }}
+                      {% set found_device = true %}
                     {% endif %}
                   {% endfor %}
+                  {% if found_device %}
+                    {{ true }}
+                  {% endif %}
         sequence:
           - alias: "Turn off the lights"
             service: light.turn_off
