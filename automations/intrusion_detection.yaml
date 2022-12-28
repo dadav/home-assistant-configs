@@ -41,3 +41,24 @@ action:
         channel: alarm_stream
         notification_icon: "mdi:alarm-light"
         color: red
+        confirmation: true
+  - wait_for_trigger:
+      - platform: event
+        event_type: mobile_app_notification_received
+        event_data:
+          title: "Possible intrusion detected!"
+    timeout: "00:00:15"
+    continue_on_timeout: true
+  - choose:
+      - alias: "When notification wasnt received"
+        conditions: "{{ not wait.completed }}"
+        sequence:
+          - alias: "Call phone via sip"
+            service: hassio.addon_stdin
+            data:
+              addon: ad61c150_dss_voip
+              input:
+                call_sip_uri: !secret emergency_sip_uri
+                message_tts: >-
+                  Possible intrusion detected. The sensor {{states[trigger.event.data.entity_id].attributes.friendly_name}}
+                  was triggered. Check out why.
