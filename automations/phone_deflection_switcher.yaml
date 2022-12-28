@@ -1,0 +1,76 @@
+---
+# Phone deflection switcher automation
+#
+# This automation switches the deflection of my phone
+# when I turned the away mode on.
+#
+id: "ae1ed701-d3b1-49d3-b12b-1c63db33ca90"
+alias: "Phone deflection switcher"
+description: >-
+  When I turned on the away mode, I want all calls
+  to be deflected to my mobile phone.
+
+trigger:
+  - alias: Away mode turned on
+    platform: state
+    entity_id:
+      - input_boolean.away_mode
+    from: "off"
+    to: "on"
+    id: Away mode turned on
+  - alias: Away mode turned off
+    platform: state
+    entity_id:
+      - input_boolean.away_mode
+    from: "on"
+    to: "off"
+    id: Away mode turned off
+  - alias: People are home
+    platform: state
+    entity_id:
+      - binary_sensor.people_home
+    from: "off"
+    to: "on"
+    id: People are home
+
+action:
+  - choose:
+      - conditions:
+          - alias: "Away mode turned on"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Away mode turned on
+              - condition: state
+                entity_id: switch.fritz_box_6660_cable_call_deflection_1
+                state: "off"
+        sequence:
+          - alias: "Turn on the deflection"
+            service: switch.turn_on
+            target:
+              entity_id: switch.fritz_box_6660_cable_call_deflection_1
+      - conditions:
+          - alias: "Away mode turned off"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Away mode turned off
+              - &is_on
+                condition: state
+                entity_id: switch.fritz_box_6660_cable_call_deflection_1
+                state: "on"
+        sequence:
+          - &turn_off
+            alias: "Turn off the deflection"
+            service: switch.turn_off
+            target:
+              entity_id: switch.fritz_box_6660_cable_call_deflection_1
+      - conditions:
+          - alias: "People are home"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: People are home
+              - *is_on
+        sequence:
+          - *turn_off
