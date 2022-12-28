@@ -6,7 +6,7 @@
 # want to turn on at the same time.
 #
 platform: group
-name: bedroom_lights
+name: Bedroom lights
 entities:
   - light.bedroom_light1
   - light.bedroom_light2
