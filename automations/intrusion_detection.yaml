@@ -45,8 +45,6 @@ action:
   - wait_for_trigger:
       - platform: event
         event_type: mobile_app_notification_received
-        event_data:
-          title: "Possible intrusion detected!"
     timeout: "00:00:15"
     continue_on_timeout: true
   - choose:
