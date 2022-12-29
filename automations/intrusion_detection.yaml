@@ -22,7 +22,7 @@ condition:
   - condition: template
     value_template: >-
       {{
-        trigger.event.data.entity_id is match('^binary_sensor\.[a-z_]+_(?:door|window)_contact')
+        trigger.event.data.entity_id is match('^binary_sensor\.[a-z0-9_]+_(?:door|window)_contact')
         and trigger.event.data.old_state == 'off'
         and trigger.event.data.new_state == 'on'
         and (is_state('binary_sensor.people_home', 'off')
