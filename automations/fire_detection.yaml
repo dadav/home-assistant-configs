@@ -23,7 +23,7 @@ condition:
     value_template: >-
       {{
         trigger.event.data.entity_id is match('^sensor\.[a-z0-9_]+_(?:door|window|temp)_temperature')
-        and trigger.event.data.new_state | int(0) >= maybe_fire_temperature
+        and trigger.event.data.new_state.state | int(0) >= maybe_fire_temperature
       }}
 
 action:
