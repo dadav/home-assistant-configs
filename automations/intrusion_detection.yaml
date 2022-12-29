@@ -6,6 +6,8 @@
 id: "cc881516-1e51-4b9c-9542-c4b261ac98c9"
 mode: queued
 max_exceeded: silent
+trace:
+  stored_traces: 25
 alias: "Intrusion detection"
 description: >-
   Detects unusual behaviour while I'm not at home.
