@@ -23,8 +23,8 @@ condition:
     value_template: >-
       {{
         trigger.event.data.entity_id is match('^binary_sensor\.[a-z0-9_]+_(?:door|window)_contact')
-        and trigger.event.data.old_state == 'off'
-        and trigger.event.data.new_state == 'on'
+        and trigger.event.data.old_state.state == 'off'
+        and trigger.event.data.new_state.state == 'on'
         and (is_state('binary_sensor.people_home', 'off')
             or is_state('input_boolean.away_mode', 'on'))
       }}
