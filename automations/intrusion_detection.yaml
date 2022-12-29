@@ -34,7 +34,7 @@ condition:
 action:
   - service: notify.mobile_app_pixel4a
     data:
-      title: "Possible intrusion detected!"
+      title: &notify_title "Possible intrusion detected!"
       message: >-
         This entity triggered the automation: {{trigger.event.data.entity_id}}
       data:
@@ -47,11 +47,13 @@ action:
   - wait_for_trigger:
       - platform: event
         event_type: mobile_app_notification_received
+        event_data:
+          title: *notify_title
     timeout: "00:00:15"
     continue_on_timeout: true
   - choose:
       - alias: "When notification wasnt received"
-        conditions: "{{ not wait.completed }}"
+        conditions: "{{ not wait.trigger }}"
         sequence:
           - alias: "Call phone via sip"
             service: hassio.addon_stdin
