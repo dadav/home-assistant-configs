@@ -21,8 +21,8 @@ condition:
   - condition: template
     value_template: >-
       {{
-        trigger.event.data.new_state == 'unavailable'
-        or trigger.event.data.old_state == 'unavailable'
+        trigger.event.data.new_state.state == 'unavailable'
+        or trigger.event.data.old_state.state == 'unavailable'
       }}
 
 action:
