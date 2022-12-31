@@ -72,7 +72,7 @@ action:
             service: light.turn_on
             entity_id: light.office1_light
             data:
-              brightness_step_pct: -10
+              brightness_step_pct: -20
               transition: 1
       - conditions:
           - alias: "Right button clicked"
@@ -83,5 +83,5 @@ action:
             service: light.turn_on
             entity_id: light.office1_light
             data:
-              brightness_step_pct: 10
+              brightness_step_pct: 20
               transition: 1
