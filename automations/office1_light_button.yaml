@@ -110,7 +110,7 @@ action:
                 - service: light.turn_on
                   entity_id: light.office1_light
                   data:
-                    brightness_step_pct: 10
+                    brightness_step_pct: -10
                     transition: 1
                 - delay:
                     seconds: 1
@@ -130,7 +130,7 @@ action:
                 - service: light.turn_on
                   entity_id: light.office1_light
                   data:
-                    brightness_step_pct: -10
+                    brightness_step_pct: 10
                     transition: 1
                 - delay:
                     seconds: 1
