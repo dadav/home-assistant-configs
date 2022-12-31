@@ -5,6 +5,7 @@
 #
 id: "9dd7eb2d-79ee-43f9-955d-d5e70d2ea3df"
 alias: "Office 1 light button"
+mode: restart
 description: >-
   This automation handels the actions for my ikea button.
 
