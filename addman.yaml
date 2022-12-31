@@ -22,6 +22,7 @@ addons:
       log_level: info
       watch_config_changes: true
   core_git_pull:
+    <<: *addon_defaults
     auto_update: false
     options:
       repository: https://github.com/dadav/home-assistant-configs.git
