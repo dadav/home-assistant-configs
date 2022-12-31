@@ -112,7 +112,9 @@ action:
                   data:
                     brightness_step_pct: 10
                     transition: 1
-                - delay: 1
+                - delay:
+                    seconds: 1
+                    milliseconds: 100
       - conditions:
           - alias: "Right button hold"
             condition: trigger
@@ -130,4 +132,6 @@ action:
                   data:
                     brightness_step_pct: -10
                     transition: 1
-                - delay: 1
+                - delay:
+                    seconds: 1
+                    milliseconds: 100
