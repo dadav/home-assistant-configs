@@ -5,7 +5,6 @@
 #
 id: "9dd7eb2d-79ee-43f9-955d-d5e70d2ea3df"
 alias: "Office 1 light button"
-mode: restart
 description: >-
   This automation handels the actions for my ikea button.
 
@@ -30,16 +29,6 @@ trigger:
     entity_id: sensor.office1_button1_action
     to: "arrow_right_click"
     id: Button1 right
-  - alias: Button1 left hold
-    platform: state
-    entity_id: sensor.office1_button1_action
-    to: "arrow_left_hold"
-    id: Button1 left hold
-  - alias: Button1 right hold
-    platform: state
-    entity_id: sensor.office1_button1_action
-    to: "arrow_right_hold"
-    id: Button1 right hold
 
 action:
   - choose:
@@ -96,43 +85,3 @@ action:
             data:
               brightness_step_pct: 10
               transition: 1
-      - conditions:
-          - alias: "Left button hold"
-            condition: trigger
-            id: Button1 left hold
-        sequence:
-          - alias: "Decrease the brightness until button is released"
-            repeat:
-              until:
-                - condition: state
-                  entity_id: sensor.office1_button1_action
-                  state: arrow_left_release
-              sequence:
-                - service: light.turn_on
-                  entity_id: light.office1_light
-                  data:
-                    brightness_step_pct: -10
-                    transition: 1
-                - delay:
-                    seconds: 1
-                    milliseconds: 100
-      - conditions:
-          - alias: "Right button hold"
-            condition: trigger
-            id: Button1 right hold
-        sequence:
-          - alias: "Increase the brightness until button is released"
-            repeat:
-              until:
-                - condition: state
-                  entity_id: sensor.office1_button1_action
-                  state: arrow_right_release
-              sequence:
-                - service: light.turn_on
-                  entity_id: light.office1_light
-                  data:
-                    brightness_step_pct: 10
-                    transition: 1
-                - delay:
-                    seconds: 1
-                    milliseconds: 100
