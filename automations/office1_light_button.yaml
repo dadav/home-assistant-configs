@@ -1,0 +1,82 @@
+---
+# Office 1 light button automation
+#
+# This automation handels the actions for my ikea button.
+#
+id: "9dd7eb2d-79ee-43f9-955d-d5e70d2ea3df"
+alias: "Office 1 light button"
+description: >-
+  This automation handels the actions for my ikea button.
+
+trigger:
+  - alias: Button1 on
+    platform: state
+    entity_id: sensor.office1_button1_action
+    to: "on"
+    id: Button1 on
+  - alias: Button1 off
+    platform: state
+    entity_id: sensor.office1_button1_action
+    to: "off"
+    id: Button1 off
+  - alias: Button1 left
+    platform: state
+    entity_id: sensor.office1_button1_action
+    to: "arrow_left_click"
+    id: Button1 left
+  - alias: Button1 right
+    platform: state
+    entity_id: sensor.office1_button1_action
+    to: "arrow_right_click"
+    id: Button1 right
+
+action:
+  - choose:
+      - conditions:
+          - alias: "On button clicked"
+            condition: trigger
+            id: Button1 on
+          - alias: "But only if the light is off"
+            condition: state
+            entity_id: light.office1_light
+            state: "off"
+        sequence:
+          - alias: "Turn on the office1 light"
+            service: light.turn_on
+            entity_id: light.office1_light
+      - conditions:
+          - alias: "Off button clicked"
+            condition: trigger
+            id: Button1 off
+          - alias: "But only if the light is on"
+            condition: state
+            entity_id: light.office1_light
+            state: "on"
+        sequence:
+          - alias: "Turn off the office1 light"
+            service: light.turn_off
+            entity_id: light.office1_light
+      - conditions:
+          - alias: "Left button clicked"
+            condition: trigger
+            id: Button1 left
+          - alias: "But only if the light is on"
+            condition: state
+            entity_id: light.office1_light
+            state: "on"
+        sequence:
+          - alias: "Decrease the brightness"
+            service: light.turn_on
+            entity_id: light.office1_light
+            data:
+              brightness_step_pct: -10
+      - conditions:
+          - alias: "Right button clicked"
+            condition: trigger
+            id: Button1 right
+        sequence:
+          - alias: "Increase the brightness"
+            service: light.turn_on
+            entity_id: light.office1_light
+            data:
+              brightness_step_pct: 10
