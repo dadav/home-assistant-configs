@@ -29,6 +29,16 @@ trigger:
     entity_id: sensor.office1_button1_action
     to: "arrow_right_click"
     id: Button1 right
+  - alias: Button1 left hold
+    platform: state
+    entity_id: sensor.office1_button1_action
+    to: "arrow_left_hold"
+    id: Button1 left hold
+  - alias: Button1 right hold
+    platform: state
+    entity_id: sensor.office1_button1_action
+    to: "arrow_right_hold"
+    id: Button1 right hold
 
 action:
   - choose:
@@ -44,6 +54,9 @@ action:
           - alias: "Turn on the office1 light"
             service: light.turn_on
             entity_id: light.office1_light
+            data:
+              brightness_pct: 100
+              transition: 1
       - conditions:
           - alias: "Off button clicked"
             condition: trigger
@@ -70,6 +83,7 @@ action:
             entity_id: light.office1_light
             data:
               brightness_step_pct: -10
+              transition: 1
       - conditions:
           - alias: "Right button clicked"
             condition: trigger
@@ -80,3 +94,40 @@ action:
             entity_id: light.office1_light
             data:
               brightness_step_pct: 10
+              transition: 1
+      - conditions:
+          - alias: "Left button hold"
+            condition: trigger
+            id: Button1 left hold
+        sequence:
+          - alias: "Decrease the brightness until button is released"
+            repeat:
+              until:
+                - condition: state
+                  entity_id: sensor.office1_button1_action
+                  state: arrow_left_release
+              sequence:
+                - service: light.turn_on
+                  entity_id: light.office1_light
+                  data:
+                    brightness_step_pct: 10
+                    transition: 1
+                - delay: 1
+      - conditions:
+          - alias: "Right button hold"
+            condition: trigger
+            id: Button1 right hold
+        sequence:
+          - alias: "Increase the brightness until button is released"
+            repeat:
+              until:
+                - condition: state
+                  entity_id: sensor.office1_button1_action
+                  state: arrow_right_release
+              sequence:
+                - service: light.turn_on
+                  entity_id: light.office1_light
+                  data:
+                    brightness_step_pct: -10
+                    transition: 1
+                - delay: 1
