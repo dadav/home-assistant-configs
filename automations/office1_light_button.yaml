@@ -59,6 +59,8 @@ action:
           - alias: "Turn off the office1 light"
             service: light.turn_off
             entity_id: light.office1_light
+            data:
+              transition: 1
       - conditions:
           - alias: "Left button clicked"
             condition: trigger
