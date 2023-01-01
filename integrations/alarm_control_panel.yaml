@@ -1,0 +1,6 @@
+---
+# This handles the loading of my alarm control panels.
+#
+# https://www.home-assistant.io/integrations/manual/
+#
+alarm_control_panel: !include_dir_list ../entities/alarm_control_panel
