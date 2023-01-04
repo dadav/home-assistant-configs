@@ -15,8 +15,7 @@ description: |-
   this.
 
 trigger:
-  - &closed_condition
-    platform: state
+  - platform: state
     entity_id: binary_sensor.everything_closed
     to: "off"
     for: "00:{{ '%0.2d' | format(states('input_number.max_open_window_or_door_time')|int) }}:00"
@@ -31,9 +30,9 @@ action:
   - alias: "Keep sending notifications until its closed again"
     repeat:
       until:
-        - <<: *closed_condition
-          to: "on"
-          for:
+        - condition: state
+          entity_id: binary_sensor.everything_closed
+          state: "on"
       sequence:
         - service: notify.mobile_app_pixel4a
           data:
