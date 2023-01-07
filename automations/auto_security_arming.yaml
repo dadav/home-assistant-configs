@@ -114,6 +114,6 @@ action:
               - condition: trigger
                 id: People are home
               - &is_not_disarmed
-                condition: "{{ !is_state('alarm_control_panel.security_alarm', 'disarmed') }}"
+                condition: "{{ not is_state('alarm_control_panel.security_alarm', 'disarmed') }}"
         sequence:
           - *disarm
