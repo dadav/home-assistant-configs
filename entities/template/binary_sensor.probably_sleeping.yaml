@@ -1,0 +1,23 @@
+---
+#
+# Small binary sensor to detect if I am sleeping
+#
+binary_sensor:
+  - name: Probably sleeping
+    unique_id: "b4764aef-ecd7-4d7a-9694-3d11f4a70e72"
+    icon: "mdi:sleep"
+    state: >-
+      {%
+        set wakeuptime = states('sensor.wakeup_time')
+          if states('sensor.wakeup_time') < states('sensor.wakeup_time_workday')
+          else states('sensor.wakeup_time_workday')
+      %}
+      {% set sleeptime = states('input_datetime.sleep_time') %}
+      {{
+        is_state('input_boolean.away_mode', 'off')
+        and (
+          (sleeptime < states('sensor.time') < wakeuptime)
+            if sleeptime < wakeuptime else
+          (wakeuptime < states('sensor.time') < sleeptime)
+        )
+      }}

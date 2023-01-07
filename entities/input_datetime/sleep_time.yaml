@@ -1,0 +1,9 @@
+---
+# Input datetime: The time I usually go to sleep
+#
+# This is used by the security alarm automation
+#
+name: "Sleep time"
+icon: "mdi:bed-clock"
+has_date: false
+has_time: true
