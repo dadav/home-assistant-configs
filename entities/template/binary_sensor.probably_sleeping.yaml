@@ -15,6 +15,7 @@ binary_sensor:
       {% set sleeptime = states('input_datetime.sleep_time') %}
       {{
         is_state('input_boolean.away_mode', 'off')
+        and is_state('binary_sensor.people_home', 'off')
         and ((sleeptime < states('sensor.time') < wakeuptime)
             if sleeptime < wakeuptime else
           (wakeuptime < states('sensor.time') < sleeptime))

@@ -45,7 +45,15 @@ action:
     continue_on_timeout: true
   - choose:
       - alias: "When notification wasnt received"
-        conditions: "{{ not wait.trigger }}"
+        conditions:
+          - alias: "Phone is off and probably sleeping"
+            condition: and
+            conditions:
+              - condition: template
+                value_template: "{{ not wait.trigger }}"
+              - condition: state
+                entity_id: binary_sensor.probably_sleeping
+                state: "on"
         sequence:
           - alias: "Call phone via sip"
             service: hassio.addon_stdin
