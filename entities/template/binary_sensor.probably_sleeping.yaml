@@ -8,16 +8,14 @@ binary_sensor:
     icon: "mdi:sleep"
     state: >-
       {%
-        set wakeuptime = states('sensor.wakeup_time')
-          if states('sensor.wakeup_time') < states('sensor.wakeup_time_workday')
-          else states('sensor.wakeup_time_workday')
+        set wakeuptime = states('input_datetime.wakeup_time')
+          if states('input_datetime.wakeup_time') < states('input_datetime.wakeup_time_workday')
+            else states('input_datetime.wakeup_time_workday')
       %}
       {% set sleeptime = states('input_datetime.sleep_time') %}
       {{
         is_state('input_boolean.away_mode', 'off')
-        and (
-          (sleeptime < states('sensor.time') < wakeuptime)
+        and ((sleeptime < states('sensor.time') < wakeuptime)
             if sleeptime < wakeuptime else
-          (wakeuptime < states('sensor.time') < sleeptime)
-        )
+          (wakeuptime < states('sensor.time') < sleeptime))
       }}
