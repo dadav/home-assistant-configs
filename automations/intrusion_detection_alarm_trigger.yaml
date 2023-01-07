@@ -1,0 +1,53 @@
+---
+# Intrusion detection automation
+#
+# This automation detects suspicious activity and notifys me.
+#
+id: "cc881516-1e51-4b9c-9542-c4b261ac98c9"
+mode: queued
+max_exceeded: silent
+trace:
+  stored_traces: 25
+alias: "Intrusion detection alarm trigger"
+description: >-
+  Detects unusual behaviour while I'm not at home or when
+  I'm sleeping.
+
+  When this automation is triggered, a security alarm will
+  be triggered.
+
+  The following things are considered unusual:
+    - A window was opened
+    - A door was opened
+
+trigger:
+  - platform: event
+    event_type: state_changed
+
+condition:
+  - condition: template
+    value_template: >-
+      {{
+        trigger.event.data.entity_id is match('^binary_sensor\.[a-z0-9_]+_(?:door|window)_contact')
+        and trigger.event.data.old_state.state == 'off'
+        and trigger.event.data.new_state.state == 'on'
+      }}
+  - or:
+      - condition: state
+        entity_id: alarm_control_panel.security_alarm
+        state: armed_away
+      - condition: state
+        entity_id: alarm_control_panel.security_alarm
+        state: armed_night
+
+action:
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.last_security_alarm_entity
+    data:
+      value: >-
+        {{state_attr(trigger.event.data.entity_id, 'friendly_name')}}
+
+  - service: alarm_control_panel.alarm_trigger
+    target:
+      entity_id: alarm_control_panel.security_alarm

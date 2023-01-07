@@ -1,0 +1,8 @@
+---
+# Input boolean: Auto security arming mode
+#
+# With this input boolean the system should arm the security system
+# automatically.
+#
+name: "Auto Security Arming Mode"
+icon: "mdi:security"

@@ -1,0 +1,119 @@
+---
+# Auto security arming automation
+#
+# This automation arms the security alarm on certain conditions.
+#
+id: "d84b108c-44e8-4df9-ba5d-2cb83f38dee9"
+alias: "Auto security arming mode"
+description: |-
+  When I turned on the auto security mode, I want the security
+  system to be turned on in these conditions:
+
+  - When I turned on the away mode
+  - When I'm sleeping (no devices online and it's a certain time)
+
+trigger:
+  - alias: Away mode turned on
+    platform: state
+    entity_id:
+      - input_boolean.away_mode
+    from: "off"
+    to: "on"
+    id: Away mode turned on
+  - alias: Away mode turned off
+    platform: state
+    entity_id:
+      - input_boolean.away_mode
+    from: "on"
+    to: "off"
+    id: Away mode turned off
+  - alias: Night time check
+    platform: time_pattern
+    minutes: "/15"
+    id: Night time check
+  - alias: People home
+    platform: state
+    entity_id:
+      - binary_sensor.people_home
+    from: "off"
+    to: "on"
+    id: People are home
+
+condition:
+  - condition: state
+    entity_id: input_boolean.auto_security_arming_mode
+    state: "on"
+
+action:
+  - choose:
+      - conditions:
+          - alias: "Away mode turned on"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Away mode turned on
+              - &has_disarmed_state
+                condition: state
+                entity_id: alarm_control_panel.security_alarm
+                state: "disarmed"
+        sequence:
+          - alias: "Turn on security alarm"
+            service: alarm_control_panel.alarm_arm_away
+            target:
+              entity_id: alarm_control_panel.security_alarm
+      - conditions:
+          - alias: "Away mode turned off"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Away mode turned off
+              - &has_armed_away_state
+                condition: state
+                entity_id: alarm_control_panel.security_alarm
+                state: "armed_away"
+        sequence:
+          - &disarm
+            alias: "Disarm security alarm"
+            service: alarm_control_panel.alarm_disarm
+            target:
+              entity_id: alarm_control_panel.security_alarm
+      - conditions:
+          - alias: "Night time"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Night time check
+              - condition: time
+                after: "00:00:00"
+                before: "06:00:00"
+              - *has_disarmed_state
+        sequence:
+          - alias: "Turn on security alarm"
+            service: alarm_control_panel.alarm_arm_night
+            target:
+              entity_id: alarm_control_panel.security_alarm
+      - conditions:
+          - alias: "Day time"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Night time check
+              - condition: time
+                after: "06:00:00"
+                before: "00:00:00"
+              - &has_armed_night_state
+                condition: state
+                entity_id: alarm_control_panel.security_alarm
+                state: "armed_night"
+        sequence:
+          - *disarm
+      - conditions:
+          - alias: "People are home"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: People are home
+              - &is_not_disarmed
+                condition: "{{ !is_state('alarm_control_panel.security_alarm', 'disarmed') }}"
+        sequence:
+          - *disarm

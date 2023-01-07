@@ -1,0 +1,72 @@
+---
+# Security alarm detection automation
+#
+# This automation gets triggered when a security alarm
+# was issued.
+#
+id: "68229927-07bf-4342-800b-20a291ce5ed4"
+trace:
+  stored_traces: 25
+alias: "Security alarm triggered"
+description: >-
+  This automation gets triggered, when a security issue
+  was detected.
+
+trigger:
+  - platform: state
+    entity_id: alarm_control_panel.security_alarm
+    to: "triggered"
+
+action:
+  - variables:
+      action_disarm: "{{ 'DISARM_' ~ context.id }}"
+  - service: notify.mobile_app_pixel4a
+    data:
+      title: &notify_title "Security alarm triggered"
+      message: &notify_message >-
+        The entity {{states('input_text.last_security_alarm_entity')}}
+        triggered the security alarm.
+      data:
+        ttl: 0
+        priority: high
+        channel: alarm_stream
+        notification_icon: "mdi:alarm-light"
+        color: red
+        confirmation: true
+        actions:
+          - action: "{{ action_disarm }}"
+            title: "Disarm"
+  - wait_for_trigger:
+      - platform: event
+        event_type: mobile_app_notification_received
+        event_data:
+          title: *notify_title
+    timeout: "00:00:15"
+    continue_on_timeout: true
+  - choose:
+      - alias: "When notification wasnt received"
+        conditions: "{{ not wait.trigger }}"
+        sequence:
+          - alias: "Call phone via sip"
+            service: hassio.addon_stdin
+            data:
+              addon: ad61c150_dss_voip
+              input:
+                call_sip_uri: !secret emergency_sip_uri
+                message_tts: *notify_message
+  - wait_for_trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_disarm }}"
+        id: Disarm
+    timeout: "00:01:00"
+    continue_on_timeout: false
+  - choose:
+      - alias: "When disarm button was pressed"
+        conditions: "{{ wait.trigger.id == 'Disarm' }}"
+        sequence:
+          - alias: "Disarm the security alarm"
+            service: alarm_control_panel.alarm_disarm
+            target:
+              entity_id: alarm_control_panel.security_alarm
