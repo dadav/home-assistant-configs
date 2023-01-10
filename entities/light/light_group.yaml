@@ -7,6 +7,7 @@ platform: group
 name: All lights
 entities:
   - light.office1_light
+  - light.office1_light2
   - light.office2_light
   - light.bedroom_light1
   - light.bedroom_light2
