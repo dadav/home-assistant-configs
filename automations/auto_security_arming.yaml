@@ -99,7 +99,7 @@ action:
             conditions:
               - condition: trigger
                 id: Night time check
-              - <<: *probably_sleeping
+              - *probably_sleeping
                 state: "off"
               - &has_armed_night_state
                 condition: state
