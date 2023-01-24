@@ -9,7 +9,6 @@ addon_defaults: &addon_defaults
   auto_restart: true
   watchdog: true
   auto_update: true
-  ingress_panel: false
   boot: auto
 
 addons:
