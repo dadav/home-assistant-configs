@@ -1,0 +1,9 @@
+---
+sensor.*_humidity:
+  templates:
+    icon_color: >
+      if (state < 30) return 'red';
+      if (state < 40) return 'yellow';
+      if (state < 60) return 'green';
+      if (state < 70) return 'cyan';
+      return 'blue';
