@@ -1,0 +1,9 @@
+---
+sensor.*_temperature:
+  templates:
+    icon_color: >
+      if (state < 7) return 'blue';
+      if (state < 15) return 'cyan';
+      if (state < 23) return 'green';
+      if (state < 27) return 'yellow';
+      return 'red';
