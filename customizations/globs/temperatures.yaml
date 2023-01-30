@@ -4,10 +4,11 @@ sensor.*_temperature:
     icon_color: >
       if (state == 'unavailable') return 'brown';
       if (state == 'unknown') return 'brown';
-      if (state < 7) return 'blue';
-      if (state < 15) return 'cyan';
-      if (state < 23) return 'green';
-      if (state < 27) return 'yellow';
+      var val = Number(value);
+      if (val < 7) return 'blue';
+      if (val < 15) return 'cyan';
+      if (val < 23) return 'green';
+      if (val < 27) return 'yellow';
       return 'red';
     hide_attributes:
       - icon_color
