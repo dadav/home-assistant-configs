@@ -1,0 +1,5 @@
+---
+# Tell me how many ads got blocked today by pihole.
+#
+source: sensor.pi_hole_domains_blocked
+cycle: daily

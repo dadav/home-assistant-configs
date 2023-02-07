@@ -1,0 +1,5 @@
+---
+# Tell me how many unique domains were seen today
+#
+source: sensor.pi_hole_dns_unique_domains
+cycle: daily
