@@ -9,6 +9,10 @@ recorder:
   purge_keep_days: 400
   # exclude some entities
   exclude:
+    domains:
+      - device_tracker
+    entity_globs:
+      - sensor.load_*m
     entities:
       - sensor.time
       - sensor.date
