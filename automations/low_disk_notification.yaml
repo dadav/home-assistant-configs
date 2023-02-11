@@ -1,0 +1,68 @@
+---
+# Low disc space notification automation
+#
+id: "e150671f-893e-426d-99c6-9f4e9eaf4d80"
+mode: single
+alias: "Low disc space detection"
+description: |-
+  This automation notifies me when the disc space is below a
+  certain threshold.
+
+variables:
+  low_disc_space_threshold: &low_disc_space_threshold "{{ states('input_number.low_disc_space_threshold') | int }}"
+
+trigger:
+  - platform: state
+    entity_id: sensor.disk_use_percent
+    above: *low_disc_space_threshold
+    for:
+      minutes: 5
+
+action:
+  - variables:
+      action_cooldown15: "{{ 'COOLDOWN15_' ~ context.id }}"
+      action_cooldown60: "{{ 'COOLDOWN60_' ~ context.id }}"
+      action_cooldown300: "{{ 'COOLDOWN300_' ~ context.id }}"
+  - service: notify.mobile_app_pixel4a
+    data:
+      title: "Low disc space detected!"
+      message: |-
+        There is almost no more available disc space for homeassistant.
+      data:
+        color: "yellow"
+        notification_icon: "mdi:disc-alert"
+        actions:
+          - action: "{{ action_cooldown15 }}"
+            title: "15 mins"
+          - action: "{{ action_cooldown60 }}"
+            title: "1 h"
+          - action: "{{ action_cooldown300 }}"
+            title: "3 h"
+  - wait_for_trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_cooldown15 }}"
+        id: Option One
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_cooldown60 }}"
+        id: Option Two
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_cooldown300 }}"
+        id: Option Three
+    timeout: "01:00:00"
+    continue_on_timeout: false
+  - choose:
+      - conditions: "{{ wait.trigger.id == 'Option One' }}"
+        sequence:
+          - delay: "00:15"
+      - conditions: "{{ wait.trigger.id == 'Option Two' }}"
+        sequence:
+          - delay: "01:00"
+      - conditions: "{{ wait.trigger.id == 'Option Two' }}"
+        sequence:
+          - delay: "03:00"

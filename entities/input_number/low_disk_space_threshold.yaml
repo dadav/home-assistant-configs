@@ -1,0 +1,13 @@
+---
+# Input number: Low disc space threshold
+#
+# This is an automation control/setting to indicate when
+# the remaining disc space should be considered too low.
+#
+name: "Low disc space threshold"
+icon: "mdi:disc-alert"
+unit_of_measurement: "%"
+min: 1
+max: 100
+step: 1
+mode: slider
