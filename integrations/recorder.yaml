@@ -11,10 +11,14 @@ recorder:
   exclude:
     domains:
       - device_tracker
+      - weather
     entity_globs:
       - sensor.load_*m
+      - sensor.dwd_*
+      - sensor.network_*
     entities:
       - sensor.time
       - sensor.date
       - sensor.date_time
       - sensor.last_boot
+      - sensor.disk_use_percent
