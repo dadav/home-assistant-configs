@@ -17,3 +17,4 @@ recorder:
       - sensor.time
       - sensor.date
       - sensor.date_time
+      - sensor.last_boot
