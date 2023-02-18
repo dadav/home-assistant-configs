@@ -12,3 +12,6 @@ entities:
   - light.bedroom_light1
   - light.bedroom_light2
   - light.bedroom_light3
+  - light.lunch_light1
+  - light.lunch_light2
+  - light.lunch_light3
