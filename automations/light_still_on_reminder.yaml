@@ -1,0 +1,79 @@
+---
+# Light is still on reminder automation
+#
+# This automation reminds me if I left some light on
+# for too long.
+#
+id: "6467257e-8844-4d73-8ea2-cebb140f9a3e"
+mode: single
+alias: "Light still on reminder"
+description: |-
+  This automation reminds me to turn off some lights.
+
+  Sometimes I turn on a light and forget to turn it off again.
+  This automations aims to prevent this.
+
+trigger:
+  - platform: state
+    entity_id: binary_sensor.all_lights
+    to: "on"
+    for: "00:{{ '%0.2d' | format(states('input_number.light_reminder_time')|int) }}:00"
+
+condition: "{{ is_state('input_boolean.light_reminder', 'on') }}"
+
+action:
+  - variables:
+      action_cooldown15: "{{ 'CLOSE_COOLDOWN15_' ~ context.id }}"
+      action_cooldown60: "{{ 'CLOSE_COOLDOWN60_' ~ context.id }}"
+      action_cooldown300: "{{ 'CLOSE_COOLDOWN300_' ~ context.id }}"
+  - alias: "Keep sending notifications until its closed again"
+    repeat:
+      until:
+        - condition: state
+          entity_id: binary_sensor.all_lights
+          state: "off"
+      sequence:
+        - service: notify.mobile_app_pixel4a
+          data:
+            title: "There is still some light turned on..."
+            message: |-
+              You might want to turn these off:
+                {{ states('sensor.turned_on_lights') }}
+            data:
+              color: "yellow"
+              notification_icon: "mdi:lightbulb-on"
+              actions:
+                - action: "{{ action_cooldown15 }}"
+                  title: "15 mins"
+                - action: "{{ action_cooldown60 }}"
+                  title: "1 h"
+                - action: "{{ action_cooldown300 }}"
+                  title: "3 h"
+        - wait_for_trigger:
+            - platform: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown15 }}"
+              id: 'Option One'
+            - platform: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown60 }}"
+              id: 'Option Two'
+            - platform: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown300 }}"
+              id: 'Option Three'
+          timeout: "01:00:00"
+          continue_on_timeout: false
+        - choose:
+            - conditions: "{{ wait.trigger.id == 'Option One' }}"
+              sequence:
+                - delay: "00:15"
+            - conditions: "{{ wait.trigger.id == 'Option Two' }}"
+              sequence:
+                - delay: "01:00"
+            - conditions: "{{ wait.trigger.id == 'Option Three' }}"
+              sequence:
+                - delay: "03:00"
