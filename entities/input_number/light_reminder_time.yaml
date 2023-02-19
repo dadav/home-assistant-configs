@@ -1,0 +1,13 @@
+---
+# Input number: Light reminder time
+#
+# This is an automation control/setting to indicate when
+# a turned on light is on for too long.
+#
+name: "Light reminder time"
+icon: "mdi:window-open"
+unit_of_measurement: "Mins"
+min: 0
+max: 180
+step: 1
+mode: slider
