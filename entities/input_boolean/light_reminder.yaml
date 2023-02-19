@@ -1,0 +1,8 @@
+---
+# Input boolean: Light reminder
+#
+# Weather the light reminder automation should
+# be enabled or not.
+#
+name: "Light reminder"
+icon: "mdi:home-lightbulb"
