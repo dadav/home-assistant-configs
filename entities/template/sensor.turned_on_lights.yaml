@@ -1,0 +1,13 @@
+---
+#
+# Small sensor which contains names of the turned on lights.
+#
+
+sensor:
+  - name: Turned on lights
+    unique_id: "09b77aa8-6f77-4f9e-866e-4446c4fe1c3e"
+    icon: "mdi:lightbulb-group"
+    state: |-
+      {% for light in states.light.all_lights.attributes.entity_id if is_state(light, 'on') %}
+      - {{ states[light].attributes.friendly_name }}
+      {% endfor %}
