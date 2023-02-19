@@ -5,7 +5,7 @@
 # a turned on light is on for too long.
 #
 name: "Light reminder time"
-icon: "mdi:window-open"
+icon: "mdi:lightbulb-on"
 unit_of_measurement: "Mins"
 min: 0
 max: 180
