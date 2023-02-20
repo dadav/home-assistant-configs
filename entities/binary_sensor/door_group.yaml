@@ -12,4 +12,3 @@ entities:
   - binary_sensor.kitchen_door_contact
   - binary_sensor.lunch_door_contact
   - binary_sensor.wintergarden_door_contact
-  - binary_sensor.office1_door_contact
