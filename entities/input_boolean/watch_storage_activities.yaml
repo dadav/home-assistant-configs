@@ -1,0 +1,8 @@
+---
+# Input boolean: Watch storage activities
+#
+# With this input boolean every activity in the storage will
+# trigger an alarm.
+#
+name: "Watch Storage Activities"
+icon: "mdi:shield-home"
