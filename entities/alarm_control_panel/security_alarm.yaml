@@ -25,3 +25,6 @@ armed_away: &armed_defaults
 
 armed_night:
   <<: *armed_defaults
+
+armed_home:
+  <<: *armed_defaults

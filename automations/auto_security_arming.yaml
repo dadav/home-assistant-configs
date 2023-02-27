@@ -52,10 +52,8 @@ action:
             conditions:
               - condition: trigger
                 id: Away mode turned on
-              - &has_disarmed_state
-                condition: state
-                entity_id: alarm_control_panel.security_alarm
-                state: "disarmed"
+              - condition: template
+                value_template: "{{ not is_state('alarm_control_panel.security_alarm', 'armed_away') }}"
         sequence:
           - alias: "Turn on security alarm"
             service: alarm_control_panel.alarm_arm_away
@@ -67,14 +65,13 @@ action:
             conditions:
               - condition: trigger
                 id: Away mode turned off
-              - &has_armed_away_state
-                condition: state
+              - condition: state
                 entity_id: alarm_control_panel.security_alarm
                 state: "armed_away"
         sequence:
-          - &disarm
-            alias: "Disarm security alarm"
-            service: alarm_control_panel.alarm_disarm
+          - &arm_home
+            alias: "Arm home"
+            service: alarm_control_panel.alarm_arm_home
             target:
               entity_id: alarm_control_panel.security_alarm
       - conditions:
@@ -83,11 +80,11 @@ action:
             conditions:
               - condition: trigger
                 id: Night time check
-              - &probably_sleeping
-                condition: state
+              - condition: state
                 entity_id: binary_sensor.probably_sleeping
                 state: "on"
-              - *has_disarmed_state
+              - condition: template
+                value_template: "{{ not is_state('alarm_control_panel.security_alarm', 'armed_night') }}"
         sequence:
           - alias: "Turn on security alarm"
             service: alarm_control_panel.alarm_arm_night
@@ -102,20 +99,18 @@ action:
               - condition: state
                 entity_id: binary_sensor.probably_sleeping
                 state: "off"
-              - &has_armed_night_state
-                condition: state
+              - condition: state
                 entity_id: alarm_control_panel.security_alarm
                 state: "armed_night"
         sequence:
-          - *disarm
+          - *arm_home
       - conditions:
           - alias: "People are home"
             condition: and
             conditions:
               - condition: trigger
                 id: People are home
-              - &is_not_disarmed
-                condition: template
-                value_template: "{{ not is_state('alarm_control_panel.security_alarm', 'disarmed') }}"
+              - condition: template
+                value_template: "{{ not is_state('alarm_control_panel.security_alarm', 'armed_home') }}"
         sequence:
-          - *disarm
+          - *arm_home
