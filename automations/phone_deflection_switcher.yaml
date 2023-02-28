@@ -42,13 +42,13 @@ action:
               - condition: trigger
                 id: Away mode turned on
               - condition: state
-                entity_id: switch.fritz_box_6660_cable_call_deflection_1
+                entity_id: switch.fritz_box_6660_cable_call_deflection_2
                 state: "off"
         sequence:
           - alias: "Turn on the deflection"
             service: switch.turn_on
             target:
-              entity_id: switch.fritz_box_6660_cable_call_deflection_1
+              entity_id: switch.fritz_box_6660_cable_call_deflection_2
       - conditions:
           - alias: "Away mode turned off"
             condition: and
@@ -57,14 +57,14 @@ action:
                 id: Away mode turned off
               - &is_on
                 condition: state
-                entity_id: switch.fritz_box_6660_cable_call_deflection_1
+                entity_id: switch.fritz_box_6660_cable_call_deflection_2
                 state: "on"
         sequence:
           - &turn_off
             alias: "Turn off the deflection"
             service: switch.turn_off
             target:
-              entity_id: switch.fritz_box_6660_cable_call_deflection_1
+              entity_id: switch.fritz_box_6660_cable_call_deflection_2
       - conditions:
           - alias: "People are home"
             condition: and
