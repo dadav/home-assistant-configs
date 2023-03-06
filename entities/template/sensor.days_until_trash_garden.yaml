@@ -1,0 +1,14 @@
+---
+#
+# Small sensor which calculates the remaining dates
+# until the next event.
+#
+sensor:
+  - name: Days until trash garden
+    unique_id: "1bcc16f7-f29c-4cd2-aa04-7be5137b8cb2"
+    icon: "mdi:trash-can"
+    state: >-
+      {{
+        ((state_attr('calendar.trash_garden', 'start_time')
+        | as_datetime | as_local).date() - now().date()).days
+      }}

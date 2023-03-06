@@ -30,6 +30,11 @@ trigger:
     entity_id: calendar.trash_blue
     offset: "-06:00:00"
     id: Blue
+  - platform: calendar
+    event: start
+    entity_id: calendar.trash_garden
+    offset: "-06:00:00"
+    id: Garden
 
 action:
   - choose:
@@ -102,3 +107,20 @@ action:
               title: "Put the rest trash outside!"
               message: >-
                 It's time to put the rest trash outside.
+      - conditions:
+          - condition: trigger
+            id: Garden
+        sequence:
+          - service: notify.mobile_app_pixel4a
+            data:
+              title: "Put the garden trash outside!"
+              message: >-
+                It's time to put the garden trash outside.
+              data:
+                color: "green"
+                notification_icon: "mdi:trash-can"
+          - service: persistent_notification.create
+            data:
+              title: "Put the garden trash outside!"
+              message: >-
+                It's time to put the garden trash outside.
