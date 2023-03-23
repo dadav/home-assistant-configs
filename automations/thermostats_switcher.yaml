@@ -1,0 +1,89 @@
+---
+# Thermostat switcher automation
+#
+# This automation switches the thermostats on and off
+# when I turned the away mode on.
+#
+id: "62f17829-bce4-495f-b1d5-b6798a9281a1"
+alias: "Thermostat switcher"
+description: >-
+  When I turned on the away mode, I want all
+  thermostats to be turned off.
+
+variables:
+  all_thermostats: &all_thermostats
+    - climate.bad
+    - climate.buro_1
+    - climate.buro_2
+    - climate.esszimmer_1
+    - climate.esszimmer_2
+    - climate.schlafzimmer_1
+    - climate.schlafzimmer_2
+    - climate.wohnzimmer
+
+trigger:
+  - alias: Away mode turned on
+    platform: state
+    entity_id:
+      - input_boolean.away_mode
+    from: "off"
+    to: "on"
+    id: Away mode turned on
+  - alias: Away mode turned off
+    platform: state
+    entity_id:
+      - input_boolean.away_mode
+    from: "on"
+    to: "off"
+    id: Away mode turned off
+  - alias: People are home
+    platform: state
+    entity_id:
+      - binary_sensor.people_home
+    from: "off"
+    to: "on"
+    id: People are home
+
+action:
+  - choose:
+      - conditions:
+          - alias: "Away mode turned on"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Away mode turned on
+              - condition: state
+                entity_id: *all_thermostats
+                match: any
+                state: "heat"
+        sequence:
+          - alias: "Turn off the thermostats"
+            service: climate.turn_off
+            target:
+              entity_id: *all_thermostats
+      - conditions:
+          - alias: "Away mode turned off"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Away mode turned off
+              - &any_on
+                condition: state
+                entity_id: *all_thermostats
+                match: any
+                state: "off"
+        sequence:
+          - &turn_on
+            alias: "Turn on the thermostats"
+            service: climate.turn_on
+            target:
+              entity_id: *all_thermostats
+      - conditions:
+          - alias: "People are home"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: People are home
+              - *any_on
+        sequence:
+          - *turn_on
