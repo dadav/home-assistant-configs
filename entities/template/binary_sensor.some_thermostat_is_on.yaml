@@ -1,0 +1,18 @@
+---
+#
+# This groups all the thermostats together.
+#
+binary_sensor:
+  - name: Some thermostat is on
+    unique_id: "a6eef52f-44c6-4d66-85ff-f48ce6126de9"
+    icon: "mdi:home-thermometer"
+    state: >-
+      {{ is_state('climate.bad', 'heat')
+         or is_state('climate.buro_1', 'heat')
+         or is_state('climate.buro_2', 'heat')
+         or is_state('climate.esszimmer_1', 'heat')
+         or is_state('climate.esszimmer_2', 'heat')
+         or is_state('climate.schlafzimmer_1', 'heat')
+         or is_state('climate.schlafzimmer_2', 'heat')
+         or is_state('climate.wohnzimmer', 'heat')
+      }}
