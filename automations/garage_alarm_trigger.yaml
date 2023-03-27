@@ -1,0 +1,45 @@
+---
+# Garage alarm trigger automation
+#
+# This automation detects suspicious activity and notifies me.
+# It's separated from the main intrusion detection automation because
+# it handles the garage sensors only.
+#
+id: "77d67d99-e18d-4b2f-b4ea-c17b2facc68e"
+mode: queued
+max_exceeded: silent
+trace:
+  stored_traces: 25
+alias: "Garage detection alarm trigger"
+description: >-
+  This automation detects suspicious activity in the garage
+  room.
+  When this automation is triggered, a security alarm will
+  be triggered.
+
+trigger:
+  - platform: event
+    event_type: state_changed
+    event_data:
+      entity_id: binary_sensor.garage_door_contact
+
+condition:
+  - condition: template
+    value_template: >-
+      {{
+        trigger.event.data.old_state.state == 'off'
+        and trigger.event.data.new_state.state == 'on'
+        and is_state('input_boolean.watch_garage_activities', 'on')
+      }}
+
+action:
+  - service: input_text.set_value
+    target:
+      entity_id: input_text.last_security_alarm_entity
+    data:
+      value: >-
+        {{state_attr(trigger.event.data.entity_id, 'friendly_name')}}
+
+  - service: alarm_control_panel.alarm_trigger
+    target:
+      entity_id: alarm_control_panel.security_alarm
