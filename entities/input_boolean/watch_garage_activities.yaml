@@ -1,0 +1,8 @@
+---
+# Input boolean: Watch garage activities
+#
+# With this input boolean every activity in the garage will
+# trigger an alarm.
+#
+name: "Watch garage Activities"
+icon: "mdi:shield-home"
