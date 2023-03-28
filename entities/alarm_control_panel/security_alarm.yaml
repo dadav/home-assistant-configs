@@ -7,10 +7,10 @@ name: Security Alarm
 code_arm_required: false
 
 # The time in seconds of the ‘arming’ state before effecting a state change.
-arming_time: 30
+arming_time: 300
 
 # The time in seconds of the ‘pending’ state before triggering the alarm.
-delay_time: 20
+delay_time: &delay 20
 
 # The time in seconds of the ‘triggered’ state in which the alarm is firing.
 trigger_time: 4
@@ -20,8 +20,7 @@ disarmed:
   trigger_time: 0
 
 armed_away: &armed_defaults
-  arming_time: 0
-  delay_time: 0
+  delay_time: *delay
 
 armed_night:
   <<: *armed_defaults
