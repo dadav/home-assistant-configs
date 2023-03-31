@@ -11,7 +11,7 @@ sensor:
     state: |-
       {% set skiplist = [] %}
       {% if is_state('input_boolean.skip_security_in_bath1', 'on') %}
-        {% set skiplist = skiplist + ["Bath 1"]
+        {% set skiplist = skiplist + ["Bath 1"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_bath2', 'on') %}
         {% set skiplist = skiplist + ["Bath 2"] %}
