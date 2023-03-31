@@ -21,8 +21,7 @@ description: >-
     - A door was opened
 
 variables:
-  excluded_rooms:
-    - areas
+  excluded_areas: "{{ states('sensor.skip_security_in_areas') }}"
 
 trigger:
   - platform: event

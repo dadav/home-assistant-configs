@@ -9,39 +9,41 @@ sensor:
     unique_id: "64233e49-67e6-4a64-9795-42c5dbcd6247"
     icon: "mdi:transit-skip"
     state: |-
+      {% set skiplist = [] %}
       {% if is_state('input_boolean.skip_security_in_bath1', 'on') %}
-        Bath 1
+        {% set skiplist = skiplist + ["Bath 1"]
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_bath2', 'on') %}
-        Bath 2
+        {% set skiplist = skiplist + ["Bath 2"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_bedroom', 'on') %}
-        Bedroom
+        {% set skiplist = skiplist + ["Bedroom"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_entrance', 'on') %}
-        Entrance
+        {% set skiplist = skiplist + ["Entrance"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_garage', 'on') %}
-        Garage
+        {% set skiplist = skiplist + ["Garage"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_kitchen', 'on') %}
-        Kitchen
+        {% set skiplist = skiplist + ["Kitchen"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_living', 'on') %}
-        Living
+        {% set skiplist = skiplist + ["Living"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_lunch', 'on') %}
-        Lunch
+        {% set skiplist = skiplist + ["Lunch"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_office1', 'on') %}
-        Office 1
+        {% set skiplist = skiplist + ["Office 1"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_office2', 'on') %}
-        Office 2
+        {% set skiplist = skiplist + ["Office 2"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_storage', 'on') %}
-        Storage
+        {% set skiplist = skiplist + ["Storage"] %}
       {% endif %}
       {% if is_state('input_boolean.skip_security_in_wintergarden', 'on') %}
-        Wintergarden
+        {% set skiplist = skiplist + ["Wintergarden"] %}
       {% endif %}
+      {{ skiplist }}
