@@ -32,9 +32,14 @@ condition:
     value_template: >-
       {{
         trigger.event.data.entity_id is match('^binary_sensor\.[a-z0-9_]+_(?:door|window)[0-9]*_contact')
-        and area_name(trigger.event.data.entity_id) not in excluded_areas
         and trigger.event.data.old_state.state == 'off'
         and trigger.event.data.new_state.state == 'on'
+      }}
+  - condition: template
+    value_template: >-
+      {{
+        is_state('alarm_control_panel.security_alarm', 'armed_night') and
+        area_name(trigger.event.data.entity_id) not in excluded_areas
       }}
   - or:
       - condition: state
