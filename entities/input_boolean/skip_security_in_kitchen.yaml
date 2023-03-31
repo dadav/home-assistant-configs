@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in kitchen
+#
+# With this input boolean I can deactivate the security in
+# the kitchen area.
+#
+name: "Skip security in kitchen"
+icon: "mdi:shield-home"

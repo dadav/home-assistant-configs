@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in storage
+#
+# With this input boolean I can deactivate the security in
+# the storage area.
+#
+name: "Skip security in storage"
+icon: "mdi:shield-home"

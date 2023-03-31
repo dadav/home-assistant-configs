@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in office 1
+#
+# With this input boolean I can deactivate the security in
+# the office 1 area.
+#
+name: "Skip security in office 1"
+icon: "mdi:shield-home"

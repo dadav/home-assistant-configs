@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in garage
+#
+# With this input boolean I can deactivate the security in
+# the garage area.
+#
+name: "Skip security in garage"
+icon: "mdi:shield-home"

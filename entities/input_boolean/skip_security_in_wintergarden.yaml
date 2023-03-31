@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in wintergarden
+#
+# With this input boolean I can deactivate the security in
+# the wintergarden area.
+#
+name: "Skip security in wintergarden"
+icon: "mdi:shield-home"

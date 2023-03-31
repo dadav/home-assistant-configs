@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in lunch
+#
+# With this input boolean I can deactivate the security in
+# the lunch area.
+#
+name: "Skip security in lunch"
+icon: "mdi:shield-home"

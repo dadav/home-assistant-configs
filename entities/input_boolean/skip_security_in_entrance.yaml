@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in entrance
+#
+# With this input boolean I can deactivate the security in
+# the entrance area.
+#
+name: "Skip security in entrance"
+icon: "mdi:shield-home"

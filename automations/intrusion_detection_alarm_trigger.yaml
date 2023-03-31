@@ -20,6 +20,10 @@ description: >-
     - A window was opened
     - A door was opened
 
+variables:
+  excluded_rooms:
+    - areas
+
 trigger:
   - platform: event
     event_type: state_changed
@@ -29,6 +33,7 @@ condition:
     value_template: >-
       {{
         trigger.event.data.entity_id is match('^binary_sensor\.[a-z0-9_]+_(?:door|window)[0-9]*_contact')
+        and area_name(trigger.event.data.entity_id) not in excluded_areas
         and trigger.event.data.old_state.state == 'off'
         and trigger.event.data.new_state.state == 'on'
       }}

@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in bath 1
+#
+# With this input boolean I can deactivate the security in
+# the bath 1 area.
+#
+name: "Skip security in bath 1"
+icon: "mdi:shield-home"

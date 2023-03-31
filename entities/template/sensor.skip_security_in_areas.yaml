@@ -1,0 +1,47 @@
+---
+#
+# Small sensor which contains names of areas which should
+# not trigger the intrusion detection system.
+#
+
+sensor:
+  - name: Skip security in areas
+    unique_id: "64233e49-67e6-4a64-9795-42c5dbcd6247"
+    icon: "mdi:transit-skip"
+    state: |-
+      {% if is_state('input_boolean.skip_security_in_bath1', 'on') %}
+        Bath 1
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_bath2', 'on') %}
+        Bath 2
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_bedroom', 'on') %}
+        Bedroom
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_entrance', 'on') %}
+        Entrance
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_garage', 'on') %}
+        Garage
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_kitchen', 'on') %}
+        Kitchen
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_living', 'on') %}
+        Living
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_lunch', 'on') %}
+        Lunch
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_office1', 'on') %}
+        Office 1
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_office2', 'on') %}
+        Office 2
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_storage', 'on') %}
+        Storage
+      {% endif %}
+      {% if is_state('input_boolean.skip_security_in_wintergarden', 'on') %}
+        Wintergarden
+      {% endif %}

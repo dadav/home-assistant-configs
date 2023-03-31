@@ -1,0 +1,8 @@
+---
+# Input boolean: Skip security in living
+#
+# With this input boolean I can deactivate the security in
+# the living area.
+#
+name: "Skip security in living"
+icon: "mdi:shield-home"
