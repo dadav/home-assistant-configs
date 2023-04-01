@@ -35,19 +35,19 @@ condition:
         and trigger.event.data.old_state.state == 'off'
         and trigger.event.data.new_state.state == 'on'
       }}
-  - condition: template
-    value_template: >-
-      {{
-        is_state('alarm_control_panel.security_alarm', 'armed_night') and
-        area_name(trigger.event.data.entity_id) not in excluded_areas
-      }}
   - or:
       - condition: state
         entity_id: alarm_control_panel.security_alarm
         state: armed_away
-      - condition: state
-        entity_id: alarm_control_panel.security_alarm
-        state: armed_night
+      - and:
+          - condition: state
+            entity_id: alarm_control_panel.security_alarm
+            state: armed_night
+          - condition: template
+            value_template: >-
+              {{
+                area_name(trigger.event.data.entity_id) not in excluded_areas
+              }}
 
 action:
   - service: input_text.set_value
