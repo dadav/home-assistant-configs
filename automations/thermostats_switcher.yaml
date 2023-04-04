@@ -13,6 +13,9 @@ description: >-
   When I return, I want them to be in the old
   state again.
 
+  And when I open a window, I want the thermostat to
+  turn off as long as it is still open.
+
 variables:
   all_thermostats: &all_thermostats
     - climate.bad
@@ -46,9 +49,272 @@ trigger:
     from: "off"
     to: "on"
     id: People are home
+  - alias: Office 1 window opened
+    platform: state
+    entity_id:
+      - binary_sensor.office1_window_contact
+    from: "off"
+    to: "on"
+    id: Office 1 window opened
+  - alias: Office 1 window closed
+    platform: state
+    entity_id:
+      - binary_sensor.office1_window_contact
+    from: "on"
+    to: "off"
+    id: Office 1 window closed
+  - alias: Office 2 window opened
+    platform: state
+    entity_id:
+      - binary_sensor.office2_window_contact
+      - binary_sensor.office2_door_contact
+    from: "off"
+    to: "on"
+    id: Office 2 window opened
+  - alias: Office 2 window closed
+    platform: state
+    entity_id:
+      - binary_sensor.office2_window_contact
+      - binary_sensor.office2_door_contact
+    from: "on"
+    to: "off"
+    id: Office 2 window closed
+  - alias: Lunch door opened
+    platform: state
+    entity_id:
+      - binary_sensor.lunch_door_contact
+    from: "off"
+    to: "on"
+    id: Lunch door opened
+  - alias: Lunch door closed
+    platform: state
+    entity_id:
+      - binary_sensor.lunch_door_contact
+    from: "on"
+    to: "off"
+    id: Lunch door closed
+  - alias: Bath1 window opened
+    platform: state
+    entity_id:
+      - binary_sensor.bath1_window_contact
+    from: "off"
+    to: "on"
+    id: Bath1 window opened
+  - alias: Bath1 window closed
+    platform: state
+    entity_id:
+      - binary_sensor.bath1_window_contact
+    from: "on"
+    to: "off"
+    id: Bath1 window closed
+  - alias: Bedroom window opened
+    platform: state
+    entity_id:
+      - binary_sensor.bedroom_window_contact
+      - binary_sensor.bedroom_door_contact
+    from: "off"
+    to: "on"
+    id: Bedroom window opened
+  - alias: Bedroom window closed
+    platform: state
+    entity_id:
+      - binary_sensor.bedroom_window_contact
+      - binary_sensor.bedroom_door_contact
+    from: "on"
+    to: "off"
+    id: Bedroom window closed
 
 action:
   - choose:
+      - conditions:
+          - alias: "Office 1 window opened"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Office 1 window opened
+              - condition: state
+                entity_id:
+                  - climate.buro_1
+                state: "heat"
+        sequence:
+          - service: scene.create
+            data:
+              scene_id: office1_thermostat
+              snapshot_entities:
+                - climate.buro_1
+          - alias: "Turn off the thermostat"
+            service: climate.turn_off
+            target:
+              entity_id:
+                - climate.buro_1
+      - conditions:
+          - alias: "Office 1 window closed again"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Office 1 window closed
+              - condition: state
+                entity_id:
+                  - climate.buro_1
+                state: "off"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.office1_thermostat
+      - conditions:
+          - alias: "Office 2 window opened"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Office 2 window opened
+              - condition: state
+                entity_id:
+                  - climate.buro_2
+                state: "heat"
+        sequence:
+          - service: scene.create
+            data:
+              scene_id: office2_thermostat
+              snapshot_entities:
+                - climate.buro_2
+          - alias: "Turn off the thermostat"
+            service: climate.turn_off
+            target:
+              entity_id:
+                - climate.buro_2
+      - conditions:
+          - alias: "Office 2 window closed again"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Office 2 window closed
+              - condition: state
+                entity_id:
+                  - climate.buro_2
+                state: "off"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.office2_thermostat
+      - conditions:
+          - alias: "Lunch door opened"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Lunch door opened
+              - condition: state
+                entity_id:
+                  - climate.wohnzimmer
+                  - climate.esszimmer_1
+                  - climate.esszimmer_2
+                match: any
+                state: "heat"
+        sequence:
+          - service: scene.create
+            data:
+              scene_id: lunch_living_thermostat
+              snapshot_entities:
+                - climate.wohnzimmer
+                - climate.esszimmer_1
+                - climate.esszimmer_2
+          - alias: "Turn off the thermostat"
+            service: climate.turn_off
+            target:
+              entity_id:
+                - climate.wohnzimmer
+                - climate.esszimmer_1
+                - climate.esszimmer_2
+      - conditions:
+          - alias: "Lunch door closed again"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Lunch door closed
+              - condition: state
+                entity_id:
+                  - climate.wohnzimmer
+                  - climate.esszimmer_1
+                  - climate.esszimmer_2
+                state: "off"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.lunch_living_thermostat
+      - conditions:
+          - alias: "Bath1 window opened"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Bath1 window opened
+              - condition: state
+                entity_id:
+                  - climate.bad
+                state: "heat"
+        sequence:
+          - service: scene.create
+            data:
+              scene_id: bad_thermostat
+              snapshot_entities:
+                - climate.bad
+          - alias: "Turn off the thermostat"
+            service: climate.turn_off
+            target:
+              entity_id:
+                - climate.bad
+      - conditions:
+          - alias: "Bath1 window closed again"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Bath1 window closed
+              - condition: state
+                entity_id:
+                  - climate.bad
+                state: "off"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.bad_thermostat
+      - conditions:
+          - alias: "Bedroom window opened"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Bedroom window opened
+              - condition: state
+                entity_id:
+                  - climate.schlafzimmer_1
+                  - climate.schlafzimmer_2
+                match: any
+                state: "heat"
+        sequence:
+          - service: scene.create
+            data:
+              scene_id: bedroom_thermostat
+              snapshot_entities:
+                - climate.schlafzimmer_1
+                - climate.schlafzimmer_2
+          - alias: "Turn off the thermostat"
+            service: climate.turn_off
+            target:
+              entity_id:
+                - climate.schlafzimmer_1
+                - climate.schlafzimmer_2
+      - conditions:
+          - alias: "Bedroom window closed again"
+            condition: and
+            conditions:
+              - condition: trigger
+                id: Bedroom window closed
+              - condition: state
+                entity_id:
+                  - climate.schlafzimmer_1
+                  - climate.schlafzimmer_2
+                state: "off"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.bedroom_thermostat
       - conditions:
           - alias: "Away mode turned on"
             condition: and
