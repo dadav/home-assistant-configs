@@ -6,6 +6,7 @@
 #
 
 platform: statistics
+name: Showering statistics
 entity_id: binary_sensor.is_showering
 state_characteristic: count_on
 sampling_size: 365
