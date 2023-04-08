@@ -1,0 +1,11 @@
+---
+# Sensor: Showering statistics
+#
+# This sensor measures some statistics about my
+# showering behaviour.
+#
+
+platform: statistics
+entity_id: binary_sensor.is_showering
+state_characteristic: count_on
+sampling_size: 365
