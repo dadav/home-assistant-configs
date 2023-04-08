@@ -1,0 +1,12 @@
+---
+#
+# Small binary sensor which mirrors the powerplug switch state.
+#
+binary_sensor:
+  - name: Bath1 powerplug
+    unique_id: "c333904e-5183-4879-a8f9-bfe1d79062bd"
+    icon: "mdi:heat-wave"
+    state: >-
+      {{
+        states('switch.bath1_powerplug')
+      }}

@@ -1,0 +1,12 @@
+---
+# Sensor: Heater statistics
+#
+# This sensor measures some statistics about my
+# heater usage behaviour.
+#
+
+platform: statistics
+name: Heater statistics
+entity_id: binary_sensor.bath1_powerplug
+state_characteristic: count_on
+sampling_size: 365
