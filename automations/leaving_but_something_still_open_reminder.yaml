@@ -24,7 +24,7 @@ action:
       title: "Door or window still open"
       message: >-
         The following entities are still open, you might want to close them:
-          {{ states.sensor.open_windows }}
-          {{ states.sensor.open_doors }}
+          {{ states('states.sensor.open_windows') }}
+          {{ states('states.sensor.open_doors') }}
       data:
         notification_icon: "mdi:alert"
