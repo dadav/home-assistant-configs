@@ -1,0 +1,49 @@
+---
+# This automation creates a notification on my phone and
+# keeps it there until the reason is gone.
+#
+id: "3619ec5b-8463-449a-8bf0-5bac911b1ee4"
+mode: parallel
+max_exceeded: silent
+alias: "Door open notification automation"
+description: >-
+  Send a notfication to my phone when the door is open.
+
+trigger:
+  - platform: state
+    entity_id:
+      - binary_sensor.garage_door_contact
+      - binary_sensor.entrance_door_contact
+      - binary_sensor.storage_door1_contact
+      - binary_sensor.storage_door2_contact
+
+action:
+  - variables:
+      entity_tag: "{{ 'unavailable_tag_' ~ trigger.event.data.entity_id }}"
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.new_state == 'on' }}"
+        sequence:
+          - service: notify.mobile_app_pixel4a
+            data:
+              title: "{{states[trigger.event.data.entity_id].attributes.friendly_name}} is open."
+              sticky: "true"
+              message: >-
+                Open since {{ states('sensor.time') }}
+              data:
+                notification_icon: "mdi:door-open"
+                tag: "{{ entity_tag }}"
+                actions:
+                  - action: "URI"
+                    title: "Open {{trigger.event.data.entity_id}}"
+                    uri: "entityId:{{trigger.event.data.entity_id}}"
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.from_state == 'off' }}"
+        sequence:
+          - service: notify.mobile_app_pixel4a
+            data:
+              message: "clear_notification"
+              data:
+                tag: "{{ entity_tag }}"
