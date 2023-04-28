@@ -22,8 +22,9 @@ action:
       entity_tag: "{{ 'unavailable_tag_' ~ trigger.entity_id }}"
   - choose:
       - conditions:
-          - condition: template
-            value_template: "{{ trigger.new_state.state == 'on' }}"
+          - condition: state
+            entity_id: "{{ trigger.entity_id }}"
+            state: "on"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
@@ -39,8 +40,9 @@ action:
                     title: "Open {{trigger.entity_id}}"
                     uri: "entityId:{{trigger.entity_id}}"
       - conditions:
-          - condition: template
-            value_template: "{{ trigger.from_state.state == 'off' }}"
+          - condition: state
+            entity_id: "{{ trigger.entity_id }}"
+            state: "off"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
