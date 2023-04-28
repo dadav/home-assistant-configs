@@ -19,7 +19,7 @@ trigger:
 
 action:
   - variables:
-      entity_tag: "{{ 'unavailable_tag_' ~ trigger.event.data.entity_id }}"
+      entity_tag: "{{ 'unavailable_tag_' ~ trigger.entity_id }}"
   - choose:
       - conditions:
           - condition: template
