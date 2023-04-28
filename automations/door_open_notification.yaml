@@ -23,11 +23,11 @@ action:
   - choose:
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.new_state == 'on' }}"
+            value_template: "{{ trigger.new_state.state == 'on' }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
-              title: "{{states[trigger.event.data.entity_id].attributes.friendly_name}} is open."
+              title: "{{states[trigger.entity_id].attributes.friendly_name}} is open."
               sticky: "true"
               message: >-
                 Open since {{ states('sensor.time') }}
@@ -36,11 +36,11 @@ action:
                 tag: "{{ entity_tag }}"
                 actions:
                   - action: "URI"
-                    title: "Open {{trigger.event.data.entity_id}}"
-                    uri: "entityId:{{trigger.event.data.entity_id}}"
+                    title: "Open {{trigger.entity_id}}"
+                    uri: "entityId:{{trigger.entity_id}}"
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.from_state == 'off' }}"
+            value_template: "{{ trigger.from_state.state == 'off' }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
