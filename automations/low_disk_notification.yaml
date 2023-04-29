@@ -9,7 +9,7 @@ description: |-
   certain threshold.
 
 variables:
-  low_disc_space_threshold: &low_disc_space_threshold "{{ states('input_number.low_disc_space_threshold') | int }}"
+  low_disc_space_threshold: &low_disc_space_threshold "{{ states('input_number.low_disc_space_threshold') | float }}"
 
 trigger:
   - platform: numeric_state
