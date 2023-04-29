@@ -13,7 +13,7 @@ description: |-
   should therefore always try to get it down to 50-60%.
 
 variables:
-  high_humidity: "{{ states('input_number.garage_setting_humidity_high') | int }}"
+  high_humidity: "{{ states('input_number.garage_setting_humidity_high') | int | default(80) }}"
   garage_sensors: &garage_sensors
     - sensor.garage_temp_humidity
   high_humidity_sensors: |-
