@@ -19,17 +19,15 @@ trigger:
 
 action:
   - variables:
-      target: "{{ trigger.entity_id }}"
       entity_tag: "{{ 'unavailable_tag_' ~ trigger.entity_id }}"
   - choose:
       - conditions:
-          - condition: state
-            entity_id: "{{ target }}"
-            state: "on"
+          - condition: template
+            value_template: "{{ is_state(trigger.entity_id, 'on') }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
-              title: "{{states[target].attributes.friendly_name}} is open."
+              title: "{{states[trigger.entity_id].attributes.friendly_name}} is open."
               sticky: "true"
               message: >-
                 Open since {{ states('sensor.time') }}
@@ -38,12 +36,11 @@ action:
                 tag: "{{ entity_tag }}"
                 actions:
                   - action: "URI"
-                    title: "Open {{target}}"
-                    uri: "entityId:{{target}}"
+                    title: "Open {{trigger.entity_id}}"
+                    uri: "entityId:{{trigger.entity_id}}"
       - conditions:
-          - condition: state
-            entity_id: "{{ target }}"
-            state: "off"
+          - condition: template
+            value_template: "{{ is_state(trigger.entity_id, 'off') }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
