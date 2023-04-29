@@ -19,7 +19,7 @@ trigger:
 
 action:
   - variables:
-      entity_tag: "{{ 'unavailable_tag_' ~ trigger.entity_id }}"
+      entity_tag: "{{ 'open_door_tag_' ~ trigger.entity_id }}"
   - choose:
       - conditions:
           - condition: template
@@ -28,12 +28,12 @@ action:
           - service: notify.mobile_app_pixel4a
             data:
               title: "{{states[trigger.entity_id].attributes.friendly_name}} is open."
-              sticky: "true"
               message: >-
                 Open since {{ states('sensor.time') }}
               data:
                 notification_icon: "mdi:door-open"
                 tag: "{{ entity_tag }}"
+                sticky: "true"
                 actions:
                   - action: "URI"
                     title: "Open {{trigger.entity_id}}"
