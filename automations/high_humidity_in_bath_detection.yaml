@@ -30,7 +30,7 @@ trigger:
   - platform: state
     entity_id: *bath_sensors
 
-condition: "{{ high_humidity_sensors != '' }}"
+condition: "{{ high_humidity_sensors != '' and is_state('binary_sensor.probably_sleeping', 'off') }}"
 
 action:
   - variables:
