@@ -8,13 +8,10 @@ description: |-
   This automation notifies me when the disc space is below a
   certain threshold.
 
-variables:
-  low_disc_space_threshold: &low_disc_space_threshold "{{ states('input_number.low_disc_space_threshold') | float }}"
-
 trigger:
   - platform: numeric_state
     entity_id: sensor.disk_use_percent
-    above: *low_disc_space_threshold
+    above: input_number.low_disc_space_threshold
     for:
       minutes: 5
 
