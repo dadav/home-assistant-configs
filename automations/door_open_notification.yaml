@@ -8,7 +8,6 @@ max_exceeded: silent
 alias: "Door open notification automation"
 description: >-
   Send a notfication to my phone when the door is open.
-
 trigger:
   - platform: state
     entity_id:
@@ -16,7 +15,6 @@ trigger:
       - binary_sensor.entrance_door_contact
       - binary_sensor.storage_door1_contact
       - binary_sensor.storage_door2_contact
-
 action:
   - variables:
       entity_tag: "{{ 'open_door_tag_' ~ trigger.entity_id }}"
@@ -36,7 +34,7 @@ action:
                 sticky: "true"
                 actions:
                   - action: "URI"
-                    title: "Open {{trigger.entity_id}}"
+                    title: "Open"
                     uri: "entityId:{{trigger.entity_id}}"
       - conditions:
           - condition: template
