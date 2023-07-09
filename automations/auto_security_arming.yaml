@@ -11,7 +11,6 @@ description: |-
 
   - When I turned on the away mode
   - When I'm sleeping (no devices online and it's a certain time)
-
 trigger:
   - alias: Away mode turned on
     platform: state
@@ -29,7 +28,7 @@ trigger:
     id: Away mode turned off
   - alias: Night time check
     platform: time_pattern
-    minutes: "/15"
+    minutes: "/5"
     id: Night time check
   - alias: People home
     platform: state
@@ -38,12 +37,10 @@ trigger:
     from: "off"
     to: "on"
     id: People are home
-
 condition:
   - condition: state
     entity_id: input_boolean.auto_security_arming_mode
     state: "on"
-
 action:
   - choose:
       - conditions:
