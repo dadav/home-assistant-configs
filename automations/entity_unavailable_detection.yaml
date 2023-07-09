@@ -18,26 +18,26 @@ trigger:
     from: unavailable
 action:
   - variables:
-      entity_tag: "{{ 'unavailable_tag_' ~ trigger.event.data.entity_id }}"
+      entity_tag: "{{ 'unavailable_tag_' ~ trigger.entity_id }}"
   - choose:
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.new_state.state == 'unavailable' }}"
+            value_template: "{{ trigger.new_state.state == 'unavailable' }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
-              title: "Entity {{states[trigger.event.data.entity_id].attributes.friendly_name}} went unavailable."
+              title: "Entity {{states[trigger.entity_id].attributes.friendly_name}} went unavailable."
               message: >-
                 Whats wrong?
               data:
                 tag: "{{ entity_tag }}"
                 actions:
                   - action: "URI"
-                    title: "Open {{trigger.event.data.entity_id}}"
-                    uri: "entityId:{{trigger.event.data.entity_id}}"
+                    title: "Open {{trigger.entity_id}}"
+                    uri: "entityId:{{trigger.entity_id}}"
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.from_state == 'unavailable' }}"
+            value_template: "{{ trigger.from_state.state == 'unavailable' }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
