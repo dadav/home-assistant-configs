@@ -10,28 +10,19 @@ alias: "Entity unavailable detection"
 description: >-
   This automation notfies me if an entity went unavailable.
 
-  But also it deletes the notification if the entity goes into
-  normal state again. I don't care then...
-
+  But also it deletes the notification if the entity goes into normal state again. I don't care then...
 trigger:
-  - platform: event
-    event_type: state_changed
-
-condition:
-  - condition: template
-    value_template: >-
-      {{
-        trigger.event.data.new_state.state == 'unavailable'
-        or trigger.event.data.old_state.state == 'unavailable'
-      }}
-
+  - platform: state
+    to: unavailable
+  - platform: state
+    from: unavailable
 action:
   - variables:
       entity_tag: "{{ 'unavailable_tag_' ~ trigger.event.data.entity_id }}"
   - choose:
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.new_state == 'unavailable' }}"
+            value_template: "{{ trigger.event.data.new_state.state == 'unavailable' }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
