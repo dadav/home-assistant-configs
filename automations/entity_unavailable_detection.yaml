@@ -12,32 +12,39 @@ description: >-
 
   But also it deletes the notification if the entity goes into normal state again. I don't care then...
 trigger:
-  - platform: state
-    to: unavailable
-  - platform: state
-    from: unavailable
+  - platform: event
+    event_type: state_changed
+condition:
+  - condition: template
+    value_template: >-
+      {{
+
+
+        trigger.event.data.new_state.state == 'unavailable'
+        or trigger.event.data.old_state.state == 'unavailable'
+      }}
 action:
   - variables:
-      entity_tag: "{{ 'unavailable_tag_' ~ trigger.entity_id }}"
+      entity_tag: "{{ 'unavailable_tag_' ~ trigger.event.data.entity_id }}"
   - choose:
       - conditions:
           - condition: template
-            value_template: "{{ trigger.new_state.state == 'unavailable' }}"
+            value_template: "{{ trigger.event.data.new_state.state == 'unavailable' }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
-              title: "Entity {{states[trigger.entity_id].attributes.friendly_name}} went unavailable."
+              title: "Entity {{states[trigger.event.data.entity_id].attributes.friendly_name}} went unavailable."
               message: >-
                 Whats wrong?
               data:
                 tag: "{{ entity_tag }}"
                 actions:
                   - action: "URI"
-                    title: "Open {{trigger.entity_id}}"
-                    uri: "entityId:{{trigger.entity_id}}"
+                    title: "Open {{trigger.event.data.entity_id}}"
+                    uri: "entityId:{{trigger.event.data.entity_id}}"
       - conditions:
           - condition: template
-            value_template: "{{ trigger.from_state.state == 'unavailable' }}"
+            value_template: "{{ trigger.event.data.from_state.state == 'unavailable' }}"
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
