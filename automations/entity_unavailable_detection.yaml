@@ -8,28 +8,38 @@ mode: parallel
 max_exceeded: silent
 alias: "Entity unavailable detection"
 description: >-
-  This automation notfies me if an entity went unavailable.
-
-  But also it deletes the notification if the entity goes into normal state again. I don't care then...
+  This automation notfies me if an entity went unavailable. But also it deletes the notification if the entity goes into normal state again. I don't care then...
 trigger:
   - platform: event
     event_type: state_changed
+
 condition:
   - condition: template
     value_template: >-
       {{
-
-
         trigger.event.data.new_state.state == 'unavailable'
         or trigger.event.data.old_state.state == 'unavailable'
       }}
+
+variables:
+  excluded_entities:
+    - light.lunch_light1
+    - light.lunch_light2
+    - light.lunch_light3
+    - light.bedroom_light1
+    - light.bedroom_light2
+    - light.bedroom_light3
 action:
   - variables:
       entity_tag: "{{ 'unavailable_tag_' ~ trigger.event.data.entity_id }}"
   - choose:
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.new_state.state == 'unavailable' }}"
+            value_template: >-
+              {{
+                trigger.event.data.new_state.state == 'unavailable'
+                and trigger.event.data.entity_id not in excluded_entities
+              }}
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
@@ -44,7 +54,11 @@ action:
                     uri: "entityId:{{trigger.event.data.entity_id}}"
       - conditions:
           - condition: template
-            value_template: "{{ trigger.event.data.from_state.state == 'unavailable' }}"
+            value_template: >-
+              {{
+                trigger.event.data.from_state.state == 'unavailable'
+                and trigger.event.data.entity_id not in excluded_entities
+              }}
         sequence:
           - service: notify.mobile_app_pixel4a
             data:
