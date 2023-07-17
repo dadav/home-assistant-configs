@@ -37,7 +37,7 @@ action:
       action_cooldown15: "{{ 'COOLDOWN15_' ~ context.id }}"
       action_cooldown60: "{{ 'COOLDOWN60_' ~ context.id }}"
       action_cooldown300: "{{ 'COOLDOWN300_' ~ context.id }}"
-  - service: notify.mobile_app_pixel4a
+  - service: notify.mobile_app_pixel_7
     data:
       title: "Some sensors with high humidity have been found!"
       message: |-

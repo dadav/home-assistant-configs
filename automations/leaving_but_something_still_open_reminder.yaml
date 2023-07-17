@@ -7,9 +7,7 @@ id: "20f51e6a-1018-4ce5-bd7d-9e702ad1b3be"
 mode: single
 alias: "Leaving but something is still open"
 description: >-
-  This automation sends me a notification if I leave the house
-  and there are still any windows or doors open.
-
+  This automation sends me a notification if I leave the house and there are still any windows or doors open. #magic___^_^___line
 trigger:
   - platform: state
     entity_id: binary_sensor.people_home
@@ -19,7 +17,7 @@ trigger:
 condition: "{{ is_state('binary_sensor.everything_closed', 'off') }}"
 
 action:
-  - service: notify.mobile_app_pixel4a
+  - service: notify.mobile_app_pixel_7
     data:
       title: "Door or window still open"
       message: >-

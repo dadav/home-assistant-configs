@@ -9,9 +9,7 @@ trace:
   stored_traces: 25
 alias: "Security alarm triggered"
 description: >-
-  This automation gets triggered, when a security issue
-  was detected.
-
+  This automation gets triggered, when a security issue was detected. #magic___^_^___line
 trigger:
   - platform: state
     entity_id: alarm_control_panel.security_alarm
@@ -20,12 +18,11 @@ trigger:
 action:
   - variables:
       action_disarm: "{{ 'DISARM_' ~ context.id }}"
-  - service: notify.mobile_app_pixel4a
+  - service: notify.mobile_app_pixel_7
     data:
       title: &notify_title "Security alarm triggered"
       message: &notify_message >-
-        The entity {{states('input_text.last_security_alarm_entity')}}
-        triggered the security alarm.
+        The entity {{states('input_text.last_security_alarm_entity')}} triggered the security alarm.
       data:
         ttl: 0
         priority: high

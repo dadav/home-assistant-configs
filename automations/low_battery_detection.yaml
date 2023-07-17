@@ -12,18 +12,15 @@ variables:
   threshold: "{{ states('input_number.low_battery_warning_threshold') | int }}"
   exclude: []
   sensors: >-
-    {% set result = namespace(sensors=[]) %}
-    {% for state in states.sensor | selectattr('attributes.device_class', '==', 'battery') %}
+    {% set result = namespace(sensors=[]) %} {% for state in states.sensor | selectattr('attributes.device_class', '==', 'battery') %}
       {% if 0 <= state.state | int(-1) < threshold | int and not state.entity_id in exclude %}
         {% set result.sensors = result.sensors + [state.name ~ ' (' ~ state.state ~ ' %)'] %}
       {% endif %}
-    {% endfor %}
-    {% for state in states.binary_sensor | selectattr('attributes.device_class', '==', 'battery') | selectattr('state', '==', 'on') %}
+    {% endfor %} {% for state in states.binary_sensor | selectattr('attributes.device_class', '==', 'battery') | selectattr('state', '==', 'on') %}
       {% if not state.entity_id in exclude %}
         {% set result.sensors = result.sensors + [state.name] %}
       {% endif %}
-    {% endfor %}
-    {{result.sensors|join('\n')}}
+    {% endfor %} {{result.sensors|join('\n')}}
 
 trigger:
   - platform: time
@@ -32,7 +29,7 @@ trigger:
 condition: "{{ sensors != '' and now().isoweekday() == 0 }}"
 
 action:
-  - service: notify.mobile_app_pixel4a
+  - service: notify.mobile_app_pixel_7
     data:
       title: "Some sensors are low on battery, check them out!"
       message: >-

@@ -23,7 +23,7 @@ action:
           - condition: template
             value_template: "{{ is_state(trigger.entity_id, 'on') }}"
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               title: "{{states[trigger.entity_id].attributes.friendly_name}} is open."
               message: >-
@@ -40,7 +40,7 @@ action:
           - condition: template
             value_template: "{{ is_state(trigger.entity_id, 'off') }}"
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               message: "clear_notification"
               data:

@@ -6,4 +6,4 @@
 name: All devices
 platform: group
 services:
-  - service: mobile_app_pixel4a
+  - service: mobile_app_pixel_7

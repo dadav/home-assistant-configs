@@ -41,7 +41,7 @@ action:
                 and trigger.event.data.entity_id not in excluded_entities
               }}
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               title: "Entity {{states[trigger.event.data.entity_id].attributes.friendly_name}} went unavailable."
               message: >-
@@ -60,7 +60,7 @@ action:
                 and trigger.event.data.entity_id not in excluded_entities
               }}
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               message: "clear_notification"
               data:

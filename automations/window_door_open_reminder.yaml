@@ -31,7 +31,7 @@ action:
           entity_id: binary_sensor.everything_closed
           state: "on"
       sequence:
-        - service: notify.mobile_app_pixel4a
+        - service: notify.mobile_app_pixel_7
           data:
             title: "It's cold outside...maybe close all windows?"
             message: |-

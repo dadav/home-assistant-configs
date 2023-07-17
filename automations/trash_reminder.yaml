@@ -42,7 +42,7 @@ action:
           - condition: trigger
             id: Bio
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               title: "Put the bio trash outside!"
               message: >-
@@ -54,13 +54,12 @@ action:
             data:
               title: "Put the bio trash outside!"
               message: >-
-                It's time to put the bio trash outside.
-
+                It's time to put the bio trash outside. #magic___^_^___line
       - conditions:
           - condition: trigger
             id: Yellow
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               title: "Put the yellow trash outside!"
               message: >-
@@ -77,7 +76,7 @@ action:
           - condition: trigger
             id: Blue
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               title: "Put the blue trash outside!"
               message: >-
@@ -94,7 +93,7 @@ action:
           - condition: trigger
             id: Rest
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               title: "Put the rest trash outside!"
               message: >-
@@ -111,7 +110,7 @@ action:
           - condition: trigger
             id: Garden
         sequence:
-          - service: notify.mobile_app_pixel4a
+          - service: notify.mobile_app_pixel_7
             data:
               title: "Put the garden trash outside!"
               message: >-
