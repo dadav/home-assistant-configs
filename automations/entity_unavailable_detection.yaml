@@ -24,11 +24,24 @@ condition:
 variables:
   excluded_entities:
     - light.lunch_light1
+    - select.lunch_light1_power_on_behavior
+    - update.lunch_light1
     - light.lunch_light2
+    - select.lunch_light2_power_on_behavior
+    - update.lunch_light2
     - light.lunch_light3
+    - select.lunch_light3_power_on_behavior
+    - update.lunch_light3
     - light.bedroom_light1
+    - select.bedroom_light1_power_on_behavior
+    - update.bedroom_light1
     - light.bedroom_light2
+    - select.bedroom_light2_power_on_behavior
+    - update.bedroom_light2
     - light.bedroom_light3
+    - select.bedroom_light3_power_on_behavior
+    - update.bedroom_light3
+
 action:
   - variables:
       entity_tag: "{{ 'unavailable_tag_' ~ trigger.event.data.entity_id }}"
