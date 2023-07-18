@@ -41,6 +41,7 @@ variables:
     - light.bedroom_light3
     - select.bedroom_light3_power_on_behavior
     - update.bedroom_light3
+    - light.bedroom_lights
 
 action:
   - variables:
