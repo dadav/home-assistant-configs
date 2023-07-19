@@ -22,7 +22,7 @@ variables:
     - climate.buro_1
     - climate.buro_2
     - climate.esszimmer_1
-    - climate.esszimmer_2
+    - climate.esszimmer_2_2
     - climate.schlafzimmer_1
     - climate.schlafzimmer_2
     - climate.wohnzimmer
