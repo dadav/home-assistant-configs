@@ -9,7 +9,7 @@ trace:
   stored_traces: 25
 alias: "Security alarm triggered"
 description: >-
-  This automation gets triggered, when a security issue was detected. #magic___^_^___line
+  This automation gets triggered, when a security issue was detected.
 trigger:
   - platform: state
     entity_id: alarm_control_panel.security_alarm

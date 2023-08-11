@@ -54,7 +54,7 @@ action:
             data:
               title: "Put the bio trash outside!"
               message: >-
-                It's time to put the bio trash outside. #magic___^_^___line
+                It's time to put the bio trash outside.
       - conditions:
           - condition: trigger
             id: Yellow

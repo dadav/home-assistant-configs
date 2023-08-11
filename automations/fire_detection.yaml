@@ -8,7 +8,7 @@ mode: queued
 max_exceeded: silent
 alias: "Fire detection automation"
 description: >-
-  This automation detects unusualy high temperatures and sends me a notification in multiple ways. #magic___^_^___line
+  This automation detects unusualy high temperatures and sends me a notification in multiple ways.
 variables:
   maybe_fire_temperature: "{{ states('input_number.maybe_fire_temperature') | int }}"
 
