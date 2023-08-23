@@ -1,0 +1,6 @@
+---
+# Input datetime: The time I want the powerplug to be activated
+#
+name: "Bath2 powerplug activation time"
+has_date: false
+has_time: true
