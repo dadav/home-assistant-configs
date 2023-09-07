@@ -1,0 +1,7 @@
+---
+# Input boolean: Summer mode
+#
+# This boolean is used by the window open automation.
+#
+name: "Summer mode"
+icon: "mdi:temperature-celsius"

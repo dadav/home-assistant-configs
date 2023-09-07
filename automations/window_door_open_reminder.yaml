@@ -18,7 +18,7 @@ trigger:
     entity_id: binary_sensor.everything_closed
     to: "off"
     for: "00:{{ '%0.2d' | format(states('input_number.max_open_window_or_door_time')|int) }}:00"
-condition: "{{ is_state('binary_sensor.outside_warmer_than_inside', 'off') and is_state('binary_sensor.probably_sleeping', 'off') }}"
+condition: "{{ states('input_boolean.summer_mode') == states('binary_sensor.outside_warmer_than_inside') and is_state('binary_sensor.probably_sleeping', 'off') }}"
 action:
   - variables:
       action_cooldown15: "{{ 'CLOSE_COOLDOWN15_' ~ context.id }}"
@@ -33,7 +33,7 @@ action:
       sequence:
         - service: notify.mobile_app_pixel_7
           data:
-            title: "It's cold outside...maybe close all windows?"
+            title: "Close windows and doors now!"
             message: |-
               The following entities are still open, you might want to close them:
                 {{ states('sensor.open_windows') }}
