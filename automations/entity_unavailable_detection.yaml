@@ -42,6 +42,9 @@ variables:
     - select.bedroom_light3_power_on_behavior
     - update.bedroom_light3
     - light.bedroom_lights
+    - button.lg_webos_tv_fa22_identify
+    - media_player.lg_webos_tv_fa22
+    - switch.lg_webos_tv_fa22_mute
 
 action:
   - variables:
