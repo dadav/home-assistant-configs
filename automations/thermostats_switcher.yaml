@@ -136,12 +136,6 @@ trigger:
 action:
   - choose:
       - conditions:
-          - alias: Check if state is still correct
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Time check
-      - conditions:
           - alias: Office 1 window opened
             condition: and
             conditions:
