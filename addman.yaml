@@ -129,6 +129,9 @@ addons:
   core_mosquitto:
     <<: *addon_defaults
     auto_update: false
+  a0d7b954_grafana:
+    <<: *addon_defaults
+    auto_update: false
 
 repositories:
   - https://github.com/dadav/hass-addon-addman
