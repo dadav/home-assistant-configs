@@ -96,7 +96,6 @@ addons:
             - 10.8.0.103/32
             - 10.8.0.104/32
             - 10.8.0.105/32
-            - 192.168.178.36/32
       server:
         host: homeassistant
         addresses:
