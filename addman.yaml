@@ -93,9 +93,9 @@ addons:
           allowed_ips: []
           public_key: Rb9r0N09UL9+GkwRfsu7s9SMvFM4ApU7an311E8gMUY=
           client_allowed_ips:
-            - 10.8.0.102/32
             - 10.8.0.103/32
             - 10.8.0.104/32
+            - 10.8.0.105/32
       server:
         host: homeassistant
         addresses:
