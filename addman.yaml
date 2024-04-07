@@ -101,6 +101,13 @@ addons:
         addresses:
           - 10.8.0.102
         dns: []
+
+  a0d7b954_tailscale:
+    <<: *addon_defaults
+    auto_update: false
+    ingress_panel: true
+    options:
+      login_server: https://headscale.dadav.de
   ad61c150_dss_voip:
     <<: *addon_defaults
     auto_update: false
