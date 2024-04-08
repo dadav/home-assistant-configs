@@ -107,7 +107,7 @@ addons:
     auto_update: false
     ingress_panel: true
     options:
-      login_server: https://headscale.dadav.de
+      login_server: *secret_headscale_uri
   ad61c150_dss_voip:
     <<: *addon_defaults
     auto_update: false
