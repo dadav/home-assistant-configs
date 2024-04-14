@@ -3,12 +3,13 @@
 #
 # This automation notifies me if an entity went unavailable.
 #
-id: "f8700e07-1e98-4c0e-bc76-72cb293811d9"
+id: f8700e07-1e98-4c0e-bc76-72cb293811d9
 mode: parallel
 max_exceeded: silent
-alias: "Entity unavailable detection"
+alias: Entity unavailable detection
 description: >-
-  This automation notfies me if an entity went unavailable. But also it deletes the notification if the entity goes into normal state again. I don't care then...
+  This automation notfies me if an entity went unavailable. But also it deletes the notification if the entity goes into normal
+  state again. I don't care then...
 trigger:
   - platform: event
     event_type: state_changed
@@ -60,25 +61,25 @@ action:
         sequence:
           - service: notify.mobile_app_pixel_7
             data:
-              title: "Entity {{states[trigger.event.data.entity_id].attributes.friendly_name}} went unavailable."
+              title: Entity {{states[trigger.event.data.entity_id].attributes.friendly_name}} went unavailable.
               message: >-
                 Whats wrong?
               data:
-                tag: "{{ entity_tag }}"
+                tag: '{{ entity_tag }}'
                 actions:
-                  - action: "URI"
-                    title: "Open {{trigger.event.data.entity_id}}"
-                    uri: "entityId:{{trigger.event.data.entity_id}}"
+                  - action: URI
+                    title: Open {{trigger.event.data.entity_id}}
+                    uri: entityId:{{trigger.event.data.entity_id}}
       - conditions:
           - condition: template
             value_template: >-
               {{
-                trigger.event.data.from_state.state == 'unavailable'
-                and trigger.event.data.entity_id not in excluded_entities
+                trigger.from_state.state == 'unavailable'
+                and trigger.entity_id not in excluded_entities
               }}
         sequence:
           - service: notify.mobile_app_pixel_7
             data:
-              message: "clear_notification"
+              message: clear_notification
               data:
-                tag: "{{ entity_tag }}"
+                tag: '{{ entity_tag }}'

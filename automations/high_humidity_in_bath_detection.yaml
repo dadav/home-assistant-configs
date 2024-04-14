@@ -3,9 +3,9 @@
 #
 # This automation detects a high humidity value in baths.
 #
-id: "6b0f392f-9afd-4db4-bde7-f961f5391ada"
+id: 6b0f392f-9afd-4db4-bde7-f961f5391ada
 mode: single
-alias: "High humdity in baths detection"
+alias: High humdity in baths detection
 description: |-
   This automation detects high humidity in my bathrooms.
 
@@ -29,7 +29,6 @@ variables:
 trigger:
   - platform: state
     entity_id: *bath_sensors
-
 condition: "{{ high_humidity_sensors != '' and is_state('binary_sensor.probably_sleeping', 'off') }}"
 
 action:
@@ -39,46 +38,46 @@ action:
       action_cooldown300: "{{ 'COOLDOWN300_' ~ context.id }}"
   - service: notify.mobile_app_pixel_7
     data:
-      title: "Some sensors with high humidity have been found!"
+      title: Some sensors with high humidity have been found!
       message: |-
         The humidity of the following sensors are
         higher than {{high_humidity}}%:
           {{high_humidity_sensors}}
       data:
-        color: "yellow"
-        notification_icon: "mdi:water-percent"
+        color: yellow
+        notification_icon: mdi:water-percent
         actions:
-          - action: "{{ action_cooldown15 }}"
-            title: "15 mins"
-          - action: "{{ action_cooldown60 }}"
-            title: "1 h"
-          - action: "{{ action_cooldown300 }}"
-            title: "3 h"
+          - action: '{{ action_cooldown15 }}'
+            title: 15 mins
+          - action: '{{ action_cooldown60 }}'
+            title: 1 h
+          - action: '{{ action_cooldown300 }}'
+            title: 3 h
   - wait_for_trigger:
       - platform: event
         event_type: mobile_app_notification_action
         event_data:
-          action: "{{ action_cooldown15 }}"
+          action: '{{ action_cooldown15 }}'
         id: Option One
       - platform: event
         event_type: mobile_app_notification_action
         event_data:
-          action: "{{ action_cooldown60 }}"
+          action: '{{ action_cooldown60 }}'
         id: Option Two
       - platform: event
         event_type: mobile_app_notification_action
         event_data:
-          action: "{{ action_cooldown300 }}"
+          action: '{{ action_cooldown300 }}'
         id: Option Three
-    timeout: "01:00:00"
+    timeout: 01:00:00
     continue_on_timeout: false
   - choose:
       - conditions: "{{ wait.trigger.id == 'Option One' }}"
         sequence:
-          - delay: "00:15"
+          - delay: 00:15
       - conditions: "{{ wait.trigger.id == 'Option Two' }}"
         sequence:
-          - delay: "01:00"
+          - delay: 01:00
       - conditions: "{{ wait.trigger.id == 'Option Two' }}"
         sequence:
-          - delay: "03:00"
+          - delay: 03:00
