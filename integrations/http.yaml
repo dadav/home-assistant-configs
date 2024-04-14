@@ -14,6 +14,7 @@ http:
   trusted_proxies:
     - 10.8.0.101
     - 172.30.33.0/24
+    - 192.168.178.23
 
   # Enables additional IP filtering.
   ip_ban_enabled: true
