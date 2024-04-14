@@ -80,27 +80,27 @@ addons:
       apks: []
       server:
         tcp_forwarding: false
-  a0d7b954_wireguard:
-    <<: *addon_defaults
-    auto_update: false
-    options:
-      peers:
-        - name: vps
-          persistent_keep_alive: 30
-          endpoint: *secret_wireguard_endpoint
-          addresses:
-            - 10.8.0.101
-          allowed_ips: []
-          public_key: Rb9r0N09UL9+GkwRfsu7s9SMvFM4ApU7an311E8gMUY=
-          client_allowed_ips:
-            - 10.8.0.103/32
-            - 10.8.0.104/32
-            - 10.8.0.105/32
-      server:
-        host: homeassistant
-        addresses:
-          - 10.8.0.102
-        dns: []
+  # a0d7b954_wireguard:
+  #   <<: *addon_defaults
+  #   auto_update: false
+  #   options:
+  #     peers:
+  #       - name: vps
+  #         persistent_keep_alive: 30
+  #         endpoint: *secret_wireguard_endpoint
+  #         addresses:
+  #           - 10.8.0.101
+  #         allowed_ips: []
+  #         public_key: Rb9r0N09UL9+GkwRfsu7s9SMvFM4ApU7an311E8gMUY=
+  #         client_allowed_ips:
+  #           - 10.8.0.103/32
+  #           - 10.8.0.104/32
+  #           - 10.8.0.105/32
+  #     server:
+  #       host: homeassistant
+  #       addresses:
+  #         - 10.8.0.102
+  #       dns: []
 
   a0d7b954_tailscale:
     <<: *addon_defaults
@@ -137,10 +137,10 @@ addons:
   core_mosquitto:
     <<: *addon_defaults
     auto_update: false
-  a0d7b954_grafana:
-    <<: *addon_defaults
-    auto_update: false
-    ingress_panel: true
+  # a0d7b954_grafana:
+  #   <<: *addon_defaults
+  #   auto_update: false
+  #   ingress_panel: true
 
 repositories:
   - https://github.com/dadav/hass-addon-addman
