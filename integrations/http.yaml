@@ -11,10 +11,7 @@ http:
 
   # List of trusted proxies, consisting of IP addresses or networks,
   # that are allowed to set the X-Forwarded-For header.
-  trusted_proxies:
-    - 10.8.0.101
-    - 172.30.33.0/24
-    - 192.168.178.23
+  trusted_proxies: !secret http_trusted_proxies
 
   # Enables additional IP filtering.
   ip_ban_enabled: true
