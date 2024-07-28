@@ -10,4 +10,4 @@ entities:
   - binary_sensor.bath1_window_contact
   - binary_sensor.bedroom_window_contact
   - binary_sensor.office1_window_contact
-  - binary_sensor.office2_window_contact
+  - binary_sensor.wintergarden_window_contact
