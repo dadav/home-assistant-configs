@@ -30,7 +30,7 @@ action:
     repeat:
       until:
         - condition: state
-          entity_id: binary_sensor.all_lights
+          entity_id: light.all_lights
           state: "off"
       sequence:
         - service: notify.mobile_app_pixel_7
