@@ -74,8 +74,8 @@ action:
           - condition: template
             value_template: >-
               {{
-                trigger.from_state.state == 'unavailable'
-                and trigger.entity_id not in excluded_entities
+                trigger.event.data.old_state.state == 'unavailable'
+                and trigger.event.data.entity_id not in excluded_entities
               }}
         sequence:
           - service: notify.mobile_app_pixel_7
