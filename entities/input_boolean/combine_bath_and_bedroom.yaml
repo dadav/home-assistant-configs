@@ -1,0 +1,8 @@
+---
+# Input boolean: Combine bed and bathroom
+#
+# This boolean is used to control if the heating in the bedroom should be turned
+# off if the bathroom window is open
+#
+name: Combine bed and bathroom
+icon: mdi:temperature-celsius
