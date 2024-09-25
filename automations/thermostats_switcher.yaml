@@ -358,6 +358,22 @@ action:
             conditions:
               - condition: or
                 conditions:
+                  - condition: state
+                    entity_id:
+                      - input_boolean.combine_bath_and_bedroom
+                    state: 'off'
+                  - condition: and
+                    conditions:
+                      - condition: state
+                        entity_id:
+                          - input_boolean.combine_bath_and_bedroom
+                        state: 'on'
+                      - condition: state
+                        entity_id:
+                          - binary_sensor.bath1_window_contact
+                        state: 'off'
+              - condition: or
+                conditions:
                   - condition: trigger
                     id: Bedroom window closed
                   - condition: and
@@ -373,22 +389,6 @@ action:
                           - binary_sensor.bedroom_window_contact
                           - binary_sensor.bedroom_door_contact
                         state: 'off'
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - input_boolean.away_mode
-                        state: 'off'
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.bath1_window_contact
-                        state: 'off'
-                      - condition: state
-                        entity_id:
-                          - input_boolean.combine_bath_and_bedroom
-                        state: 'on'
               - condition: state
                 entity_id:
                   - climate.schlafzimmer_1
