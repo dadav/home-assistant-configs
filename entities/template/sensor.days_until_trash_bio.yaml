@@ -4,11 +4,11 @@
 # until the next event.
 #
 sensor:
-  - name: Days until trash bio
+  - name: Days until trash
     unique_id: "81a3572e-71d6-456d-8d1c-2689d4043e4d"
     icon: "mdi:trash-can"
     state: >-
       {{
-        ((state_attr('calendar.trash_bio', 'start_time')
+        ((state_attr('calendar.trash', 'start_time')
         | as_datetime | as_local).date() - now().date()).days
       }}
