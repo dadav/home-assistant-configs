@@ -1,0 +1,18 @@
+---
+id: "68229927-07bf-4342-800b-20a291ce5ed5"
+trace:
+  stored_traces: 25
+alias: Intercom to chime pipeline
+description: >-
+  Triggers the chime if the intercom gets pressed.
+triggers:
+  - trigger: state
+    entity_id: event.vordereingang_ding
+actions:
+  - action: siren.turn_on
+    data:
+      tone: ding
+      duration: 6
+    target:
+      entity_id: siren.wohnzimmer_siren
+mode: single

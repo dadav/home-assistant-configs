@@ -1,0 +1,15 @@
+---
+id: "68229927-07bf-4342-800b-20a291ce5ed6"
+trace:
+  stored_traces: 25
+alias: Mute chime on open door
+description: >-
+  Turns off the chime if the door gets opened.
+triggers:
+  - trigger: state
+    entity_id: event.vordereingang_intercom_unlock
+actions:
+  - action: siren.turn_off
+    target:
+      entity_id: siren.wohnzimmer_siren
+mode: single
