@@ -12,7 +12,6 @@ actions:
   - action: siren.turn_on
     data:
       tone: ding
-      duration: 6
     target:
       entity_id: siren.wohnzimmer_siren
 mode: single
