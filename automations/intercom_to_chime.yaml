@@ -7,7 +7,8 @@ description: >-
   Triggers the chime if the intercom gets pressed.
 triggers:
   - trigger: state
-    entity_id: event.vordereingang_ding
+    entity_id: binary_sensor.vordereingang_ding
+    to: "on"
 actions:
   - action: siren.turn_on
     data:
