@@ -7,14 +7,10 @@ description: >-
   Triggers the chime if the intercom gets pressed.
 triggers:
   - trigger: state
-    entity_id: sensor.vordereingang_last_ding
-condition:
-  - "{{ trigger.from_state.state not in ['unknown', 'unavailable'] }}"
-  - "{{ trigger.to_state.state not in ['unknown', 'unavailable'] }}"
+    entity_id: binary_sensor.vordereingang_ding_2
+    to: "on"
 actions:
-  - action: siren.turn_on
-    data:
-      tone: ding
+  - action: homeassistant.turn_on
     target:
-      entity_id: siren.wohnzimmer_siren
+      entity_id: switch.wohnzimmer_play_ding_sound
 mode: single
