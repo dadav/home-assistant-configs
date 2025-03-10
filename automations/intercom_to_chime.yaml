@@ -8,6 +8,9 @@ description: >-
 triggers:
   - trigger: state
     entity_id: sensor.vordereingang_last_ding
+condition:
+  - "{{ trigger.from_state.state not in ['unknown', 'unavailable'] }}"
+  - "{{ trigger.to_state.state not in ['unknown', 'unavailable'] }}"
 actions:
   - action: siren.turn_on
     data:
