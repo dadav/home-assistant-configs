@@ -9,7 +9,7 @@ triggers:
   - trigger: state
     entity_id:
       - event.vordereingang_ding
-    from: null
+    # from: null
 actions:
   - action: homeassistant.turn_on
     target:
