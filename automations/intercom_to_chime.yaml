@@ -9,8 +9,7 @@ triggers:
   - trigger: state
     entity_id:
       - binary_sensor.vordereingang_ding_2
-    to:
-      - "on"
+    to: "on"
     # from: null
 actions:
   - action: homeassistant.turn_on
