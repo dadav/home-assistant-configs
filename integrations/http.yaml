@@ -18,7 +18,7 @@ http:
 
   # Number of failed login attempts from a single IP after which it will
   # be automatically banned.
-  login_attempts_threshold: 3
+  login_attempts_threshold: 50
 
   # List of trusted origins
   cors_allowed_origins: !secret http_trusted_origins
