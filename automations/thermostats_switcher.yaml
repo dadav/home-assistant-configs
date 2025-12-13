@@ -56,7 +56,7 @@ trigger:
     from: "off"
     to: "on"
     id: Office 1 window opened
-    for: 00:00:10
+    for: 00:01:00
   - alias: Office 1 window closed
     platform: state
     entity_id:
@@ -71,7 +71,7 @@ trigger:
     from: "off"
     to: "on"
     id: Lunch door opened
-    for: 00:00:10
+    for: 00:01:00
   - alias: Lunch door closed
     platform: state
     entity_id:
@@ -86,7 +86,7 @@ trigger:
     from: "off"
     to: "on"
     id: Bath1 window opened
-    for: 00:00:10
+    for: 00:01:00
   - alias: Bath1 window closed
     platform: state
     entity_id:
@@ -102,7 +102,7 @@ trigger:
     from: "off"
     to: "on"
     id: Bedroom window opened
-    for: 00:00:10
+    for: 00:01:00
   - alias: Bedroom window closed
     platform: state
     entity_id:
