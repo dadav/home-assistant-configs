@@ -64,7 +64,7 @@ addons:
   #       - fe80::/10
   a0d7b954_vscode:
     <<: *addon_defaults
-    ingress_panel: true
+    ingress_panel: false
   core_ssh:
     <<: *addon_defaults
     ingress_panel: true
