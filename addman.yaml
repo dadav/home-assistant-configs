@@ -64,7 +64,7 @@ addons:
   #       - fe80::/10
   a0d7b954_vscode:
     <<: *addon_defaults
-    ingress_panel: false
+    ingress_panel: true
   core_ssh:
     <<: *addon_defaults
     ingress_panel: true
@@ -135,6 +135,8 @@ addons:
       serial:
         port: /dev/ttyACM0
         adapter: deconz
+  core_vlc:
+    <<: *addon_defaults
   core_mosquitto:
     <<: *addon_defaults
     auto_update: false
