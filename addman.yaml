@@ -109,6 +109,7 @@ addons:
     options:
       login_server: *secret_headscale_uri
       advertise_exit_node: true
+      taildrop: true
   ad61c150_dss_voip:
     <<: *addon_defaults
     auto_update: false
