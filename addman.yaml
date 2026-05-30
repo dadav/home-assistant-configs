@@ -135,8 +135,6 @@ addons:
       serial:
         port: /dev/ttyACM0
         adapter: deconz
-  core_vlc:
-    <<: *addon_defaults
   core_mosquitto:
     <<: *addon_defaults
     auto_update: false
