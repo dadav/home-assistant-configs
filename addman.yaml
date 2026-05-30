@@ -110,6 +110,28 @@ addons:
       login_server: *secret_headscale_uri
       advertise_exit_node: true
       taildrop: true
+      accept_dns: true
+      accept_routes: true
+      advertise_connector: true
+      advertise_routes:
+        - local_subnets
+      always_use_derp: false
+      log_level: info
+      share_homeassistant: disabled
+      share_on_port: 443
+      snat_subnet_routes: true
+      stateful_filtering: false
+      tags: []
+      taildrive:
+        addons: false
+        addon_configs: false
+        backup: false
+        config: false
+        media: false
+        share: false
+        ssl: false
+      userspace_networking: true
+
   ad61c150_dss_voip:
     <<: *addon_defaults
     auto_update: false
