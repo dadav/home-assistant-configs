@@ -7,7 +7,8 @@ sensor:
   - name: Open windows
     unique_id: "170ae53a-02bf-4882-bf3d-1b391cabae43"
     icon: "mdi:window-open"
+    availability: "{{ state_attr('binary_sensor.all_windows', 'entity_id') is not none }}"
     state: |-
-      {% for window in states.binary_sensor.all_windows.attributes.entity_id if is_state(window, 'on') %}
-      - {{ states[window].attributes.friendly_name }}
+      {% for window in state_attr('binary_sensor.all_windows', 'entity_id') or [] if is_state(window, 'on') %}
+      - {{ state_attr(window, 'friendly_name') }}
       {% endfor %}
