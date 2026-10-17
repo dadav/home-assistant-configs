@@ -1,0 +1,1190 @@
+{
+  "title": "Floor plan",
+  "path": "floorplan",
+  "icon": "mdi:floor-plan",
+  "type": "sections",
+  "max_columns": 4,
+  "sections": [
+    {
+      "type": "grid",
+      "column_span": 4,
+      "cards": [
+        {
+          "type": "heading",
+          "heading": "Floor plan",
+          "heading_style": "title",
+          "icon": "mdi:floor-plan",
+          "badges": [
+            {
+              "type": "entity",
+              "entity": "sensor.outside_temp_temperature",
+              "name": "Outside",
+              "show_state": true,
+              "show_icon": true
+            },
+            {
+              "type": "entity",
+              "entity": "sensor.garage_temp_temperature",
+              "name": "Garage",
+              "show_state": true,
+              "show_icon": true
+            },
+            {
+              "type": "entity",
+              "entity": "binary_sensor.garage_door_contact",
+              "name": "Garage door",
+              "show_state": true,
+              "show_icon": true
+            },
+            {
+              "type": "entity",
+              "entity": "binary_sensor.everything_closed",
+              "name": "Closed",
+              "show_state": true,
+              "show_icon": true
+            },
+            {
+              "type": "entity",
+              "entity": "alarm_control_panel.security_alarm",
+              "name": "Alarm",
+              "show_state": true,
+              "show_icon": true
+            }
+          ]
+        },
+        {
+          "type": "picture-elements",
+          "image": "/local/floorplan/floorplan-light.svg",
+          "dark_mode_image": "/local/floorplan/floorplan-dark.svg",
+          "elements": [
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.buro_1_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.buro_1_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.buro_1_temperature",
+                  "style": {
+                    "left": "21.72%",
+                    "top": "12.59%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.bath2_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.bath2_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.bath2_temp_temperature",
+                  "style": {
+                    "left": "35.1%",
+                    "top": "10.88%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.bath2_temp_temperature",
+                  "state": "unavailable"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.bath2_waterdetector_temperature",
+                  "style": {
+                    "left": "35.1%",
+                    "top": "10.88%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.bath2_temp_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.bath2_temp_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.bath2_temp_humidity",
+                  "style": {
+                    "left": "35.1%",
+                    "top": "14.29%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.living_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.living_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.living_temp_temperature",
+                  "style": {
+                    "left": "24.24%",
+                    "top": "43.54%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.living_temp_temperature",
+                  "state": "unavailable"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.wohnzimmer_temperature",
+                  "style": {
+                    "left": "24.24%",
+                    "top": "43.54%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.living_temp_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.living_temp_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.living_temp_humidity",
+                  "style": {
+                    "left": "24.24%",
+                    "top": "46.94%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.lunch_co2meter_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.lunch_co2meter_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.lunch_co2meter_temperature",
+                  "style": {
+                    "left": "44.19%",
+                    "top": "63.27%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.lunch_co2meter_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.lunch_co2meter_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.lunch_co2meter_humidity",
+                  "style": {
+                    "left": "44.19%",
+                    "top": "66.67%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.lunch_co2meter_co2",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.lunch_co2meter_co2",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.lunch_co2meter_co2",
+                  "style": {
+                    "left": "44.19%",
+                    "top": "69.25%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.kitchen_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.kitchen_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.kitchen_temp_temperature",
+                  "style": {
+                    "left": "60.1%",
+                    "top": "68.71%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.kitchen_temp_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.kitchen_temp_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.kitchen_temp_humidity",
+                  "style": {
+                    "left": "60.1%",
+                    "top": "72.11%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.office2_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.office2_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.office2_temp_temperature",
+                  "style": {
+                    "left": "24.24%",
+                    "top": "69.39%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.office2_temp_temperature",
+                  "state": "unavailable"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.buro_2_temperature",
+                  "style": {
+                    "left": "24.24%",
+                    "top": "69.39%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.office2_temp_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.office2_temp_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.office2_temp_humidity",
+                  "style": {
+                    "left": "24.24%",
+                    "top": "72.79%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.bath1_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.bath1_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.bath1_temp_temperature",
+                  "style": {
+                    "left": "79.8%",
+                    "top": "55.78%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.bath1_temp_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.bath1_temp_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.bath1_temp_humidity",
+                  "style": {
+                    "left": "79.8%",
+                    "top": "59.18%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.bedroom_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.bedroom_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.bedroom_temp_temperature",
+                  "style": {
+                    "left": "77.02%",
+                    "top": "79.59%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.bedroom_temp_temperature",
+                  "state": "unavailable"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.schlafzimmer_1_temperature",
+                  "style": {
+                    "left": "77.02%",
+                    "top": "79.59%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.bedroom_temp_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.bedroom_temp_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.bedroom_temp_humidity",
+                  "style": {
+                    "left": "77.02%",
+                    "top": "82.99%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.wintergarden_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.wintergarden_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.wintergarden_temp_temperature",
+                  "style": {
+                    "left": "7.32%",
+                    "top": "43.54%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.wintergarden_temp_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.wintergarden_temp_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.wintergarden_temp_humidity",
+                  "style": {
+                    "left": "7.32%",
+                    "top": "46.94%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.storage_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.storage_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.storage_temp_temperature",
+                  "style": {
+                    "left": "91.67%",
+                    "top": "34.01%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.storage_temp_humidity",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.storage_temp_humidity",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.storage_temp_humidity",
+                  "style": {
+                    "left": "91.67%",
+                    "top": "37.41%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.office1_window_contact",
+              "state_color": true,
+              "style": {
+                "left": "13.64%",
+                "top": "18.37%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.office2_door_contact",
+              "state_color": true,
+              "style": {
+                "left": "18.69%",
+                "top": "81.63%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.lunch_door_contact",
+              "state_color": true,
+              "style": {
+                "left": "44.04%",
+                "top": "81.63%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.kitchen_door_contact",
+              "state_color": true,
+              "style": {
+                "left": "60.61%",
+                "top": "81.63%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.bedroom_door_contact",
+              "state_color": true,
+              "style": {
+                "left": "78.79%",
+                "top": "96.6%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.bedroom_window_contact",
+              "state_color": true,
+              "style": {
+                "left": "87.37%",
+                "top": "74.83%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.bath1_window_contact",
+              "state_color": true,
+              "style": {
+                "left": "87.37%",
+                "top": "54.76%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.wintergarden_door_contact",
+              "state_color": true,
+              "style": {
+                "left": "7.32%",
+                "top": "57.14%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.wintergarden_window_contact",
+              "state_color": true,
+              "style": {
+                "left": "1.01%",
+                "top": "43.54%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.entrance_door_contact",
+              "state_color": true,
+              "style": {
+                "left": "50.76%",
+                "top": "29.93%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.storage_door1_contact",
+              "state_color": true,
+              "style": {
+                "left": "95.96%",
+                "top": "44.9%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.storage_door2_contact",
+              "state_color": true,
+              "style": {
+                "left": "84.09%",
+                "top": "41.29%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "climate.buro_1",
+              "state_color": true,
+              "style": {
+                "left": "19.19%",
+                "top": "20.41%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "climate.buro_2",
+              "state_color": true,
+              "style": {
+                "left": "21.72%",
+                "top": "76.87%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "climate.wohnzimmer",
+              "state_color": true,
+              "style": {
+                "left": "21.72%",
+                "top": "51.7%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "climate.esszimmer_1",
+              "state_color": true,
+              "style": {
+                "left": "41.67%",
+                "top": "73.47%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "climate.esszimmer_2",
+              "state_color": true,
+              "style": {
+                "left": "46.72%",
+                "top": "73.47%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "climate.schlafzimmer_1",
+              "state_color": true,
+              "style": {
+                "left": "74.49%",
+                "top": "88.44%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "climate.schlafzimmer_2",
+              "state_color": true,
+              "style": {
+                "left": "79.55%",
+                "top": "88.44%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "climate.bad",
+              "state_color": true,
+              "style": {
+                "left": "77.27%",
+                "top": "62.59%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "light.office1_light2",
+              "state_color": true,
+              "style": {
+                "left": "24.24%",
+                "top": "20.41%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              },
+              "tap_action": {
+                "action": "toggle"
+              },
+              "hold_action": {
+                "action": "more-info"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "light.office2_light",
+              "state_color": true,
+              "style": {
+                "left": "26.77%",
+                "top": "76.87%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              },
+              "tap_action": {
+                "action": "toggle"
+              },
+              "hold_action": {
+                "action": "more-info"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "switch.kitchen_powerplug",
+              "state_color": true,
+              "style": {
+                "left": "60.1%",
+                "top": "76.87%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              },
+              "icon": "mdi:stove",
+              "tap_action": {
+                "action": "toggle"
+              },
+              "hold_action": {
+                "action": "more-info"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "switch.bath1_powerplug",
+              "state_color": true,
+              "style": {
+                "left": "82.32%",
+                "top": "62.59%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              },
+              "icon": "mdi:radiator",
+              "tap_action": {
+                "action": "toggle"
+              },
+              "hold_action": {
+                "action": "more-info"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "lock.vordereingang_lock",
+              "state_color": true,
+              "style": {
+                "left": "47.47%",
+                "top": "38.1%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.vordereingang_ding_2",
+              "state_color": true,
+              "style": {
+                "left": "52.53%",
+                "top": "38.1%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              },
+              "icon": "mdi:doorbell"
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "binary_sensor.is_showering",
+                  "state": "on"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-icon",
+                  "entity": "binary_sensor.is_showering",
+                  "state_color": true,
+                  "style": {
+                    "left": "84.85%",
+                    "top": "49.66%",
+                    "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "border-radius": "50%",
+                    "padding": "0.15em",
+                    "color": "var(--error-color)"
+                  },
+                  "icon": "mdi:shower-head"
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "binary_sensor.bath2_waterdetector_water_leak",
+                  "state": "on"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-icon",
+                  "entity": "binary_sensor.bath2_waterdetector_water_leak",
+                  "state_color": true,
+                  "style": {
+                    "left": "35.1%",
+                    "top": "17.69%",
+                    "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "border-radius": "50%",
+                    "padding": "0.15em",
+                    "color": "var(--error-color)"
+                  }
+                }
+              ]
+            }
+          ],
+          "grid_options": {
+            "columns": "full"
+          }
+        }
+      ]
+    }
+  ]
+}
