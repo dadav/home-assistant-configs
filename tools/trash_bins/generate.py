@@ -7,6 +7,9 @@ Every image shares the same geometry: a white label plate with the bin name on t
 and an empty lower half. The dashboard places a state-label (attribute "label" of
 sensor.trash_<slug>) at LABEL_CENTER, converted to percent of VIEW_W/VIEW_H.
 Keep VIEW_* and PLATE stable or the overlay drifts.
+The overlay font is a fixed 14px (picture-elements has no container-relative units),
+so the plate must stay wide enough for "in 10 Tagen" on the narrowest card
+(~155px with grid_options columns 6): keep PLATE width >= 56% of VIEW_W.
 /local/ is cached by browsers for 31 days: bump the ?v= query in the dashboard
 whenever the SVGs change.
 """
@@ -15,7 +18,7 @@ from pathlib import Path
 
 VIEW_W, VIEW_H = 200, 240
 # x, y, width, height of the white label plate.
-PLATE = (52, 94, 96, 92)
+PLATE = (44, 94, 112, 92)
 NAME_Y = 113
 DIVIDER_Y = 122
 LABEL_CENTER = (100, 154)
