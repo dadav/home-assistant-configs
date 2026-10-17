@@ -8,7 +8,7 @@ name: All doors
 device_class: opening
 entities:
   - binary_sensor.bedroom_door_contact
-  - binary_sensor.entrace_door_contact
+  - binary_sensor.entrance_door_contact
   - binary_sensor.kitchen_door_contact
   - binary_sensor.lunch_door_contact
   - binary_sensor.wintergarden_door_contact
