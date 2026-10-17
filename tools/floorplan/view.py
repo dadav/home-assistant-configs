@@ -1,93 +1,118 @@
 """Build the "Floor plan" view JSON for the home-main dashboard (storage mode).
 
 Usage: python3 tools/floorplan/view.py > tools/floorplan/view.json
-Apply via the HA MCP: ha_config_set_dashboard(url_path="home-main", patch=[{"op": "add",
-"path": "/views/2", "value": <view.json>}]) or replace the existing view at that index.
+Apply via the HA MCP: replace views[2] (path "floorplan") of url_path="home-main" with
+view.json, e.g. ha_config_set_dashboard(patch=[{"op": "replace", "path": "/views/2", ...}]).
 
 Element positions use the same pixel coordinates as generate.py, converted to percent.
+/local/ is cached by browsers for 31 days: bump IMAGE_VERSION whenever the SVGs change.
 """
 
 import json
 
 from generate import VIEW_H, VIEW_W, VIEW_X, VIEW_Y
 
-IMAGE_LIGHT = "/local/floorplan/floorplan-light.svg"
-IMAGE_DARK = "/local/floorplan/floorplan-dark.svg"
+IMAGE_VERSION = "2"
+IMAGE_LIGHT = f"/local/floorplan/floorplan-light.svg?v={IMAGE_VERSION}"
+IMAGE_DARK = f"/local/floorplan/floorplan-dark.svg?v={IMAGE_VERSION}"
 
 PILL_BACKGROUND = "color-mix(in srgb, var(--card-background-color) 88%, transparent)"
 PILL_SHADOW = "0 1px 6px rgba(0, 0, 0, 0.18)"
+HUMIDITY_PREFIX = "💧 "
 
-# Temperature pill per room. fallback is used while the primary sensor is unavailable.
+# One reading block per room:
+# temperature: big pill; fallback replaces it while the primary is unavailable.
+# humidity: always shown below the pill (shows "Unavailable" when the sensor is down,
+#   so dead sensors stay visible). None when the room has no humidity sensor.
+# extra: further small labels below humidity, hidden while unavailable.
 ROOM_READINGS = [
     {
         "room": "Zimmer 1",
         "at": (450, 215),
         "temperature": "sensor.buro_1_temperature",
         "fallback": None,
-        "secondary": [],
+        "humidity": None,
+        "extra": [],
     },
     {
         "room": "DU/WC",
         "at": (715, 190),
         "temperature": "sensor.bath2_temp_temperature",
         "fallback": "sensor.bath2_waterdetector_temperature",
-        "secondary": ["sensor.bath2_temp_humidity"],
+        "humidity": "sensor.bath2_temp_humidity",
+        "extra": [],
     },
     {
         "room": "Wohnen",
         "at": (500, 670),
         "temperature": "sensor.living_temp_temperature",
         "fallback": "sensor.wohnzimmer_temperature",
-        "secondary": ["sensor.living_temp_humidity"],
+        "humidity": "sensor.living_temp_humidity",
+        "extra": [],
     },
     {
         "room": "Essen",
         "at": (895, 960),
         "temperature": "sensor.lunch_co2meter_temperature",
         "fallback": None,
-        "secondary": ["sensor.lunch_co2meter_humidity", "sensor.lunch_co2meter_co2"],
+        "humidity": "sensor.lunch_co2meter_humidity",
+        "extra": ["sensor.lunch_co2meter_co2"],
     },
     {
         "room": "Kueche",
         "at": (1210, 1040),
         "temperature": "sensor.kitchen_temp_temperature",
         "fallback": None,
-        "secondary": ["sensor.kitchen_temp_humidity"],
+        "humidity": "sensor.kitchen_temp_humidity",
+        "extra": [],
     },
     {
         "room": "Zimmer 2",
         "at": (500, 1050),
         "temperature": "sensor.office2_temp_temperature",
         "fallback": "sensor.buro_2_temperature",
-        "secondary": ["sensor.office2_temp_humidity"],
+        "humidity": "sensor.office2_temp_humidity",
+        "extra": [],
     },
     {
         "room": "Bad",
         "at": (1600, 850),
         "temperature": "sensor.bath1_temp_temperature",
         "fallback": None,
-        "secondary": ["sensor.bath1_temp_humidity"],
+        "humidity": "sensor.bath1_temp_humidity",
+        "extra": [],
     },
     {
         "room": "Schlafen",
         "at": (1545, 1200),
         "temperature": "sensor.bedroom_temp_temperature",
         "fallback": "sensor.schlafzimmer_1_temperature",
-        "secondary": ["sensor.bedroom_temp_humidity"],
+        "humidity": "sensor.bedroom_temp_humidity",
+        "extra": [],
     },
     {
         "room": "Wintergarten",
         "at": (165, 670),
         "temperature": "sensor.wintergarden_temp_temperature",
         "fallback": None,
-        "secondary": ["sensor.wintergarden_temp_humidity"],
+        "humidity": "sensor.wintergarden_temp_humidity",
+        "extra": [],
     },
     {
         "room": "Keller 2",
         "at": (1835, 530),
         "temperature": "sensor.storage_temp_temperature",
         "fallback": None,
-        "secondary": ["sensor.storage_temp_humidity"],
+        "humidity": "sensor.storage_temp_humidity",
+        "extra": [],
+    },
+    {
+        "room": "Garage",
+        "at": (1835, 210),
+        "temperature": "sensor.garage_temp_temperature",
+        "fallback": "sensor.garage_door_device_temperature",
+        "humidity": "sensor.garage_temp_humidity",
+        "extra": [],
     },
 ]
 
@@ -103,10 +128,11 @@ ICONS = [
     {"entity": "binary_sensor.bedroom_window_contact", "at": (1750, 1130)},
     {"entity": "binary_sensor.bath1_window_contact", "at": (1750, 835)},
     {"entity": "binary_sensor.wintergarden_door_contact", "at": (165, 870)},
-    {"entity": "binary_sensor.wintergarden_window_contact", "at": (40, 670)},
+    {"entity": "binary_sensor.wintergarden_window_contact", "at": (165, 470)},
     {"entity": "binary_sensor.entrance_door_contact", "at": (1025, 470)},
     {"entity": "binary_sensor.storage_door1_contact", "at": (1920, 690)},
     {"entity": "binary_sensor.storage_door2_contact", "at": (1685, 637)},
+    {"entity": "binary_sensor.garage_door_contact", "at": (1835, 55)},
     # Thermostats
     {"entity": "climate.buro_1", "at": (400, 330)},
     {"entity": "climate.buro_2", "at": (450, 1160)},
@@ -131,6 +157,12 @@ ICONS = [
         "toggle": True,
         "icon": "mdi:radiator",
     },
+    {
+        "entity": "switch.garage_power",
+        "at": (1835, 330),
+        "toggle": True,
+        "icon": "mdi:power-socket-eu",
+    },
     # Entrance
     {"entity": "lock.vordereingang_lock", "at": (960, 590)},
     {
@@ -147,15 +179,13 @@ ICONS = [
     },
     {
         "entity": "binary_sensor.bath2_waterdetector_water_leak",
-        "at": (715, 290),
+        "at": (715, 300),
         "alert_only": True,
     },
 ]
 
 HEADING_BADGES = [
     {"entity": "sensor.outside_temp_temperature", "name": "Outside"},
-    {"entity": "sensor.garage_temp_temperature", "name": "Garage"},
-    {"entity": "binary_sensor.garage_door_contact", "name": "Garage door"},
     {"entity": "binary_sensor.everything_closed", "name": "Closed"},
     {"entity": "alarm_control_panel.security_alarm", "name": "Alarm"},
 ]
@@ -186,21 +216,25 @@ def temperature_label(entity, at):
     }
 
 
-def secondary_label(entity, at, index):
+def small_label(entity, at, line, prefix=None):
+    """Small label on the given line below the temperature pill (line 0 is right below)."""
     x, y = at
-    return {
+    label = {
         "type": "state-label",
         "entity": entity,
         "style": {
-            **position((x, y + 50 + index * 38)),
+            **position((x, y + 50 + line * 38)),
             "font-size": "clamp(9px, 0.95vw, 17px)",
             "color": "var(--secondary-text-color)",
             "white-space": "nowrap",
         },
     }
+    if prefix:
+        label["prefix"] = prefix
+    return label
 
 
-def unavailable_condition(entity):
+def available_condition(entity):
     return [
         {"entity": entity, "state_not": "unavailable"},
         {"entity": entity, "state_not": "unknown"},
@@ -208,16 +242,14 @@ def unavailable_condition(entity):
 
 
 def room_elements(reading):
-    elements = []
-    primary = temperature_label(reading["temperature"], reading["at"])
+    elements = [
+        {
+            "type": "conditional",
+            "conditions": available_condition(reading["temperature"]),
+            "elements": [temperature_label(reading["temperature"], reading["at"])],
+        }
+    ]
     if reading["fallback"]:
-        elements.append(
-            {
-                "type": "conditional",
-                "conditions": unavailable_condition(reading["temperature"]),
-                "elements": [primary],
-            }
-        )
         elements.append(
             {
                 "type": "conditional",
@@ -227,22 +259,22 @@ def room_elements(reading):
                 "elements": [temperature_label(reading["fallback"], reading["at"])],
             }
         )
-    else:
+
+    line = 0
+    if reading["humidity"]:
+        elements.append(
+            small_label(reading["humidity"], reading["at"], line, HUMIDITY_PREFIX)
+        )
+        line += 1
+    for entity in reading["extra"]:
         elements.append(
             {
                 "type": "conditional",
-                "conditions": unavailable_condition(reading["temperature"]),
-                "elements": [primary],
+                "conditions": available_condition(entity),
+                "elements": [small_label(entity, reading["at"], line)],
             }
         )
-    for index, entity in enumerate(reading["secondary"]):
-        elements.append(
-            {
-                "type": "conditional",
-                "conditions": unavailable_condition(entity),
-                "elements": [secondary_label(entity, reading["at"], index)],
-            }
-        )
+        line += 1
     return elements
 
 

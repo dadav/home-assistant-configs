@@ -96,6 +96,12 @@ ROOMS = [
         "points": [(1685, 380), (1985, 380), (1985, 690), (1685, 690)],
     },
     {
+        "name": "Garage",
+        "kind": "garage",
+        "label_at": (1707, 98),
+        "points": [(1685, 55), (1985, 55), (1985, 380), (1685, 380)],
+    },
+    {
         "name": "Zimmer 2",
         "kind": "office",
         "label_at": (312, 912),
@@ -136,8 +142,8 @@ FOOTPRINT = [
     (1180, 350),
     (1180, 455),
     (1685, 455),
-    (1685, 380),
-    (1985, 380),
+    (1685, 55),
+    (1985, 55),
     (1985, 690),
     (1750, 690),
     (1750, 1450),
@@ -149,6 +155,7 @@ FOOTPRINT = [
 # Openings in walls. gap: center line (x1, y1, x2, y2) on a horizontal or vertical wall.
 # swing: None (open passage) or (hinge_x, hinge_y, sweep_end_x, sweep_end_y).
 # fill: tint kind used to paint the erased wall so the opening blends into a room.
+# panel: optional, draws a dashed sectional door across a full outer-wall opening.
 DOORS = [
     {
         "name": "Zimmer 1",
@@ -222,12 +229,20 @@ DOORS = [
         "swing": (1960, 690, 1880, 765),
         "fill": "utility",
     },
+    {
+        "name": "Garage door",
+        "gap": (1725, 55, 1945, 55),
+        "swing": None,
+        "fill": "garage",
+        "panel": True,
+    },
 ]
 
 # Windows and glazed doors on outer walls: (x1, y1, x2, y2).
 WINDOWS = [
     (290, 240, 290, 360),  # Zimmer 1
     (725, 55, 815, 55),  # DU/WC
+    (70, 470, 260, 470),  # Wintergarten roof side
     (290, 590, 290, 760),  # Wohnen to Wintergarten
     (290, 1110, 290, 1200),  # Zimmer 2 side
     (320, 1230, 460, 1230),  # Zimmer 2 terrace door
@@ -263,6 +278,7 @@ PALETTES = {
             "utility": "#e8e4dd",
             "kitchen": "#e2f2df",
             "bedroom": "#ebe3f7",
+            "garage": "#e4e6e9",
         },
     },
     "dark": {
@@ -285,6 +301,7 @@ PALETTES = {
             "utility": "#2a2824",
             "kitchen": "#1f3022",
             "bedroom": "#2b2639",
+            "garage": "#24272b",
         },
     },
 }
@@ -373,10 +390,16 @@ def render(palette):
     for door in DOORS:
         x1, y1, x2, y2 = door["gap"]
         swing = door["swing"]
-        rx, ry, rw, rh = door_gap_rect(x1, y1, x2, y2, WALL + 2)
+        rx, ry, rw, rh = door_gap_rect(
+            x1, y1, x2, y2, OUTER_WALL + 4 if door.get("panel") else WALL + 2
+        )
         out.append(
             f'<rect x="{rx}" y="{ry}" width="{rw}" height="{rh}" fill="{p["tints"][door["fill"]]}"/>'
         )
+        if door.get("panel"):
+            out.append(
+                f'<path d="M{x1},{y1}L{x2},{y2}" stroke="{p["wall"]}" stroke-width="6" stroke-dasharray="22 10"/>'
+            )
         if swing:
             hx, hy, ex, ey = swing
             # Leaf from hinge to the open position, quarter arc back to the closed position.

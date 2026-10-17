@@ -24,20 +24,6 @@
             },
             {
               "type": "entity",
-              "entity": "sensor.garage_temp_temperature",
-              "name": "Garage",
-              "show_state": true,
-              "show_icon": true
-            },
-            {
-              "type": "entity",
-              "entity": "binary_sensor.garage_door_contact",
-              "name": "Garage door",
-              "show_state": true,
-              "show_icon": true
-            },
-            {
-              "type": "entity",
               "entity": "binary_sensor.everything_closed",
               "name": "Closed",
               "show_state": true,
@@ -54,8 +40,8 @@
         },
         {
           "type": "picture-elements",
-          "image": "/local/floorplan/floorplan-light.svg",
-          "dark_mode_image": "/local/floorplan/floorplan-dark.svg",
+          "image": "/local/floorplan/floorplan-light.svg?v=2",
+          "dark_mode_image": "/local/floorplan/floorplan-dark.svg?v=2",
           "elements": [
             {
               "type": "conditional",
@@ -147,30 +133,16 @@
               ]
             },
             {
-              "type": "conditional",
-              "conditions": [
-                {
-                  "entity": "sensor.bath2_temp_humidity",
-                  "state_not": "unavailable"
-                },
-                {
-                  "entity": "sensor.bath2_temp_humidity",
-                  "state_not": "unknown"
-                }
-              ],
-              "elements": [
-                {
-                  "type": "state-label",
-                  "entity": "sensor.bath2_temp_humidity",
-                  "style": {
-                    "left": "35.1%",
-                    "top": "14.29%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
-                    "white-space": "nowrap"
-                  }
-                }
-              ]
+              "type": "state-label",
+              "entity": "sensor.bath2_temp_humidity",
+              "style": {
+                "left": "35.1%",
+                "top": "14.29%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "conditional",
@@ -231,30 +203,16 @@
               ]
             },
             {
-              "type": "conditional",
-              "conditions": [
-                {
-                  "entity": "sensor.living_temp_humidity",
-                  "state_not": "unavailable"
-                },
-                {
-                  "entity": "sensor.living_temp_humidity",
-                  "state_not": "unknown"
-                }
-              ],
-              "elements": [
-                {
-                  "type": "state-label",
-                  "entity": "sensor.living_temp_humidity",
-                  "style": {
-                    "left": "24.24%",
-                    "top": "46.94%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
-                    "white-space": "nowrap"
-                  }
-                }
-              ]
+              "type": "state-label",
+              "entity": "sensor.living_temp_humidity",
+              "style": {
+                "left": "24.24%",
+                "top": "46.94%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "conditional",
@@ -288,30 +246,16 @@
               ]
             },
             {
-              "type": "conditional",
-              "conditions": [
-                {
-                  "entity": "sensor.lunch_co2meter_humidity",
-                  "state_not": "unavailable"
-                },
-                {
-                  "entity": "sensor.lunch_co2meter_humidity",
-                  "state_not": "unknown"
-                }
-              ],
-              "elements": [
-                {
-                  "type": "state-label",
-                  "entity": "sensor.lunch_co2meter_humidity",
-                  "style": {
-                    "left": "44.19%",
-                    "top": "66.67%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
-                    "white-space": "nowrap"
-                  }
-                }
-              ]
+              "type": "state-label",
+              "entity": "sensor.lunch_co2meter_humidity",
+              "style": {
+                "left": "44.19%",
+                "top": "66.67%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "conditional",
@@ -371,30 +315,16 @@
               ]
             },
             {
-              "type": "conditional",
-              "conditions": [
-                {
-                  "entity": "sensor.kitchen_temp_humidity",
-                  "state_not": "unavailable"
-                },
-                {
-                  "entity": "sensor.kitchen_temp_humidity",
-                  "state_not": "unknown"
-                }
-              ],
-              "elements": [
-                {
-                  "type": "state-label",
-                  "entity": "sensor.kitchen_temp_humidity",
-                  "style": {
-                    "left": "60.1%",
-                    "top": "72.11%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
-                    "white-space": "nowrap"
-                  }
-                }
-              ]
+              "type": "state-label",
+              "entity": "sensor.kitchen_temp_humidity",
+              "style": {
+                "left": "60.1%",
+                "top": "72.11%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "conditional",
@@ -455,30 +385,16 @@
               ]
             },
             {
-              "type": "conditional",
-              "conditions": [
-                {
-                  "entity": "sensor.office2_temp_humidity",
-                  "state_not": "unavailable"
-                },
-                {
-                  "entity": "sensor.office2_temp_humidity",
-                  "state_not": "unknown"
-                }
-              ],
-              "elements": [
-                {
-                  "type": "state-label",
-                  "entity": "sensor.office2_temp_humidity",
-                  "style": {
-                    "left": "24.24%",
-                    "top": "72.79%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
-                    "white-space": "nowrap"
-                  }
-                }
-              ]
+              "type": "state-label",
+              "entity": "sensor.office2_temp_humidity",
+              "style": {
+                "left": "24.24%",
+                "top": "72.79%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "conditional",
@@ -512,30 +428,16 @@
               ]
             },
             {
-              "type": "conditional",
-              "conditions": [
-                {
-                  "entity": "sensor.bath1_temp_humidity",
-                  "state_not": "unavailable"
-                },
-                {
-                  "entity": "sensor.bath1_temp_humidity",
-                  "state_not": "unknown"
-                }
-              ],
-              "elements": [
-                {
-                  "type": "state-label",
-                  "entity": "sensor.bath1_temp_humidity",
-                  "style": {
-                    "left": "79.8%",
-                    "top": "59.18%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
-                    "white-space": "nowrap"
-                  }
-                }
-              ]
+              "type": "state-label",
+              "entity": "sensor.bath1_temp_humidity",
+              "style": {
+                "left": "79.8%",
+                "top": "59.18%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "conditional",
@@ -596,30 +498,16 @@
               ]
             },
             {
-              "type": "conditional",
-              "conditions": [
-                {
-                  "entity": "sensor.bedroom_temp_humidity",
-                  "state_not": "unavailable"
-                },
-                {
-                  "entity": "sensor.bedroom_temp_humidity",
-                  "state_not": "unknown"
-                }
-              ],
-              "elements": [
-                {
-                  "type": "state-label",
-                  "entity": "sensor.bedroom_temp_humidity",
-                  "style": {
-                    "left": "77.02%",
-                    "top": "82.99%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
-                    "white-space": "nowrap"
-                  }
-                }
-              ]
+              "type": "state-label",
+              "entity": "sensor.bedroom_temp_humidity",
+              "style": {
+                "left": "77.02%",
+                "top": "82.99%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "conditional",
@@ -653,30 +541,16 @@
               ]
             },
             {
-              "type": "conditional",
-              "conditions": [
-                {
-                  "entity": "sensor.wintergarden_temp_humidity",
-                  "state_not": "unavailable"
-                },
-                {
-                  "entity": "sensor.wintergarden_temp_humidity",
-                  "state_not": "unknown"
-                }
-              ],
-              "elements": [
-                {
-                  "type": "state-label",
-                  "entity": "sensor.wintergarden_temp_humidity",
-                  "style": {
-                    "left": "7.32%",
-                    "top": "46.94%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
-                    "white-space": "nowrap"
-                  }
-                }
-              ]
+              "type": "state-label",
+              "entity": "sensor.wintergarden_temp_humidity",
+              "style": {
+                "left": "7.32%",
+                "top": "46.94%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "conditional",
@@ -710,30 +584,86 @@
               ]
             },
             {
+              "type": "state-label",
+              "entity": "sensor.storage_temp_humidity",
+              "style": {
+                "left": "91.67%",
+                "top": "37.41%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
+            },
+            {
               "type": "conditional",
               "conditions": [
                 {
-                  "entity": "sensor.storage_temp_humidity",
+                  "entity": "sensor.garage_temp_temperature",
                   "state_not": "unavailable"
                 },
                 {
-                  "entity": "sensor.storage_temp_humidity",
+                  "entity": "sensor.garage_temp_temperature",
                   "state_not": "unknown"
                 }
               ],
               "elements": [
                 {
                   "type": "state-label",
-                  "entity": "sensor.storage_temp_humidity",
+                  "entity": "sensor.garage_temp_temperature",
                   "style": {
                     "left": "91.67%",
-                    "top": "37.41%",
-                    "font-size": "clamp(9px, 0.95vw, 17px)",
-                    "color": "var(--secondary-text-color)",
+                    "top": "12.24%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
                     "white-space": "nowrap"
                   }
                 }
               ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.garage_temp_temperature",
+                  "state": "unavailable"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.garage_door_device_temperature",
+                  "style": {
+                    "left": "91.67%",
+                    "top": "12.24%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "state-label",
+              "entity": "sensor.garage_temp_humidity",
+              "style": {
+                "left": "91.67%",
+                "top": "15.65%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
             },
             {
               "type": "state-icon",
@@ -852,8 +782,8 @@
               "entity": "binary_sensor.wintergarden_window_contact",
               "state_color": true,
               "style": {
-                "left": "1.01%",
-                "top": "43.54%",
+                "left": "7.32%",
+                "top": "29.93%",
                 "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
                 "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
                 "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
@@ -896,6 +826,20 @@
               "style": {
                 "left": "84.09%",
                 "top": "41.29%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              }
+            },
+            {
+              "type": "state-icon",
+              "entity": "binary_sensor.garage_door_contact",
+              "state_color": true,
+              "style": {
+                "left": "91.67%",
+                "top": "1.7%",
                 "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
                 "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
                 "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
@@ -1099,6 +1043,27 @@
             },
             {
               "type": "state-icon",
+              "entity": "switch.garage_power",
+              "state_color": true,
+              "style": {
+                "left": "91.67%",
+                "top": "20.41%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              },
+              "icon": "mdi:power-socket-eu",
+              "tap_action": {
+                "action": "toggle"
+              },
+              "hold_action": {
+                "action": "more-info"
+              }
+            },
+            {
+              "type": "state-icon",
               "entity": "lock.vordereingang_lock",
               "state_color": true,
               "style": {
@@ -1168,7 +1133,7 @@
                   "state_color": true,
                   "style": {
                     "left": "35.1%",
-                    "top": "17.69%",
+                    "top": "18.37%",
                     "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
                     "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
                     "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
