@@ -6,40 +6,44 @@
 #
 id: "6467257e-8844-4d73-8ea2-cebb140f9a3e"
 mode: single
+max_exceeded: silent
 alias: "Light still on reminder"
 description: |-
   This automation reminds me to turn off some lights.
 
   Sometimes I turn on a light and forget to turn it off again.
-  This automations aims to prevent this.
-
-trigger:
-  - platform: state
+  This automations aims to prevent this. It reminds me every hour
+  (or after the chosen snooze time) until all lights are off.
+triggers:
+  - trigger: state
     entity_id: light.all_lights
     to: "on"
-    for: "00:{{ '%0.2d' | format(states('input_number.light_reminder_time')|int) }}:00"
-
-condition: "{{ is_state('input_boolean.light_reminder', 'on') }}"
-
-action:
+    for:
+      minutes: "{{ states('input_number.light_reminder_time') | int(60) }}"
+conditions:
+  - condition: state
+    entity_id: input_boolean.light_reminder
+    state: "on"
+actions:
   - variables:
-      action_cooldown15: "{{ 'CLOSE_COOLDOWN15_' ~ context.id }}"
-      action_cooldown60: "{{ 'CLOSE_COOLDOWN60_' ~ context.id }}"
-      action_cooldown300: "{{ 'CLOSE_COOLDOWN300_' ~ context.id }}"
-  - alias: "Keep sending notifications until its closed again"
+      action_cooldown15: "{{ 'LIGHT_COOLDOWN15_' ~ context.id }}"
+      action_cooldown60: "{{ 'LIGHT_COOLDOWN60_' ~ context.id }}"
+      action_cooldown180: "{{ 'LIGHT_COOLDOWN180_' ~ context.id }}"
+  - alias: "Keep sending notifications until all lights are off"
     repeat:
       until:
         - condition: state
           entity_id: light.all_lights
           state: "off"
       sequence:
-        - service: notify.mobile_app_pixel_7
+        - action: notify.mobile_app_pixel_7
           data:
             title: "There is still some light turned on..."
             message: |-
               You might want to turn these off:
                 {{ states('sensor.turned_on_lights') }}
             data:
+              tag: light_still_on
               color: "yellow"
               notification_icon: "mdi:lightbulb-on"
               actions:
@@ -47,33 +51,42 @@ action:
                   title: "15 mins"
                 - action: "{{ action_cooldown60 }}"
                   title: "1 h"
-                - action: "{{ action_cooldown300 }}"
+                - action: "{{ action_cooldown180 }}"
                   title: "3 h"
         - wait_for_trigger:
-            - platform: event
+            - trigger: event
               event_type: mobile_app_notification_action
               event_data:
                 action: "{{ action_cooldown15 }}"
-              id: 'Option One'
-            - platform: event
+              id: snooze15
+            - trigger: event
               event_type: mobile_app_notification_action
               event_data:
                 action: "{{ action_cooldown60 }}"
-              id: 'Option Two'
-            - platform: event
+              id: snooze60
+            - trigger: event
               event_type: mobile_app_notification_action
               event_data:
-                action: "{{ action_cooldown300 }}"
-              id: 'Option Three'
+                action: "{{ action_cooldown180 }}"
+              id: snooze180
+            - trigger: state
+              entity_id: light.all_lights
+              to: "off"
+              id: lights_off
           timeout: "01:00:00"
-          continue_on_timeout: false
+          continue_on_timeout: true
         - choose:
-            - conditions: "{{ wait.trigger.id == 'Option One' }}"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
               sequence:
-                - delay: "00:15"
-            - conditions: "{{ wait.trigger.id == 'Option Two' }}"
+                - delay: "00:15:00"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze60' }}"
               sequence:
-                - delay: "01:00"
-            - conditions: "{{ wait.trigger.id == 'Option Three' }}"
+                - delay: "01:00:00"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze180' }}"
               sequence:
-                - delay: "03:00"
+                - delay: "03:00:00"
+  - action: notify.mobile_app_pixel_7
+    data:
+      message: clear_notification
+      data:
+        tag: light_still_on

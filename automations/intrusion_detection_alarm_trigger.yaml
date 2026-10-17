@@ -1,7 +1,8 @@
 ---
 # Intrusion detection automation
 #
-# This automation detects suspicious activity and notifys me.
+# This automation detects suspicious activity and triggers the
+# security alarm.
 #
 id: "cc881516-1e51-4b9c-9542-c4b261ac98c9"
 mode: queued
@@ -20,21 +21,26 @@ description: >-
     - A window was opened
     - A door was opened
 
-variables:
-  excluded_areas: "{{ states('sensor.skip_security_in_areas') }}"
-
-trigger:
-  - platform: event
-    event_type: state_changed
-
-condition:
-  - condition: template
-    value_template: >-
-      {{
-        trigger.event.data.entity_id is match('^binary_sensor\.[a-z0-9_]+_(?:door|window)[0-9]*_contact')
-        and trigger.event.data.old_state.state == 'off'
-        and trigger.event.data.new_state.state == 'on'
-      }}
+  At night, areas listed in sensor.skip_security_in_areas are ignored.
+triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.bath1_window_contact
+      - binary_sensor.bedroom_door_contact
+      - binary_sensor.bedroom_window_contact
+      - binary_sensor.entrance_door_contact
+      - binary_sensor.garage_door_contact
+      - binary_sensor.kitchen_door_contact
+      - binary_sensor.lunch_door_contact
+      - binary_sensor.office1_window_contact
+      - binary_sensor.office2_door_contact
+      - binary_sensor.storage_door1_contact
+      - binary_sensor.storage_door2_contact
+      - binary_sensor.wintergarden_door_contact
+      - binary_sensor.wintergarden_window_contact
+    from: "off"
+    to: "on"
+conditions:
   - or:
       - condition: state
         entity_id: alarm_control_panel.security_alarm
@@ -43,20 +49,20 @@ condition:
           - condition: state
             entity_id: alarm_control_panel.security_alarm
             state: armed_night
-          - condition: template
+          - alias: "Area is not skipped at night"
+            condition: template
             value_template: >-
               {{
-                area_name(trigger.event.data.entity_id) not in excluded_areas
+                area_name(trigger.entity_id) is none
+                or area_name(trigger.entity_id)
+                  not in states('sensor.skip_security_in_areas')
               }}
-
-action:
-  - service: input_text.set_value
+actions:
+  - action: input_text.set_value
     target:
       entity_id: input_text.last_security_alarm_entity
     data:
-      value: >-
-        {{state_attr(trigger.event.data.entity_id, 'friendly_name')}}
-
-  - service: alarm_control_panel.alarm_trigger
+      value: "{{ trigger.to_state.name }}"
+  - action: alarm_control_panel.alarm_trigger
     target:
       entity_id: alarm_control_panel.security_alarm

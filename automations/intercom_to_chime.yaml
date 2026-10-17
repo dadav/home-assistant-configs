@@ -1,18 +1,22 @@
 ---
+# Intercom to chime automation
+#
+# The Ring intercom has no own chime, so the living room chime
+# plays the ding sound when someone rings.
+#
 id: "68229927-07bf-4342-800b-20a291ce5ed5"
 trace:
   stored_traces: 25
 alias: Intercom to chime pipeline
 description: >-
   Triggers the chime if the intercom gets pressed.
+mode: single
 triggers:
   - trigger: state
-    entity_id:
-      - binary_sensor.vordereingang_ding_2
+    entity_id: binary_sensor.vordereingang_ding_2
+    from: "off"
     to: "on"
-    # from: null
 actions:
-  - action: homeassistant.turn_on
+  - action: switch.turn_on
     target:
       entity_id: switch.wohnzimmer_play_ding_sound
-mode: single

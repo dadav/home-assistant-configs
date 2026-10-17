@@ -6,6 +6,7 @@
 #
 id: "8511c2ca-4ea3-429f-b3a3-e35bd6289e67"
 mode: single
+max_exceeded: silent
 alias: "Window or door open for too long reminder"
 description: |-
   This automation reminds me to close an open window or door.
@@ -13,25 +14,42 @@ description: |-
   Sometimes I open a window or door to let some fresh air in
   and forget to close it again. This automations aims to prevent
   this.
-trigger:
-  - platform: state
+
+  Only active when opening makes it worse: in summer mode when it is
+  warmer outside, otherwise when it is colder outside. Needs both
+  temperature sensors (outside_warmer_than_inside is unavailable
+  without them).
+triggers:
+  - trigger: state
     entity_id: binary_sensor.everything_closed
     to: "off"
-    for: "00:{{ '%0.2d' | format(states('input_number.max_open_window_or_door_time')|int) }}:00"
-condition: "{{ states('input_boolean.summer_mode') == states('binary_sensor.outside_warmer_than_inside') and is_state('binary_sensor.probably_sleeping', 'off') }}"
-action:
+    for:
+      minutes: "{{ states('input_number.max_open_window_or_door_time') | int(15) }}"
+conditions:
+  - condition: state
+    entity_id: binary_sensor.probably_sleeping
+    state: "off"
+  - alias: "Opening makes it worse"
+    condition: template
+    value_template: >-
+      {{
+        states('binary_sensor.outside_warmer_than_inside') in ['on', 'off']
+        and states('input_boolean.summer_mode')
+          == states('binary_sensor.outside_warmer_than_inside')
+      }}
+actions:
   - variables:
       action_cooldown15: "{{ 'CLOSE_COOLDOWN15_' ~ context.id }}"
       action_cooldown60: "{{ 'CLOSE_COOLDOWN60_' ~ context.id }}"
-      action_cooldown300: "{{ 'CLOSE_COOLDOWN300_' ~ context.id }}"
-  - alias: "Keep sending notifications until its closed again"
+      action_cooldown180: "{{ 'CLOSE_COOLDOWN180_' ~ context.id }}"
+  - alias: "Keep sending notifications until everything is closed again"
     repeat:
       until:
         - condition: state
           entity_id: binary_sensor.everything_closed
           state: "on"
       sequence:
-        - service: notify.mobile_app_pixel_7
+        - action: notify.mobile_app_pixel_7
           data:
             title: "Close windows and doors now!"
             message: |-
@@ -39,6 +57,7 @@ action:
                 {{ states('sensor.open_windows') }}
                 {{ states('sensor.open_doors') }}
             data:
+              tag: window_door_open
               color: "yellow"
               notification_icon: "mdi:window-open"
               actions:
@@ -46,33 +65,42 @@ action:
                   title: "15 mins"
                 - action: "{{ action_cooldown60 }}"
                   title: "1 h"
-                - action: "{{ action_cooldown300 }}"
+                - action: "{{ action_cooldown180 }}"
                   title: "3 h"
         - wait_for_trigger:
-            - platform: event
+            - trigger: event
               event_type: mobile_app_notification_action
               event_data:
                 action: "{{ action_cooldown15 }}"
-              id: 'Option One'
-            - platform: event
+              id: snooze15
+            - trigger: event
               event_type: mobile_app_notification_action
               event_data:
                 action: "{{ action_cooldown60 }}"
-              id: 'Option Two'
-            - platform: event
+              id: snooze60
+            - trigger: event
               event_type: mobile_app_notification_action
               event_data:
-                action: "{{ action_cooldown300 }}"
-              id: 'Option Three'
+                action: "{{ action_cooldown180 }}"
+              id: snooze180
+            - trigger: state
+              entity_id: binary_sensor.everything_closed
+              to: "on"
+              id: closed
           timeout: "01:00:00"
-          continue_on_timeout: false
+          continue_on_timeout: true
         - choose:
-            - conditions: "{{ wait.trigger.id == 'Option One' }}"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
               sequence:
-                - delay: "00:15"
-            - conditions: "{{ wait.trigger.id == 'Option Two' }}"
+                - delay: "00:15:00"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze60' }}"
               sequence:
-                - delay: "01:00"
-            - conditions: "{{ wait.trigger.id == 'Option Three' }}"
+                - delay: "01:00:00"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze180' }}"
               sequence:
-                - delay: "03:00"
+                - delay: "03:00:00"
+  - action: notify.mobile_app_pixel_7
+    data:
+      message: clear_notification
+      data:
+        tag: window_door_open

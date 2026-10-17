@@ -10,19 +10,22 @@ trace:
 alias: "Security alarm triggered"
 description: >-
   This automation gets triggered, when a security issue was detected.
-trigger:
-  - platform: state
+  It notifies my phone, calls me if the notification was not received
+  while I'm probably sleeping and offers a disarm button.
+mode: single
+max_exceeded: silent
+triggers:
+  - trigger: state
     entity_id: alarm_control_panel.security_alarm
     to: "triggered"
-
-action:
+actions:
   - variables:
       action_disarm: "{{ 'DISARM_' ~ context.id }}"
-  - service: notify.mobile_app_pixel_7
+  - action: notify.mobile_app_pixel_7
     data:
       title: &notify_title "Security alarm triggered"
       message: &notify_message >-
-        The entity {{states('input_text.last_security_alarm_entity')}} triggered the security alarm.
+        The entity {{ states('input_text.last_security_alarm_entity') }} triggered the security alarm.
       data:
         ttl: 0
         priority: high
@@ -34,7 +37,7 @@ action:
           - action: "{{ action_disarm }}"
             title: "Disarm"
   - wait_for_trigger:
-      - platform: event
+      - trigger: event
         event_type: mobile_app_notification_received
         event_data:
           title: *notify_title
@@ -43,42 +46,34 @@ action:
   - choose:
       - alias: "When notification wasnt received"
         conditions:
-          - alias: "Phone is off and probably sleeping"
-            condition: and
-            conditions:
-              - condition: template
-                value_template: "{{ not wait.trigger }}"
-              - condition: state
-                entity_id: binary_sensor.probably_sleeping
-                state: "on"
+          - condition: template
+            value_template: "{{ wait.trigger is none }}"
+          - condition: state
+            entity_id: binary_sensor.probably_sleeping
+            state: "on"
         sequence:
           - alias: "Call phone via sip"
-            service: hassio.addon_stdin
+            action: hassio.addon_stdin
             data:
               addon: ad61c150_dss_voip
               input:
                 call_sip_uri: !secret emergency_sip_uri
                 message_tts: *notify_message
           - alias: "Turn on lights with breathe effect"
-            service: light.turn_on
+            action: light.turn_on
             data:
               effect: breathe
               brightness_pct: 100
             target:
               entity_id: light.all_lights
   - wait_for_trigger:
-      - platform: event
+      - trigger: event
         event_type: mobile_app_notification_action
         event_data:
           action: "{{ action_disarm }}"
-        id: Disarm
-    timeout: "00:01:00"
+    timeout: "00:05:00"
     continue_on_timeout: false
-  - choose:
-      - alias: "When disarm button was pressed"
-        conditions: "{{ wait.trigger.id == 'Disarm' }}"
-        sequence:
-          - alias: "Disarm the security alarm"
-            service: alarm_control_panel.alarm_disarm
-            target:
-              entity_id: alarm_control_panel.security_alarm
+  - alias: "Disarm the security alarm"
+    action: alarm_control_panel.alarm_disarm
+    target:
+      entity_id: alarm_control_panel.security_alarm

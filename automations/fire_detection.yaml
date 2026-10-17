@@ -1,45 +1,81 @@
 ---
-# Intrusion detection automation
+# Fire detection automation
 #
-# This automation detects suspicious activity and notifys me.
+# This automation detects unusually high temperatures and notifies me
+# by push notification and by phone call.
 #
 id: "0f2f1eeb-b028-470e-b835-cf2a0fb23a1d"
 mode: queued
 max_exceeded: silent
 alias: "Fire detection automation"
 description: >-
-  This automation detects unusualy high temperatures and sends me a notification in multiple ways.
-variables:
-  maybe_fire_temperature: "{{ states('input_number.maybe_fire_temperature') | int }}"
-
-trigger:
-  - platform: event
-    event_type: state_changed
-
-condition:
-  - condition: template
+  Detects unusually high temperatures on any room, device or thermostat
+  temperature sensor and alerts me in multiple ways.
+triggers:
+  - trigger: numeric_state
+    entity_id:
+      # Room climate sensors
+      - sensor.bath1_temp_temperature
+      - sensor.bath2_temp_temperature
+      - sensor.bedroom_temp_temperature
+      - sensor.garage_temp_temperature
+      - sensor.kitchen_temp_temperature
+      - sensor.living_temp_temperature
+      - sensor.lunch_co2meter_temperature
+      - sensor.office2_temp_temperature
+      - sensor.storage_temp_temperature
+      - sensor.wintergarden_temp_temperature
+      # Internal temperature of contact sensors and buttons
+      - sensor.bath1_window_device_temperature
+      - sensor.bath2_waterdetector_temperature
+      - sensor.bedroom_door_device_temperature
+      - sensor.bedroom_window_device_temperature
+      - sensor.entrance_door_device_temperature
+      - sensor.garage_door_device_temperature
+      - sensor.kitchen_door_device_temperature
+      - sensor.lunch_door_device_temperature
+      - sensor.office1_window_device_temperature
+      - sensor.office2_button_device_temperature
+      - sensor.office2_door_device_temperature
+      - sensor.storage_door1_device_temperature
+      - sensor.storage_door2_device_temperature
+      - sensor.wintergarden_door_device_temperature
+      - sensor.wintergarden_window_device_temperature
+      # Thermostat sensors
+      - sensor.bad_temperature
+      - sensor.buro_1_temperature
+      - sensor.buro_2_temperature
+      - sensor.esszimmer_1_temperature
+      - sensor.esszimmer_2_temperature
+      - sensor.schlafzimmer_1_temperature
+      - sensor.schlafzimmer_2_temperature
+      - sensor.wohnzimmer_temperature
+    above: input_number.maybe_fire_temperature
+conditions:
+  - alias: "Ignore re-arming after restart or unavailable blips"
+    condition: template
     value_template: >-
       {{
-        trigger.event.data.entity_id is match('^sensor\.[a-z0-9_]+_(?:door|window|temp|co2meter)_temperature')
-        and trigger.event.data.new_state.state | int(0) >= maybe_fire_temperature
+        trigger.from_state is not none
+        and is_number(trigger.from_state.state)
       }}
-
-action:
-  - service: notify.mobile_app_pixel_7
+actions:
+  - action: notify.mobile_app_pixel_7
     data:
       title: "Possible fire detected!"
       message: >-
-        This entity triggered the automation was: {{trigger.event.data.entity_id}}
+        {{ trigger.to_state.name }} reports {{ trigger.to_state.state }} °C.
       data:
         ttl: 0
         priority: high
         channel: alarm_stream
-        notification_icon: "mdi:alarm-light"
+        notification_icon: "mdi:fire-alert"
         color: red
-  - service: hassio.addon_stdin
+  - action: hassio.addon_stdin
     data:
       addon: ad61c150_dss_voip
       input:
         call_sip_uri: !secret emergency_sip_uri
         message_tts: >-
-          The sensor {{states[trigger.event.data.entity_id].attributes.friendly_name}} is getting really hot. Please check it out.
+          The sensor {{ trigger.to_state.name }} is getting really hot.
+          Please check it out.

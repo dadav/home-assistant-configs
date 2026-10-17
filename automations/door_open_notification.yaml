@@ -7,27 +7,33 @@ mode: parallel
 max_exceeded: silent
 alias: "Door open notification automation"
 description: >-
-  Send a notfication to my phone when the door is open.
-trigger:
-  - platform: state
-    entity_id:
+  Send a notification to my phone when an outside door is open.
+triggers:
+  - trigger: state
+    entity_id: &outside_doors
       - binary_sensor.garage_door_contact
       - binary_sensor.entrance_door_contact
       - binary_sensor.storage_door1_contact
       - binary_sensor.storage_door2_contact
-action:
-  - variables:
-      entity_tag: "{{ 'open_door_tag_' ~ trigger.entity_id }}"
+    to: "on"
+    id: opened
+  - trigger: state
+    entity_id: *outside_doors
+    to: "off"
+    id: closed
+variables:
+  entity_tag: "{{ 'open_door_tag_' ~ trigger.entity_id }}"
+actions:
   - choose:
       - conditions:
-          - condition: template
-            value_template: "{{ is_state(trigger.entity_id, 'on') }}"
+          - condition: trigger
+            id: opened
         sequence:
-          - service: notify.mobile_app_pixel_7
+          - action: notify.mobile_app_pixel_7
             data:
-              title: "{{states[trigger.entity_id].attributes.friendly_name}} is open."
+              title: "{{ trigger.to_state.name }} is open."
               message: >-
-                Open since {{ states('sensor.time') }}
+                Open since {{ now().strftime('%H:%M') }}
               data:
                 notification_icon: "mdi:door-open"
                 tag: "{{ entity_tag }}"
@@ -35,12 +41,12 @@ action:
                 actions:
                   - action: "URI"
                     title: "Open"
-                    uri: "entityId:{{trigger.entity_id}}"
+                    uri: "entityId:{{ trigger.entity_id }}"
       - conditions:
-          - condition: template
-            value_template: "{{ is_state(trigger.entity_id, 'off') }}"
+          - condition: trigger
+            id: closed
         sequence:
-          - service: notify.mobile_app_pixel_7
+          - action: notify.mobile_app_pixel_7
             data:
               message: "clear_notification"
               data:

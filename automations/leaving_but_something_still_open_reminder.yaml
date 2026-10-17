@@ -1,23 +1,26 @@
 ---
 # Leaving but something is still open automation
 #
-# This automation detects sensor with low battery and notifies me.
+# This automation reminds me about open windows or doors when
+# everybody left the house.
 #
 id: "20f51e6a-1018-4ce5-bd7d-9e702ad1b3be"
 mode: single
 alias: "Leaving but something is still open"
 description: >-
   This automation sends me a notification if I leave the house and there are still any windows or doors open.
-trigger:
-  - platform: state
+triggers:
+  - trigger: state
     entity_id: binary_sensor.people_home
-    to: 'off'
-    for: '00:00:30'
-
-condition: "{{ is_state('binary_sensor.everything_closed', 'off') }}"
-
-action:
-  - service: notify.mobile_app_pixel_7
+    from: "on"
+    to: "off"
+    for: "00:00:30"
+conditions:
+  - condition: state
+    entity_id: binary_sensor.everything_closed
+    state: "off"
+actions:
+  - action: notify.mobile_app_pixel_7
     data:
       title: "Door or window still open"
       message: >-

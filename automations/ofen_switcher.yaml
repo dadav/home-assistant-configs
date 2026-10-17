@@ -4,15 +4,19 @@
 #
 id: "66c3956a-4dd6-4af0-8e5d-45354b8af18a"
 alias: "Bath ofen switcher"
-
-trigger:
-  - platform: state
+description: >-
+  Turns off the bath heater as soon as the bath window is opened.
+mode: single
+triggers:
+  - trigger: state
     entity_id: binary_sensor.bath1_window_contact
-
-action:
-  - choose:
-      - conditions: "{{trigger.to_state.state == 'on'}}"
-        sequence:
-          - service: homeassistant.turn_off
-            target:
-              entity_id: switch.bath1_powerplug
+    from: "off"
+    to: "on"
+conditions:
+  - condition: state
+    entity_id: switch.bath1_powerplug
+    state: "on"
+actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.bath1_powerplug
