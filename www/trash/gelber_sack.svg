@@ -10,8 +10,8 @@
 <path d="M108,66 L130,30 Q116,34 102,56 Z" fill="#f6cf2f" stroke="#c99a0e" stroke-width="2.5" stroke-linejoin="round"/>
 <ellipse cx="100" cy="64" rx="12" ry="7" fill="#d8b629" stroke="#c99a0e" stroke-width="2.5"/>
 <circle cx="100" cy="78" r="11" fill="#fff" opacity="0.92"/><g transform="translate(100 78)"><path d="M-6.5,1.5 A6.5,6.5 0 0 1 4.5,-4.7" fill="none" stroke="#8a6a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5,-1.5 A6.5,6.5 0 0 1 -4.5,4.7" fill="none" stroke="#8a6a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2,-8 L6,-4 L1,-2.5 Z" fill="#8a6a00"/><path d="M-2,8 L-6,4 L-1,2.5 Z" fill="#8a6a00"/></g>
-<rect x="52" y="96" width="96" height="92" rx="12" fill="#000" opacity="0.18"/>
-<rect x="52" y="94" width="96" height="92" rx="12" fill="#fff"/>
+<rect x="44" y="96" width="112" height="92" rx="12" fill="#000" opacity="0.18"/>
+<rect x="44" y="94" width="112" height="92" rx="12" fill="#fff"/>
 <text x="100.0" y="113" text-anchor="middle" font-size="12.5" font-weight="700" letter-spacing="0.3" fill="#8a6a00">Gelber Sack</text>
-<path d="M66,122H134" stroke="#c99a0e" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+<path d="M58,122H142" stroke="#c99a0e" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
 </svg>
