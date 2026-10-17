@@ -2,12 +2,20 @@
 #
 # Small binary sensor to tell me if it's outside warmer than inside
 #
+# Unavailable when one of the sensors has no numeric value, so
+# automations do not act on a fake 0.0 > 0.0 comparison.
+#
 binary_sensor:
   - name: Outside warmer than inside
     unique_id: "f06752c7-c7a4-470f-99e5-99ec6fe8fb3b"
     icon: "mdi:weather-sunny"
+    availability: >-
+      {{
+        is_number(states('sensor.outside_temp_temperature'))
+        and is_number(states('sensor.living_temp_temperature'))
+      }}
     state: >-
       {{
-        states('sensor.outside_temp_temperature')|float(0.0)
-        > states('sensor.living_temp_temperature')|float(0.0)
+        states('sensor.outside_temp_temperature') | float
+        > states('sensor.living_temp_temperature') | float
       }}

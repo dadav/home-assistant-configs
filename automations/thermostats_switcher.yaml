@@ -4,6 +4,11 @@
 # This automation switches the thermostats on and off
 # when I turned the away mode on.
 #
+# Pattern per room: when the window/door is open for a minute, snapshot
+# the thermostat(s) into a scene and turn them off. When it is closed
+# again, restore the scene and delete it. The 3 minute poll catches
+# transitions that happened while Home Assistant was restarting.
+#
 id: 62f17829-bce4-495f-b1d5-b6798a9281a1
 alias: Thermostat switcher
 description: >-
@@ -15,7 +20,8 @@ description: >-
 
   And when I open a window, I want the thermostat to
   turn off as long as it is still open.
-
+mode: queued
+max_exceeded: silent
 variables:
   all_thermostats: &all_thermostats
     - climate.bad
@@ -26,474 +32,451 @@ variables:
     - climate.schlafzimmer_1
     - climate.schlafzimmer_2
     - climate.wohnzimmer
-
-trigger:
+triggers:
   - alias: Away mode turned on
-    platform: state
-    entity_id:
-      - input_boolean.away_mode
+    trigger: state
+    entity_id: input_boolean.away_mode
     from: "off"
     to: "on"
-    id: Away mode turned on
+    id: away_on
   - alias: Away mode turned off
-    platform: state
-    entity_id:
-      - input_boolean.away_mode
+    trigger: state
+    entity_id: input_boolean.away_mode
     from: "on"
     to: "off"
-    id: Away mode turned off
+    id: away_off
   - alias: People are home
-    platform: state
-    entity_id:
-      - binary_sensor.people_home
+    trigger: state
+    entity_id: binary_sensor.people_home
     from: "off"
     to: "on"
-    id: People are home
+    id: people_home
   - alias: Office 1 window opened
-    platform: state
-    entity_id:
-      - binary_sensor.office1_window_contact
+    trigger: state
+    entity_id: binary_sensor.office1_window_contact
     from: "off"
     to: "on"
-    id: Office 1 window opened
-    for: 00:01:00
+    for: "00:01:00"
+    id: office1_opened
   - alias: Office 1 window closed
-    platform: state
-    entity_id:
-      - binary_sensor.office1_window_contact
+    trigger: state
+    entity_id: binary_sensor.office1_window_contact
     from: "on"
     to: "off"
-    id: Office 1 window closed
+    id: office1_closed
+  - alias: Office 2 door opened
+    trigger: state
+    entity_id: binary_sensor.office2_door_contact
+    from: "off"
+    to: "on"
+    for: "00:01:00"
+    id: office2_opened
+  - alias: Office 2 door closed
+    trigger: state
+    entity_id: binary_sensor.office2_door_contact
+    from: "on"
+    to: "off"
+    id: office2_closed
   - alias: Lunch door opened
-    platform: state
-    entity_id:
-      - binary_sensor.lunch_door_contact
+    trigger: state
+    entity_id: binary_sensor.lunch_door_contact
     from: "off"
     to: "on"
-    id: Lunch door opened
-    for: 00:01:00
+    for: "00:01:00"
+    id: lunch_opened
   - alias: Lunch door closed
-    platform: state
-    entity_id:
-      - binary_sensor.lunch_door_contact
+    trigger: state
+    entity_id: binary_sensor.lunch_door_contact
     from: "on"
     to: "off"
-    id: Lunch door closed
+    id: lunch_closed
   - alias: Bath1 window opened
-    platform: state
-    entity_id:
-      - binary_sensor.bath1_window_contact
+    trigger: state
+    entity_id: binary_sensor.bath1_window_contact
     from: "off"
     to: "on"
-    id: Bath1 window opened
-    for: 00:01:00
+    for: "00:01:00"
+    id: bath1_opened
   - alias: Bath1 window closed
-    platform: state
-    entity_id:
-      - binary_sensor.bath1_window_contact
+    trigger: state
+    entity_id: binary_sensor.bath1_window_contact
     from: "on"
     to: "off"
-    id: Bath1 window closed
+    id: bath1_closed
   - alias: Bedroom window opened
-    platform: state
+    trigger: state
     entity_id:
       - binary_sensor.bedroom_window_contact
       - binary_sensor.bedroom_door_contact
     from: "off"
     to: "on"
-    id: Bedroom window opened
-    for: 00:01:00
+    for: "00:01:00"
+    id: bedroom_opened
   - alias: Bedroom window closed
-    platform: state
+    trigger: state
     entity_id:
       - binary_sensor.bedroom_window_contact
       - binary_sensor.bedroom_door_contact
     from: "on"
     to: "off"
-    id: Bedroom window closed
+    id: bedroom_closed
   - alias: Time check
-    platform: time_pattern
+    trigger: time_pattern
     minutes: /3
-    id: Time check
-
-action:
+    id: poll
+actions:
   - choose:
-      - conditions:
-          - alias: Office 1 window opened
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+      # Office 1
+      - alias: Office 1 window opened
+        conditions:
+          - or:
+              - condition: trigger
+                id: office1_opened
+              - and:
                   - condition: trigger
-                    id: Office 1 window opened
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.office1_window_contact
-                        state: "on"
-              - condition: state
-                entity_id:
-                  - climate.buro_1
-                state: heat
+                    id: poll
+                  - condition: state
+                    entity_id: binary_sensor.office1_window_contact
+                    state: "on"
+          - condition: state
+            entity_id: climate.buro_1
+            state: heat
         sequence:
-          - service: scene.create
+          - action: scene.create
             data:
               scene_id: office1_thermostat
               snapshot_entities:
                 - climate.buro_1
           - alias: Turn off the thermostat
-            service: climate.turn_off
+            action: climate.turn_off
             target:
-              entity_id:
-                - climate.buro_1
-      - conditions:
-          - alias: Office 1 window closed again
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+              entity_id: climate.buro_1
+      - alias: Office 1 window closed again
+        conditions:
+          - or:
+              - condition: trigger
+                id: office1_closed
+              - and:
                   - condition: trigger
-                    id: Office 1 window closed
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - input_boolean.away_mode
-                        state: "off"
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.office1_window_contact
-                        state: "off"
-              - condition: state
-                entity_id:
-                  - climate.buro_1
-                state: "off"
+                    id: poll
+                  - condition: state
+                    entity_id: input_boolean.away_mode
+                    state: "off"
+                  - condition: state
+                    entity_id: binary_sensor.office1_window_contact
+                    state: "off"
+          - condition: state
+            entity_id: climate.buro_1
+            state: "off"
+          - alias: Snapshot scene exists
+            condition: template
+            value_template: "{{ states.scene.office1_thermostat is not none }}"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.office1_thermostat
-      - conditions:
-          - alias: Office 2 door opened
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+          - alias: Forget the snapshot so a manual off is not undone by the poll
+            action: scene.delete
+            target:
+              entity_id: scene.office1_thermostat
+      # Office 2
+      - alias: Office 2 door opened
+        conditions:
+          - or:
+              - condition: trigger
+                id: office2_opened
+              - and:
                   - condition: trigger
-                    id: Office 2 door opened
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.office2_door_contact
-                        state: "on"
-              - condition: state
-                entity_id:
-                  - climate.buro_2
-                state: heat
+                    id: poll
+                  - condition: state
+                    entity_id: binary_sensor.office2_door_contact
+                    state: "on"
+          - condition: state
+            entity_id: climate.buro_2
+            state: heat
         sequence:
-          - service: scene.create
+          - action: scene.create
             data:
               scene_id: office2_thermostat
               snapshot_entities:
                 - climate.buro_2
           - alias: Turn off the thermostat
-            service: climate.turn_off
+            action: climate.turn_off
             target:
-              entity_id:
-                - climate.buro_2
-      - conditions:
-          - alias: Office 2 door closed again
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+              entity_id: climate.buro_2
+      - alias: Office 2 door closed again
+        conditions:
+          - or:
+              - condition: trigger
+                id: office2_closed
+              - and:
                   - condition: trigger
-                    id: Office 2 door closed
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - input_boolean.away_mode
-                        state: "off"
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.office2_door_contact
-                        state: "off"
-              - condition: state
-                entity_id:
-                  - climate.buro_2
-                state: "off"
+                    id: poll
+                  - condition: state
+                    entity_id: input_boolean.away_mode
+                    state: "off"
+                  - condition: state
+                    entity_id: binary_sensor.office2_door_contact
+                    state: "off"
+          - condition: state
+            entity_id: climate.buro_2
+            state: "off"
+          - alias: Snapshot scene exists
+            condition: template
+            value_template: "{{ states.scene.office2_thermostat is not none }}"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.office2_thermostat
-      - conditions:
-          - alias: Lunch door opened
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+          - alias: Forget the snapshot so a manual off is not undone by the poll
+            action: scene.delete
+            target:
+              entity_id: scene.office2_thermostat
+      # Lunch and living
+      - alias: Lunch door opened
+        conditions:
+          - or:
+              - condition: trigger
+                id: lunch_opened
+              - and:
                   - condition: trigger
-                    id: Lunch door opened
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.lunch_door_contact
-                        state: "on"
-              - condition: state
-                entity_id:
-                  - climate.wohnzimmer
-                  - climate.esszimmer_1
-                  - climate.esszimmer_2
-                match: any
-                state: heat
+                    id: poll
+                  - condition: state
+                    entity_id: binary_sensor.lunch_door_contact
+                    state: "on"
+          - condition: state
+            entity_id:
+              - climate.wohnzimmer
+              - climate.esszimmer_1
+              - climate.esszimmer_2
+            match: any
+            state: heat
         sequence:
-          - service: scene.create
+          - action: scene.create
             data:
               scene_id: lunch_living_thermostat
               snapshot_entities:
                 - climate.wohnzimmer
                 - climate.esszimmer_1
                 - climate.esszimmer_2
-          - alias: Turn off the thermostat
-            service: climate.turn_off
+          - alias: Turn off the thermostats
+            action: climate.turn_off
             target:
               entity_id:
                 - climate.wohnzimmer
                 - climate.esszimmer_1
                 - climate.esszimmer_2
-      - conditions:
-          - alias: Lunch door closed again
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+      - alias: Lunch door closed again
+        conditions:
+          - or:
+              - condition: trigger
+                id: lunch_closed
+              - and:
                   - condition: trigger
-                    id: Lunch door closed
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - input_boolean.away_mode
-                        state: "off"
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.lunch_door_contact
-                        state: "off"
-              - condition: state
-                entity_id:
-                  - climate.wohnzimmer
-                  - climate.esszimmer_1
-                  - climate.esszimmer_2
-                state: "off"
+                    id: poll
+                  - condition: state
+                    entity_id: input_boolean.away_mode
+                    state: "off"
+                  - condition: state
+                    entity_id: binary_sensor.lunch_door_contact
+                    state: "off"
+          - condition: state
+            entity_id:
+              - climate.wohnzimmer
+              - climate.esszimmer_1
+              - climate.esszimmer_2
+            state: "off"
+          - alias: Snapshot scene exists
+            condition: template
+            value_template: "{{ states.scene.lunch_living_thermostat is not none }}"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.lunch_living_thermostat
-      - conditions:
-          - alias: Bath1 window opened
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+          - alias: Forget the snapshot so a manual off is not undone by the poll
+            action: scene.delete
+            target:
+              entity_id: scene.lunch_living_thermostat
+      # Bath 1
+      - alias: Bath1 window opened
+        conditions:
+          - or:
+              - condition: trigger
+                id: bath1_opened
+              - and:
                   - condition: trigger
-                    id: Bath1 window opened
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.bath1_window_contact
-                        state: "on"
-              - condition: state
-                entity_id:
-                  - climate.bad
-                state: heat
+                    id: poll
+                  - condition: state
+                    entity_id: binary_sensor.bath1_window_contact
+                    state: "on"
+          - condition: state
+            entity_id: climate.bad
+            state: heat
         sequence:
-          - service: scene.create
+          - action: scene.create
             data:
               scene_id: bad_thermostat
               snapshot_entities:
                 - climate.bad
           - alias: Turn off the thermostat
-            service: climate.turn_off
+            action: climate.turn_off
             target:
-              entity_id:
-                - climate.bad
-      - conditions:
-          - alias: Bath1 window closed again
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+              entity_id: climate.bad
+      - alias: Bath1 window closed again
+        conditions:
+          - or:
+              - condition: trigger
+                id: bath1_closed
+              - and:
                   - condition: trigger
-                    id: Bath1 window closed
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - input_boolean.away_mode
-                        state: "off"
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.bath1_window_contact
-                        state: "off"
-              - condition: state
-                entity_id:
-                  - climate.bad
-                state: "off"
+                    id: poll
+                  - condition: state
+                    entity_id: input_boolean.away_mode
+                    state: "off"
+                  - condition: state
+                    entity_id: binary_sensor.bath1_window_contact
+                    state: "off"
+          - condition: state
+            entity_id: climate.bad
+            state: "off"
+          - alias: Snapshot scene exists
+            condition: template
+            value_template: "{{ states.scene.bad_thermostat is not none }}"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.bad_thermostat
-      - conditions:
-          - alias: Bedroom window opened
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
+          - alias: Forget the snapshot so a manual off is not undone by the poll
+            action: scene.delete
+            target:
+              entity_id: scene.bad_thermostat
+      # Bedroom (optionally combined with the bath 1 window)
+      - alias: Bedroom window opened
+        conditions:
+          - or:
+              - condition: trigger
+                id: bedroom_opened
+              - and:
                   - condition: trigger
-                    id: Bedroom window opened
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.bedroom_window_contact
-                          - binary_sensor.bedroom_door_contact
-                        state: "on"
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.bath1_window_contact
-                        state: "on"
-                      - condition: state
-                        entity_id:
-                          - input_boolean.combine_bath_and_bedroom
-                        state: "on"
-              - condition: state
-                entity_id:
-                  - climate.schlafzimmer_1
-                  - climate.schlafzimmer_2
-                match: any
-                state: heat
+                    id: poll
+                  - condition: state
+                    entity_id:
+                      - binary_sensor.bedroom_window_contact
+                      - binary_sensor.bedroom_door_contact
+                    match: any
+                    state: "on"
+              - and:
+                  - condition: trigger
+                    id: poll
+                  - condition: state
+                    entity_id: binary_sensor.bath1_window_contact
+                    state: "on"
+                  - condition: state
+                    entity_id: input_boolean.combine_bath_and_bedroom
+                    state: "on"
+          - condition: state
+            entity_id:
+              - climate.schlafzimmer_1
+              - climate.schlafzimmer_2
+            match: any
+            state: heat
         sequence:
-          - service: scene.create
+          - action: scene.create
             data:
               scene_id: bedroom_thermostat
               snapshot_entities:
                 - climate.schlafzimmer_1
                 - climate.schlafzimmer_2
-          - alias: Turn off the thermostat
-            service: climate.turn_off
+          - alias: Turn off the thermostats
+            action: climate.turn_off
             target:
               entity_id:
                 - climate.schlafzimmer_1
                 - climate.schlafzimmer_2
-      - conditions:
-          - alias: Bedroom window closed again
-            condition: and
-            conditions:
-              - condition: or
-                conditions:
-                  - condition: state
-                    entity_id:
-                      - input_boolean.combine_bath_and_bedroom
-                    state: "off"
-                  - condition: and
-                    conditions:
-                      - condition: state
-                        entity_id:
-                          - input_boolean.combine_bath_and_bedroom
-                        state: "on"
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.bath1_window_contact
-                        state: "off"
-              - condition: or
-                conditions:
-                  - condition: trigger
-                    id: Bedroom window closed
-                  - condition: and
-                    conditions:
-                      - condition: trigger
-                        id: Time check
-                      - condition: state
-                        entity_id:
-                          - input_boolean.away_mode
-                        state: "off"
-                      - condition: state
-                        entity_id:
-                          - binary_sensor.bedroom_window_contact
-                          - binary_sensor.bedroom_door_contact
-                        state: "off"
+      - alias: Bedroom window closed again
+        conditions:
+          - or:
               - condition: state
-                entity_id:
-                  - climate.schlafzimmer_1
-                  - climate.schlafzimmer_2
+                entity_id: input_boolean.combine_bath_and_bedroom
                 state: "off"
+              - condition: state
+                entity_id: binary_sensor.bath1_window_contact
+                state: "off"
+          - or:
+              - condition: trigger
+                id: bedroom_closed
+              - and:
+                  - condition: trigger
+                    id: poll
+                  - condition: state
+                    entity_id: input_boolean.away_mode
+                    state: "off"
+          - condition: state
+            entity_id:
+              - binary_sensor.bedroom_window_contact
+              - binary_sensor.bedroom_door_contact
+            state: "off"
+          - condition: state
+            entity_id:
+              - climate.schlafzimmer_1
+              - climate.schlafzimmer_2
+            state: "off"
+          - alias: Snapshot scene exists
+            condition: template
+            value_template: "{{ states.scene.bedroom_thermostat is not none }}"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.bedroom_thermostat
-      - conditions:
-          - alias: Away mode turned on
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Away mode turned on
-              - condition: state
-                entity_id: *all_thermostats
-                match: any
-                state: heat
+          - alias: Forget the snapshot so a manual off is not undone by the poll
+            action: scene.delete
+            target:
+              entity_id: scene.bedroom_thermostat
+      # Away mode
+      - alias: Away mode turned on
+        conditions:
+          - condition: trigger
+            id: away_on
+          - condition: state
+            entity_id: *all_thermostats
+            match: any
+            state: heat
         sequence:
-          - service: scene.create
+          - action: scene.create
             data:
               scene_id: before
               snapshot_entities: *all_thermostats
           - alias: Turn off the thermostats
-            service: climate.turn_off
+            action: climate.turn_off
             target:
               entity_id: *all_thermostats
-      - conditions:
-          - alias: Away mode turned off
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Away mode turned off
-              - condition: state
-                entity_id: *all_thermostats
-                match: any
-                state: "off"
+      - alias: Away mode turned off
+        conditions:
+          - condition: trigger
+            id: away_off
+          - condition: state
+            entity_id: *all_thermostats
+            match: any
+            state: "off"
+          - alias: Snapshot scene exists
+            condition: template
+            value_template: "{{ states.scene.before is not none }}"
         sequence:
-          - service: scene.turn_on
+          - action: scene.turn_on
             target:
               entity_id: scene.before
-      - conditions:
+          - alias: Forget the snapshot so a manual off is not undone by the poll
+            action: scene.delete
+            target:
+              entity_id: scene.before
+      - alias: People came home, end away mode
+        conditions:
           - condition: trigger
-            id: People are home
+            id: people_home
+          - condition: state
+            entity_id: input_boolean.away_mode
+            state: "on"
         sequence:
-          - service: input_boolean.turn_off
+          - action: input_boolean.turn_off
             target:
               entity_id: input_boolean.away_mode

@@ -2,10 +2,12 @@
 #
 # Small binary sensor to tell me if anyone is home
 #
+# Counts every person entity, so persons without trackers
+# (state unknown) do not break it.
+#
 binary_sensor:
   - name: People home
     unique_id: "47fa6ec0-da11-4e65-bee6-1a7213d7c0d2"
     icon: "mdi:home-account"
     state: >-
-      {{ is_state('person.daniel', 'home')
-         or is_state('person.corinna', 'home') }}
+      {{ states.person | selectattr('state', 'eq', 'home') | list | count > 0 }}

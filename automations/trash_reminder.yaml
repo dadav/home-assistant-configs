@@ -7,21 +7,22 @@ id: 356696e4-4423-4863-8f28-a02ec1ef18ac
 mode: queued
 alias: Trash reminder
 description: |-
-  This automation reminds me to put the trash outside
-
-trigger:
-  - platform: calendar
+  This automation reminds me to put the trash outside the evening
+  before the pickup.
+triggers:
+  - trigger: calendar
     event: start
     entity_id: calendar.trash
-    offset: -08:00:00
-action:
-  - service: notify.mobile_app_pixel_7
+    offset: "-08:00:00"
+actions:
+  - action: notify.mobile_app_pixel_7
     data:
       title: "{{ trigger.calendar_event.summary }}"
-      message: "{{ trigger.calendar_event.description }}"
+      message: "{{ trigger.calendar_event.description or 'Put the trash outside.' }}"
       data:
         notification_icon: mdi:trash-can
-  - service: persistent_notification.create
+  - action: persistent_notification.create
     data:
+      notification_id: trash_reminder
       title: "{{ trigger.calendar_event.summary }}"
-      message: "{{ trigger.calendar_event.description }}"
+      message: "{{ trigger.calendar_event.description or 'Put the trash outside.' }}"

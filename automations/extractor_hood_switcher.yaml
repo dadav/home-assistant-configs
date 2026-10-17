@@ -8,20 +8,33 @@
 #
 id: "659d017f-b25c-447d-8651-488e1a8c3c54"
 alias: "Extractor hood power switcher"
-
-trigger:
-  - platform: state
+description: >-
+  Powers the extractor hood only while the kitchen door is open.
+mode: restart
+triggers:
+  - trigger: state
     entity_id: binary_sensor.kitchen_door_contact
-
-action:
+    from: "off"
+    to: "on"
+    id: opened
+  - trigger: state
+    entity_id: binary_sensor.kitchen_door_contact
+    from: "on"
+    to: "off"
+    id: closed
+actions:
   - choose:
-      - conditions: "{{trigger.to_state.state == 'on'}}"
+      - conditions:
+          - condition: trigger
+            id: opened
         sequence:
-          - service: homeassistant.turn_on
+          - action: switch.turn_on
             target:
               entity_id: switch.kitchen_powerplug
-      - conditions: "{{trigger.to_state.state == 'off'}}"
+      - conditions:
+          - condition: trigger
+            id: closed
         sequence:
-          - service: homeassistant.turn_off
+          - action: switch.turn_off
             target:
               entity_id: switch.kitchen_powerplug

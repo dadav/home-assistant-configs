@@ -16,30 +16,21 @@ description: >-
   room.
   When this automation is triggered, a security alarm will
   be triggered.
-
-trigger:
-  - platform: event
-    event_type: state_changed
-    event_data:
-      entity_id: binary_sensor.garage_door_contact
-
-condition:
-  - condition: template
-    value_template: >-
-      {{
-        trigger.event.data.old_state.state == 'off'
-        and trigger.event.data.new_state.state == 'on'
-        and is_state('input_boolean.watch_garage_activities', 'on')
-      }}
-
-action:
-  - service: input_text.set_value
+triggers:
+  - trigger: state
+    entity_id: binary_sensor.garage_door_contact
+    from: "off"
+    to: "on"
+conditions:
+  - condition: state
+    entity_id: input_boolean.watch_garage_activities
+    state: "on"
+actions:
+  - action: input_text.set_value
     target:
       entity_id: input_text.last_security_alarm_entity
     data:
-      value: >-
-        {{state_attr(trigger.event.data.entity_id, 'friendly_name')}}
-
-  - service: alarm_control_panel.alarm_trigger
+      value: "{{ trigger.to_state.name }}"
+  - action: alarm_control_panel.alarm_trigger
     target:
       entity_id: alarm_control_panel.security_alarm

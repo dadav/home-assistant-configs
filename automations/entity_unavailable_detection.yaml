@@ -1,85 +1,111 @@
 ---
 # Entity unavailable detection automation
 #
-# This automation notifies me if an entity went unavailable.
+# This automation notifies me if an important entity went unavailable
+# for a while and clears the notification once it is back.
+#
+# Only the entities in the watch list are monitored. Listening to every
+# state_changed event was too expensive on the Pi.
 #
 id: f8700e07-1e98-4c0e-bc76-72cb293811d9
 mode: parallel
 max_exceeded: silent
 alias: Entity unavailable detection
 description: >-
-  This automation notfies me if an entity went unavailable. But also it deletes the notification if the entity goes into normal
-  state again. I don't care then...
-trigger:
-  - platform: event
-    event_type: state_changed
-
-condition:
-  - condition: template
-    value_template: >-
-      {{
-        trigger.event.data.new_state.state == 'unavailable'
-        or trigger.event.data.old_state.state == 'unavailable'
-      }}
-
+  Notifies me if a watched entity is unavailable for 30 minutes and
+  removes the notification when it recovers.
+triggers:
+  - trigger: state
+    # Watch list, starting with doors and windows
+    entity_id: &watched_entities
+      - binary_sensor.bath1_window_contact
+      - binary_sensor.bedroom_door_contact
+      - binary_sensor.bedroom_window_contact
+      - binary_sensor.entrance_door_contact
+      - binary_sensor.garage_door_contact
+      - binary_sensor.kitchen_door_contact
+      - binary_sensor.lunch_door_contact
+      - binary_sensor.office1_window_contact
+      - binary_sensor.office2_door_contact
+      - binary_sensor.storage_door1_contact
+      - binary_sensor.storage_door2_contact
+      - binary_sensor.wintergarden_door_contact
+      - binary_sensor.wintergarden_window_contact
+      # Water
+      - binary_sensor.bath2_waterdetector_water_leak
+      # Climate sensors
+      - sensor.bath1_temp_temperature
+      - sensor.bath2_temp_temperature
+      - sensor.bedroom_temp_temperature
+      - sensor.garage_temp_temperature
+      - sensor.kitchen_temp_temperature
+      - sensor.kitchen_fridge_temperature
+      - sensor.living_temp_temperature
+      - sensor.office2_temp_temperature
+      - sensor.outside_temp_temperature
+      - sensor.storage_temp_temperature
+      - sensor.wintergarden_temp_temperature
+      - sensor.lunch_co2meter_co2
+      # Thermostats
+      - climate.bad
+      - climate.buro_1
+      - climate.buro_2
+      - climate.esszimmer_1
+      - climate.esszimmer_2
+      - climate.schlafzimmer_1
+      - climate.schlafzimmer_2
+      - climate.wohnzimmer
+      # Switches and lights
+      - switch.bath1_powerplug
+      - switch.kitchen_powerplug
+      - switch.storage_power
+      - switch.garage_power
+      - light.office1_light2
+      - light.office2_light
+      # Others
+      - lock.vordereingang_lock
+      - binary_sensor.zigbee2mqtt_bridge_connection_state
+    to: "unavailable"
+    for: "00:30:00"
+    id: unavailable
+  - trigger: state
+    entity_id: *watched_entities
+    from: "unavailable"
+    id: recovered
 variables:
-  excluded_entities:
-    - light.lunch_light1
-    - select.lunch_light1_power_on_behavior
-    - update.lunch_light1
-    - light.lunch_light2
-    - select.lunch_light2_power_on_behavior
-    - update.lunch_light2
-    - light.lunch_light3
-    - select.lunch_light3_power_on_behavior
-    - update.lunch_light3
-    - light.bedroom_light1
-    - select.bedroom_light1_power_on_behavior
-    - update.bedroom_light1
-    - light.bedroom_light2
-    - select.bedroom_light2_power_on_behavior
-    - update.bedroom_light2
-    - light.bedroom_light3
-    - select.bedroom_light3_power_on_behavior
-    - update.bedroom_light3
-    - light.bedroom_lights
-    - button.lg_webos_tv_fa22_identify
-    - media_player.lg_webos_tv_fa22
-    - switch.lg_webos_tv_fa22_mute
-
-action:
-  - variables:
-      entity_tag: "{{ 'unavailable_tag_' ~ trigger.event.data.entity_id }}"
+  entity_tag: "{{ 'unavailable_tag_' ~ trigger.entity_id }}"
+actions:
   - choose:
       - conditions:
-          - condition: template
-            value_template: >-
-              {{
-                trigger.event.data.new_state.state == 'unavailable'
-                and trigger.event.data.entity_id not in excluded_entities
-              }}
+          - condition: trigger
+            id: unavailable
         sequence:
-          - service: notify.mobile_app_pixel_7
+          - action: notify.mobile_app_pixel_7
             data:
-              title: Entity {{states[trigger.event.data.entity_id].attributes.friendly_name}} went unavailable.
+              title: "{{ trigger.to_state.name }} went unavailable."
               message: >-
-                Whats wrong?
+                Unavailable since {{ trigger.to_state.last_changed | as_timestamp
+                | timestamp_custom('%d.%m. %H:%M') }}.
               data:
-                tag: '{{ entity_tag }}'
+                tag: "{{ entity_tag }}"
+                notification_icon: "mdi:lan-disconnect"
                 actions:
                   - action: URI
-                    title: Open {{trigger.event.data.entity_id}}
-                    uri: entityId:{{trigger.event.data.entity_id}}
-      - conditions:
+                    title: "Open {{ trigger.entity_id }}"
+                    uri: "entityId:{{ trigger.entity_id }}"
+      - alias: "Only clear when it was unavailable long enough to notify"
+        conditions:
+          - condition: trigger
+            id: recovered
           - condition: template
             value_template: >-
               {{
-                trigger.event.data.old_state.state == 'unavailable'
-                and trigger.event.data.entity_id not in excluded_entities
+                (trigger.to_state.last_changed - trigger.from_state.last_changed)
+                .total_seconds() >= 1800
               }}
         sequence:
-          - service: notify.mobile_app_pixel_7
+          - action: notify.mobile_app_pixel_7
             data:
               message: clear_notification
               data:
-                tag: '{{ entity_tag }}'
+                tag: "{{ entity_tag }}"

@@ -1,189 +1,37 @@
 ---
 # Office 1 light switcher automation
 #
-# This automation switches the lights on and off in
-# my office.
+# This automation turns off the light in my office when I start
+# working on my tower (the monitors are bright enough).
+#
+# The door contact and chair sensor of office 1 are gone, so only
+# the device based rule is left.
 #
 id: "40c147c1-b3a1-4214-b002-7bf7d4af65d0"
 alias: "Office 1 light switcher"
 description: >-
-  This automation tries to predict how much light I need
-  in my office and sets up the lights as needed.
-
-variables:
-  office_devices: &office_devices
-    - device_tracker.daniel_tower
-    - device_tracker.t2978124
-
-trigger:
-  - alias: Door opened
-    platform: state
-    entity_id:
-      - binary_sensor.office1_door_contact
-    from: "off"
-    to: "on"
-    id: Door opened
-  - alias: Door closed
-    platform: state
-    entity_id:
-      - binary_sensor.office1_door_contact
-    from: "on"
-    to: "off"
-    id: Door closed
-  - alias: Sun is gone, need light
-    platform: state
-    entity_id:
-      - binary_sensor.need_light
-    from: "off"
-    to: "on"
-    id: Need light
-  - alias: Sun is up, don't need light
-    platform: state
-    entity_id:
-      - binary_sensor.need_light
-    from: "on"
-    to: "off"
-    id: Dont need light
+  Turns the office 1 light off when my tower comes online.
+mode: restart
+triggers:
   - alias: Device turned on
-    platform: state
-    entity_id: *office_devices
+    trigger: state
+    entity_id: device_tracker.daniel_tower
     from: "not_home"
     to: "home"
-    id: Device turned on
-  - alias: Chair moved
-    platform: state
-    entity_id: sensor.office1_chair_action
-    id: Chair movement
-
-condition:
+conditions:
   - condition: state
     entity_id: input_boolean.office1_manage_lights
     state: "on"
-
-action:
-  - choose:
-      - conditions:
-          - alias: "Device turned on, turn light off"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Device turned on
-              - condition: state
-                entity_id: input_boolean.office1_device_on_lights_off
-                state: "on"
-              - condition: state
-                entity_id: light.office1_light
-                state: "on"
-        sequence:
-          - alias: "Turn off the lights"
-            service: light.turn_off
-            target:
-              entity_id: light.office1_light
-      - conditions:
-          - alias: "Chair movement detected, turn light off when device is on"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Chair movement
-              - condition: state
-                entity_id: input_boolean.office1_when_sitting_lights_off
-                state: "on"
-              - condition: state
-                entity_id: light.office1_light
-                state: "on"
-              - condition: state
-                entity_id: *office_devices
-                match: any
-                state: "home"
-        sequence:
-          - alias: "Turn off the lights"
-            service: light.turn_off
-            target:
-              entity_id: light.office1_light
-      - conditions:
-          - alias: "Door opened"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Door opened
-              - condition: state
-                entity_id: binary_sensor.need_light
-                state: "on"
-        sequence:
-          - alias: "Turn on the lights"
-            service: light.turn_on
-            target:
-              entity_id: light.office1_light
-      - conditions:
-          - alias: "Door closed and devices went offline 2 mins ago"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Door closed
-              - condition: state
-                entity_id: light.office1_light
-                state: "on"
-              - condition: state
-                entity_id: *office_devices
-                state: "not_home"
-              - condition: template
-                value_template: >-
-                  {% set now_ts = as_timestamp(now()) %}
-                  {% set found_device = false %}
-                  {% for dev in office_devices %}
-                    {% if (now_ts - as_timestamp(state_attr(dev, "last_time_reachable"))) < 120 %}
-                      {% set found_device = true %}
-                    {% endif %}
-                  {% endfor %}
-                  {% if found_device %}
-                    {{ true }}
-                  {% endif %}
-        sequence:
-          - alias: "Turn off the lights"
-            service: light.turn_off
-            target:
-              entity_id: light.office1_light
-      - conditions:
-          - alias: "Door closed and devices are offline"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Door closed
-              - condition: state
-                entity_id: light.office1_light
-                state: "on"
-              - condition: state
-                entity_id: *office_devices
-                state: "not_home"
-        sequence:
-          - alias: "Wait 2 mins"
-            delay: 120
-          - alias: "Check if devices are still offline"
-            choose:
-              - conditions:
-                  - condition: state
-                    entity_id: *office_devices
-                    state: "not_home"
-                sequence:
-                  - alias: "Turn off the lights"
-                    service: light.turn_off
-                    target:
-                      entity_id: light.office1_light
-      - conditions:
-          - alias: "Door closed and devices are still online"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Door closed
-              - condition: state
-                entity_id: light.office1_light
-                state: "on"
-              - condition: state
-                entity_id: *office_devices
-                match: any
-                state: "home"
-        sequence:
-          - alias: "Turn off the lights"
-            service: light.turn_off
-            target:
-              entity_id: light.office1_light
+  - condition: state
+    entity_id: input_boolean.office1_device_on_lights_off
+    state: "on"
+  - condition: state
+    entity_id: light.office1_light2
+    state: "on"
+actions:
+  - alias: "Turn off the light"
+    action: light.turn_off
+    target:
+      entity_id: light.office1_light2
+    data:
+      transition: 2

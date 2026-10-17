@@ -7,54 +7,51 @@
 id: "379f4de2-2c0d-412e-a1e4-0626b5713ece"
 alias: "Office 2 light switcher"
 description: >-
-  This automation is a simple button / light
-  connector.
-
-trigger:
-  - platform: state
-    entity_id:
-      - sensor.office2_button_action
+  This automation is a simple button / light connector.
+  Single click toggles, double click sets 50%, triple click 25%.
+mode: queued
+max: 5
+triggers:
+  - trigger: state
+    entity_id: sensor.office2_button_action
     to: "single"
-    id: Single Click
-  - platform: state
-    entity_id:
-      - sensor.office2_button_action
+    id: single_click
+  - trigger: state
+    entity_id: sensor.office2_button_action
     to: "double"
-    id: Double Click
-  - platform: state
-    entity_id:
-      - sensor.office2_button_action
+    id: double_click
+  - trigger: state
+    entity_id: sensor.office2_button_action
     to: "triple"
-    id: Triple Click
-
-action:
+    id: triple_click
+actions:
   - choose:
       - conditions:
           - condition: trigger
-            id: Single Click
+            id: single_click
         sequence:
-          - alias: "Toggle the lights"
-            service: light.toggle
+          - alias: "Toggle the light"
+            action: light.toggle
             target:
               entity_id: light.office2_light
             data:
               brightness_pct: 100
       - conditions:
           - condition: trigger
-            id: Double Click
+            id: double_click
         sequence:
-          - alias: "Toggle the lights"
-            service: light.turn_on
+          - alias: "Dim the light to 50%"
+            action: light.turn_on
             target:
               entity_id: light.office2_light
             data:
               brightness_pct: 50
       - conditions:
           - condition: trigger
-            id: Triple Click
+            id: triple_click
         sequence:
-          - alias: "Toggle the lights"
-            service: light.turn_on
+          - alias: "Dim the light to 25%"
+            action: light.turn_on
             target:
               entity_id: light.office2_light
             data:

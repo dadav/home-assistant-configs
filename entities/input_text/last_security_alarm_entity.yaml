@@ -1,0 +1,10 @@
+---
+# Input text: Last security alarm entity
+#
+# The alarm trigger automations store the friendly name of the
+# entity that triggered the security alarm here. The security alarm
+# notification reads it to tell me what happened.
+#
+name: "Last security alarm entity"
+icon: "mdi:shield-alert"
+max: 255

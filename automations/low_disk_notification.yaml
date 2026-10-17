@@ -3,63 +3,76 @@
 #
 id: "e150671f-893e-426d-99c6-9f4e9eaf4d80"
 mode: single
+max_exceeded: silent
 alias: "Low disc space detection"
 description: |-
-  This automation notifies me when the disc space is below a
-  certain threshold.
-
-trigger:
-  - platform: numeric_state
+  This automation notifies me when the used disc space is above a
+  certain threshold. It reminds me every hour (or after the chosen
+  snooze time) until enough space is free again.
+triggers:
+  - trigger: numeric_state
     entity_id: sensor.disk_use_percent
-    above: input_number.low_disc_space_threshold
+    above: input_number.low_disk_space_threshold
     for:
       minutes: 5
-
-action:
+actions:
   - variables:
-      action_cooldown15: "{{ 'COOLDOWN15_' ~ context.id }}"
-      action_cooldown60: "{{ 'COOLDOWN60_' ~ context.id }}"
-      action_cooldown300: "{{ 'COOLDOWN300_' ~ context.id }}"
-  - service: notify.mobile_app_pixel_7
+      action_cooldown15: "{{ 'DISK_COOLDOWN15_' ~ context.id }}"
+      action_cooldown60: "{{ 'DISK_COOLDOWN60_' ~ context.id }}"
+      action_cooldown180: "{{ 'DISK_COOLDOWN180_' ~ context.id }}"
+  - alias: "Keep reminding until the disk usage is below the threshold"
+    repeat:
+      until:
+        - condition: numeric_state
+          entity_id: sensor.disk_use_percent
+          below: input_number.low_disk_space_threshold
+      sequence:
+        - action: notify.mobile_app_pixel_7
+          data:
+            title: "Low disc space detected!"
+            message: |-
+              Home Assistant uses {{ states('sensor.disk_use_percent') }}% of its disc.
+            data:
+              tag: low_disk_space
+              color: "yellow"
+              notification_icon: "mdi:harddisk-remove"
+              actions:
+                - action: "{{ action_cooldown15 }}"
+                  title: "15 mins"
+                - action: "{{ action_cooldown60 }}"
+                  title: "1 h"
+                - action: "{{ action_cooldown180 }}"
+                  title: "3 h"
+        - wait_for_trigger:
+            - trigger: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown15 }}"
+              id: snooze15
+            - trigger: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown60 }}"
+              id: snooze60
+            - trigger: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown180 }}"
+              id: snooze180
+          timeout: "01:00:00"
+          continue_on_timeout: true
+        - choose:
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
+              sequence:
+                - delay: "00:15:00"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze60' }}"
+              sequence:
+                - delay: "01:00:00"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze180' }}"
+              sequence:
+                - delay: "03:00:00"
+  - action: notify.mobile_app_pixel_7
     data:
-      title: "Low disc space detected!"
-      message: |-
-        There is almost no more available disc space for homeassistant.
+      message: clear_notification
       data:
-        color: "yellow"
-        notification_icon: "mdi:disc-alert"
-        actions:
-          - action: "{{ action_cooldown15 }}"
-            title: "15 mins"
-          - action: "{{ action_cooldown60 }}"
-            title: "1 h"
-          - action: "{{ action_cooldown300 }}"
-            title: "3 h"
-  - wait_for_trigger:
-      - platform: event
-        event_type: mobile_app_notification_action
-        event_data:
-          action: "{{ action_cooldown15 }}"
-        id: Option One
-      - platform: event
-        event_type: mobile_app_notification_action
-        event_data:
-          action: "{{ action_cooldown60 }}"
-        id: Option Two
-      - platform: event
-        event_type: mobile_app_notification_action
-        event_data:
-          action: "{{ action_cooldown300 }}"
-        id: Option Three
-    timeout: "01:00:00"
-    continue_on_timeout: false
-  - choose:
-      - conditions: "{{ wait.trigger.id == 'Option One' }}"
-        sequence:
-          - delay: "00:15"
-      - conditions: "{{ wait.trigger.id == 'Option Two' }}"
-        sequence:
-          - delay: "01:00"
-      - conditions: "{{ wait.trigger.id == 'Option Two' }}"
-        sequence:
-          - delay: "03:00"
+        tag: low_disk_space

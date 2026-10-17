@@ -11,103 +11,108 @@ description: |-
 
   - When I turned on the away mode
   - When I'm sleeping (no devices online and it's a certain time)
-trigger:
+mode: queued
+max_exceeded: silent
+triggers:
   - alias: Away mode turned on
-    platform: state
-    entity_id:
-      - input_boolean.away_mode
+    trigger: state
+    entity_id: input_boolean.away_mode
     from: "off"
     to: "on"
-    id: Away mode turned on
+    id: away_on
   - alias: Away mode turned off
-    platform: state
-    entity_id:
-      - input_boolean.away_mode
+    trigger: state
+    entity_id: input_boolean.away_mode
     from: "on"
     to: "off"
-    id: Away mode turned off
-  - alias: Night time check
-    platform: time_pattern
+    id: away_off
+  - alias: Sleeping state changed
+    trigger: state
+    entity_id: binary_sensor.probably_sleeping
+    to:
+      - "on"
+      - "off"
+    id: sleeping_check
+  - alias: Periodic sleeping check
+    trigger: time_pattern
     minutes: "/5"
-    id: Night time check
-  - alias: People home
-    platform: state
-    entity_id:
-      - binary_sensor.people_home
+    id: sleeping_check
+  - alias: People are home
+    trigger: state
+    entity_id: binary_sensor.people_home
     from: "off"
     to: "on"
-    id: People are home
-condition:
+    id: people_home
+conditions:
   - condition: state
     entity_id: input_boolean.auto_security_arming_mode
     state: "on"
-action:
+actions:
   - choose:
-      - conditions:
-          - alias: "Away mode turned on"
-            condition: and
+      - alias: "Away mode turned on"
+        conditions:
+          - condition: trigger
+            id: away_on
+          - condition: not
             conditions:
-              - condition: trigger
-                id: Away mode turned on
-              - condition: template
-                value_template: "{{ not is_state('alarm_control_panel.security_alarm', 'armed_away') }}"
-        sequence:
-          - alias: "Turn on security alarm"
-            service: alarm_control_panel.alarm_arm_away
-            target:
-              entity_id: alarm_control_panel.security_alarm
-      - conditions:
-          - alias: "Away mode turned off"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Away mode turned off
               - condition: state
                 entity_id: alarm_control_panel.security_alarm
-                state: "armed_away"
+                state: armed_away
+        sequence:
+          - alias: "Arm away"
+            action: alarm_control_panel.alarm_arm_away
+            target:
+              entity_id: alarm_control_panel.security_alarm
+      - alias: "Away mode turned off"
+        conditions:
+          - condition: trigger
+            id: away_off
+          - condition: state
+            entity_id: alarm_control_panel.security_alarm
+            state: armed_away
         sequence:
           - &arm_home
             alias: "Arm home"
-            service: alarm_control_panel.alarm_arm_home
+            action: alarm_control_panel.alarm_arm_home
             target:
               entity_id: alarm_control_panel.security_alarm
-      - conditions:
-          - alias: "Night time"
-            condition: and
+      - alias: "Night time"
+        conditions:
+          - condition: trigger
+            id: sleeping_check
+          - condition: state
+            entity_id: binary_sensor.probably_sleeping
+            state: "on"
+          - condition: not
             conditions:
-              - condition: trigger
-                id: Night time check
-              - condition: state
-                entity_id: binary_sensor.probably_sleeping
-                state: "on"
-              - condition: template
-                value_template: "{{ not is_state('alarm_control_panel.security_alarm', 'armed_night') }}"
-        sequence:
-          - alias: "Turn on security alarm"
-            service: alarm_control_panel.alarm_arm_night
-            target:
-              entity_id: alarm_control_panel.security_alarm
-      - conditions:
-          - alias: "Day time"
-            condition: and
-            conditions:
-              - condition: trigger
-                id: Night time check
-              - condition: state
-                entity_id: binary_sensor.probably_sleeping
-                state: "off"
               - condition: state
                 entity_id: alarm_control_panel.security_alarm
-                state: "armed_night"
+                state: armed_night
+        sequence:
+          - alias: "Arm night"
+            action: alarm_control_panel.alarm_arm_night
+            target:
+              entity_id: alarm_control_panel.security_alarm
+      - alias: "Day time"
+        conditions:
+          - condition: trigger
+            id: sleeping_check
+          - condition: state
+            entity_id: binary_sensor.probably_sleeping
+            state: "off"
+          - condition: state
+            entity_id: alarm_control_panel.security_alarm
+            state: armed_night
         sequence:
           - *arm_home
-      - conditions:
-          - alias: "People are home"
-            condition: and
+      - alias: "People are home"
+        conditions:
+          - condition: trigger
+            id: people_home
+          - condition: not
             conditions:
-              - condition: trigger
-                id: People are home
-              - condition: template
-                value_template: "{{ not is_state('alarm_control_panel.security_alarm', 'armed_home') }}"
+              - condition: state
+                entity_id: alarm_control_panel.security_alarm
+                state: armed_home
         sequence:
           - *arm_home
