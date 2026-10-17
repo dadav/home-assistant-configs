@@ -1,0 +1,97 @@
+---
+#
+# Days until the next pickup of each bin, read from calendar.trash.
+# The calendar holds every waste type as all-day events; the event summary
+# must match the names in trash_bins exactly.
+# State: days (0 = today), unavailable when no pickup within 90 days.
+# Attribute label: German text for the dashboard ("heute", "morgen", "in N Tagen").
+#
+triggers:
+  - trigger: homeassistant
+    event: start
+  - trigger: event
+    event_type: event_template_reloaded
+  # Hourly refresh also covers the midnight day rollover.
+  - trigger: time_pattern
+    minutes: 0
+actions:
+  - action: calendar.get_events
+    target:
+      entity_id: calendar.trash
+    data:
+      duration:
+        days: 90
+    response_variable: trash_events
+  - variables:
+      trash_bins:
+        - Bioabfall
+        - Gelber Sack
+        - Restmüll
+        - Gartentonne
+        - Blaue Tonne
+      trash_days: >-
+        {% set events = trash_events['calendar.trash'].events %}
+        {% set ns = namespace(days=[]) %}
+        {% for bin in trash_bins %}
+          {% set starts = events | selectattr('summary', 'eq', bin)
+            | map(attribute='start') | sort | list %}
+          {% set ns.days = ns.days + [
+            (strptime(starts[0][:10], '%Y-%m-%d').date() - now().date()).days
+            if starts else none] %}
+        {% endfor %}
+        {{ dict(zip(trash_bins, ns.days)) }}
+      trash_labels: >-
+        {% set ns = namespace(labels=[]) %}
+        {% for bin in trash_bins %}
+          {% set d = trash_days[bin] %}
+          {% set ns.labels = ns.labels + [
+            '–' if d is none else 'heute' if d == 0
+            else 'morgen' if d == 1 else 'in ' ~ d ~ ' Tagen'] %}
+        {% endfor %}
+        {{ dict(zip(trash_bins, ns.labels)) }}
+sensor:
+  - name: Bioabfall
+    default_entity_id: sensor.trash_bioabfall
+    unique_id: "565c2634-6e39-4cdc-93f0-f63814db621f"
+    icon: "mdi:leaf"
+    unit_of_measurement: d
+    availability: "{{ trash_days['Bioabfall'] is not none }}"
+    state: "{{ trash_days['Bioabfall'] }}"
+    attributes:
+      label: "{{ trash_labels['Bioabfall'] }}"
+  - name: Gelber Sack
+    default_entity_id: sensor.trash_gelber_sack
+    unique_id: "83c1135f-6883-4cdd-8b09-d3682dc7f50f"
+    icon: "mdi:recycle"
+    unit_of_measurement: d
+    availability: "{{ trash_days['Gelber Sack'] is not none }}"
+    state: "{{ trash_days['Gelber Sack'] }}"
+    attributes:
+      label: "{{ trash_labels['Gelber Sack'] }}"
+  - name: Restmüll
+    default_entity_id: sensor.trash_restmuell
+    unique_id: "dadf611e-3575-46f3-8fd7-d45ed936d806"
+    icon: "mdi:trash-can"
+    unit_of_measurement: d
+    availability: "{{ trash_days['Restmüll'] is not none }}"
+    state: "{{ trash_days['Restmüll'] }}"
+    attributes:
+      label: "{{ trash_labels['Restmüll'] }}"
+  - name: Gartentonne
+    default_entity_id: sensor.trash_gartentonne
+    unique_id: "9126a8ba-18de-4d18-a8e4-d056d122883d"
+    icon: "mdi:flower"
+    unit_of_measurement: d
+    availability: "{{ trash_days['Gartentonne'] is not none }}"
+    state: "{{ trash_days['Gartentonne'] }}"
+    attributes:
+      label: "{{ trash_labels['Gartentonne'] }}"
+  - name: Blaue Tonne
+    default_entity_id: sensor.trash_blaue_tonne
+    unique_id: "ee27a865-d26e-4bee-82ed-368f7fc82830"
+    icon: "mdi:newspaper-variant"
+    unit_of_measurement: d
+    availability: "{{ trash_days['Blaue Tonne'] is not none }}"
+    state: "{{ trash_days['Blaue Tonne'] }}"
+    attributes:
+      label: "{{ trash_labels['Blaue Tonne'] }}"
