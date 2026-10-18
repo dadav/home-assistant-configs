@@ -1,0 +1,52 @@
+---
+# Leaving script
+#
+# One tap when leaving the house: turns off all lights, turns on
+# the away mode and tells me right away what is still open.
+#
+# The away mode makes other automations switch the thermostats,
+# the phone deflection and (with the auto security arming mode)
+# the security alarm. Without the auto security arming mode,
+# this script arms the alarm itself.
+#
+alias: "Leaving"
+icon: "mdi:exit-run"
+mode: single
+sequence:
+  - alias: "Turn off all lights"
+    action: light.turn_off
+    target:
+      entity_id: light.all_lights
+  - alias: "Turn on away mode"
+    action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.away_mode
+  - alias: "Arm away if the automation does not do it"
+    if:
+      - condition: state
+        entity_id: input_boolean.auto_security_arming_mode
+        state: "off"
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: alarm_control_panel.security_alarm
+            state: armed_away
+    then:
+      - action: alarm_control_panel.alarm_arm_away
+        target:
+          entity_id: alarm_control_panel.security_alarm
+  - alias: "Warn about open windows or doors"
+    if:
+      - condition: state
+        entity_id: binary_sensor.everything_closed
+        state: "off"
+    then:
+      - action: notify.mobile_app_pixel_7
+        data:
+          title: "Leaving, but something is still open"
+          message: >-
+            The following entities are still open, you might want to close them:
+              {{ states('sensor.open_windows') }}
+              {{ states('sensor.open_doors') }}
+          data:
+            notification_icon: "mdi:alert"

@@ -1,0 +1,28 @@
+---
+# Welcome home script
+#
+# Counterpart of the leaving script: turns off the away mode.
+#
+# With the auto security arming mode, the automation then arms
+# the security alarm for home. Without it, this script does it.
+#
+alias: "Welcome home"
+icon: "mdi:home-heart"
+mode: single
+sequence:
+  - alias: "Turn off away mode"
+    action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.away_mode
+  - alias: "Arm home if the automation does not do it"
+    if:
+      - condition: state
+        entity_id: input_boolean.auto_security_arming_mode
+        state: "off"
+      - condition: state
+        entity_id: alarm_control_panel.security_alarm
+        state: armed_away
+    then:
+      - action: alarm_control_panel.alarm_arm_home
+        target:
+          entity_id: alarm_control_panel.security_alarm
