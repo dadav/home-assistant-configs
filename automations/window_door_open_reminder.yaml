@@ -19,6 +19,9 @@ description: |-
   warmer outside, otherwise when it is colder outside. Needs both
   temperature sensors (outside_warmer_than_inside is unavailable
   without them).
+
+  Swiping the notification away mutes it until the state changes
+  and the automation triggers again.
 triggers:
   - trigger: state
     entity_id: binary_sensor.everything_closed
@@ -87,9 +90,17 @@ actions:
               entity_id: binary_sensor.everything_closed
               to: "on"
               id: closed
+            - trigger: event
+              event_type: mobile_app_notification_cleared
+              event_data:
+                tag: window_door_open
+              id: dismissed
           timeout: "01:00:00"
           continue_on_timeout: true
         - choose:
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
+              sequence:
+                - stop: "Notification dismissed, muted until the state changes again"
             - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
               sequence:
                 - delay: "00:15:00"

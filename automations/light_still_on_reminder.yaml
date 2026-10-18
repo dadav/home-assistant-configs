@@ -14,6 +14,9 @@ description: |-
   Sometimes I turn on a light and forget to turn it off again.
   This automations aims to prevent this. It reminds me every hour
   (or after the chosen snooze time) until all lights are off.
+
+  Swiping the notification away mutes it until the state changes
+  and the automation triggers again.
 triggers:
   - trigger: state
     entity_id: light.all_lights
@@ -73,9 +76,17 @@ actions:
               entity_id: light.all_lights
               to: "off"
               id: lights_off
+            - trigger: event
+              event_type: mobile_app_notification_cleared
+              event_data:
+                tag: light_still_on
+              id: dismissed
           timeout: "01:00:00"
           continue_on_timeout: true
         - choose:
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
+              sequence:
+                - stop: "Notification dismissed, muted until the state changes again"
             - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
               sequence:
                 - delay: "00:15:00"

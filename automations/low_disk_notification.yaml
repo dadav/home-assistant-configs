@@ -9,6 +9,9 @@ description: |-
   This automation notifies me when the used disc space is above a
   certain threshold. It reminds me every hour (or after the chosen
   snooze time) until enough space is free again.
+
+  Swiping the notification away mutes it until the state changes
+  and the automation triggers again.
 triggers:
   - trigger: numeric_state
     entity_id: sensor.disk_use_percent
@@ -59,9 +62,17 @@ actions:
               event_data:
                 action: "{{ action_cooldown180 }}"
               id: snooze180
+            - trigger: event
+              event_type: mobile_app_notification_cleared
+              event_data:
+                tag: low_disk_space
+              id: dismissed
           timeout: "01:00:00"
           continue_on_timeout: true
         - choose:
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
+              sequence:
+                - stop: "Notification dismissed, muted until the state changes again"
             - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
               sequence:
                 - delay: "00:15:00"
