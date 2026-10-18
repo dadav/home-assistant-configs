@@ -121,7 +121,6 @@ addons:
         - 192.168.178.0/24
         - fd00:1111:2222:3333::/64
       always_use_derp: false
-      log_level: info
       log_suppression: true
       log_upload: false
       services: []
