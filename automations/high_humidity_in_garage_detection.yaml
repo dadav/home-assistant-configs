@@ -16,6 +16,9 @@ description: |-
   Reminds me every hour (or after the chosen snooze time) until
   the humidity is below the threshold again. No reminders while
   I'm probably sleeping.
+
+  Swiping the notification away mutes it until the state changes
+  and the automation triggers again.
 triggers:
   - trigger: numeric_state
     entity_id:
@@ -79,9 +82,17 @@ actions:
               event_data:
                 action: "{{ action_cooldown180 }}"
               id: snooze180
+            - trigger: event
+              event_type: mobile_app_notification_cleared
+              event_data:
+                tag: high_humidity_garage
+              id: dismissed
           timeout: "01:00:00"
           continue_on_timeout: true
         - choose:
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
+              sequence:
+                - stop: "Notification dismissed, muted until the state changes again"
             - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
               sequence:
                 - delay: "00:15:00"
