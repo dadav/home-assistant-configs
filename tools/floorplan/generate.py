@@ -256,6 +256,9 @@ WINDOWS = [
 WINTERGARDEN = [(40, 470), (290, 470), (290, 870), (40, 870)]
 TERRACE = (290, 1240, 1330, 1480)
 STAIRS = {"x1": 845, "x2": 1040, "y1": 180, "y2": 350, "step": 21}
+# Free area outside the footprint, left of the garage. view.py puts the outside readings here.
+OUTSIDE_LABEL_AT = (1430, 110)
+OUTSIDE_READING_AT = (1430, 210)
 
 PALETTES = {
     "light": {
@@ -345,6 +348,12 @@ def render(palette):
     out.append(
         f'<text x="{(tx1 + tx2) / 2}" y="{ty2 - 40}" text-anchor="middle" font-size="26" '
         f'letter-spacing="4" fill="{p["label"]}">TERRASSE</text>'
+    )
+
+    ox, oy = OUTSIDE_LABEL_AT
+    out.append(
+        f'<text x="{ox}" y="{oy}" text-anchor="middle" font-size="26" '
+        f'letter-spacing="4" fill="{p["label"]}">AUSSEN</text>'
     )
 
     # Wintergarden (glass walls)

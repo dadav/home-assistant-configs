@@ -10,9 +10,9 @@ Element positions use the same pixel coordinates as generate.py, converted to pe
 
 import json
 
-from generate import VIEW_H, VIEW_W, VIEW_X, VIEW_Y
+from generate import OUTSIDE_READING_AT, VIEW_H, VIEW_W, VIEW_X, VIEW_Y
 
-IMAGE_VERSION = "2"
+IMAGE_VERSION = "3"
 IMAGE_LIGHT = f"/local/floorplan/floorplan-light.svg?v={IMAGE_VERSION}"
 IMAGE_DARK = f"/local/floorplan/floorplan-dark.svg?v={IMAGE_VERSION}"
 
@@ -28,11 +28,11 @@ HUMIDITY_PREFIX = "💧 "
 ROOM_READINGS = [
     {
         "room": "Zimmer 1",
-        "at": (450, 215),
-        "temperature": "sensor.buro_1_temperature",
-        "fallback": None,
-        "humidity": None,
-        "extra": [],
+        "at": (450, 185),
+        "temperature": "sensor.office1_co2meter_temperature",
+        "fallback": "sensor.buro_1_temperature",
+        "humidity": "sensor.office1_co2meter_humidity",
+        "extra": ["sensor.office1_co2meter_co2"],
     },
     {
         "room": "DU/WC",
@@ -104,6 +104,14 @@ ROOM_READINGS = [
         "temperature": "sensor.storage_temp_temperature",
         "fallback": None,
         "humidity": "sensor.storage_temp_humidity",
+        "extra": [],
+    },
+    {
+        "room": "Aussen",
+        "at": OUTSIDE_READING_AT,
+        "temperature": "sensor.outside_temp_temperature",
+        "fallback": None,
+        "humidity": "sensor.outside_temp_humidity",
         "extra": [],
     },
     {
