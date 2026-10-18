@@ -1,8 +1,10 @@
 """Build the "Floor plan" view JSON for the home-main dashboard (storage mode).
 
 Usage: python3 tools/floorplan/view.py > tools/floorplan/view.json
-Apply via the HA MCP: replace views[2] (path "floorplan") of url_path="home-main" with
-view.json, e.g. ha_config_set_dashboard(patch=[{"op": "replace", "path": "/views/2", ...}]).
+Apply via the HA MCP: replace the view with path "floorplan" of url_path="home-main" with
+view.json. Its index shifts when views are added or removed, so look it up first
+(ha_config_get_dashboard(url_path="home-main", view_path="floorplan") returns view_index),
+then e.g. ha_config_set_dashboard(patch=[{"op": "replace", "path": "/views/<view_index>", ...}]).
 
 Element positions use the same pixel coordinates as generate.py, converted to percent.
 /local/ is cached by browsers for 31 days: bump IMAGE_VERSION whenever the SVGs change.
