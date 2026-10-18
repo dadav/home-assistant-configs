@@ -3,6 +3,7 @@
 <rect x="290" y="1240" width="1040" height="240" rx="10" fill="#efe8dc"/>
 <path d="M350,1240V1480M410,1240V1480M470,1240V1480M530,1240V1480M590,1240V1480M650,1240V1480M710,1240V1480M770,1240V1480M830,1240V1480M890,1240V1480M950,1240V1480M1010,1240V1480M1070,1240V1480M1130,1240V1480M1190,1240V1480M1250,1240V1480M1310,1240V1480M290,1300H1330M290,1360H1330M290,1420H1330" stroke="#ddd3c3" stroke-width="2" fill="none"/>
 <text x="810.0" y="1440" text-anchor="middle" font-size="26" letter-spacing="4" fill="#6b6f76">TERRASSE</text>
+<text x="1430" y="110" text-anchor="middle" font-size="26" letter-spacing="4" fill="#6b6f76">AUSSEN</text>
 <polygon points="40,470 290,470 290,870 40,870" fill="#e4f2dc" stroke="#7fb069" stroke-width="6" stroke-dasharray="18 10"/>
 <text x="58" y="512" font-size="22" font-weight="600" letter-spacing="2" fill="#6b6f76">WINTERGARTEN</text>
 <polygon points="290,55 600,55 600,350 705,350 705,470 290,470" fill="#e3ecfa"/>

@@ -40,19 +40,46 @@
         },
         {
           "type": "picture-elements",
-          "image": "/local/floorplan/floorplan-light.svg?v=2",
-          "dark_mode_image": "/local/floorplan/floorplan-dark.svg?v=2",
+          "image": "/local/floorplan/floorplan-light.svg?v=3",
+          "dark_mode_image": "/local/floorplan/floorplan-dark.svg?v=3",
           "elements": [
             {
               "type": "conditional",
               "conditions": [
                 {
-                  "entity": "sensor.buro_1_temperature",
+                  "entity": "sensor.office1_co2meter_temperature",
                   "state_not": "unavailable"
                 },
                 {
-                  "entity": "sensor.buro_1_temperature",
+                  "entity": "sensor.office1_co2meter_temperature",
                   "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.office1_co2meter_temperature",
+                  "style": {
+                    "left": "21.72%",
+                    "top": "10.54%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.office1_co2meter_temperature",
+                  "state": "unavailable"
                 }
               ],
               "elements": [
@@ -61,7 +88,7 @@
                   "entity": "sensor.buro_1_temperature",
                   "style": {
                     "left": "21.72%",
-                    "top": "12.59%",
+                    "top": "10.54%",
                     "font-size": "clamp(12px, 1.5vw, 28px)",
                     "font-weight": "600",
                     "color": "var(--primary-text-color)",
@@ -69,6 +96,44 @@
                     "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
                     "padding": "0.15em 0.6em",
                     "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "state-label",
+              "entity": "sensor.office1_co2meter_humidity",
+              "style": {
+                "left": "21.72%",
+                "top": "13.95%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.office1_co2meter_co2",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.office1_co2meter_co2",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.office1_co2meter_co2",
+                  "style": {
+                    "left": "21.72%",
+                    "top": "16.53%",
+                    "font-size": "clamp(9px, 0.95vw, 17px)",
+                    "color": "var(--secondary-text-color)",
                     "white-space": "nowrap"
                   }
                 }
@@ -589,6 +654,49 @@
               "style": {
                 "left": "91.67%",
                 "top": "37.41%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--secondary-text-color)",
+                "white-space": "nowrap"
+              },
+              "prefix": "💧 "
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "entity": "sensor.outside_temp_temperature",
+                  "state_not": "unavailable"
+                },
+                {
+                  "entity": "sensor.outside_temp_temperature",
+                  "state_not": "unknown"
+                }
+              ],
+              "elements": [
+                {
+                  "type": "state-label",
+                  "entity": "sensor.outside_temp_temperature",
+                  "style": {
+                    "left": "71.21%",
+                    "top": "12.24%",
+                    "font-size": "clamp(12px, 1.5vw, 28px)",
+                    "font-weight": "600",
+                    "color": "var(--primary-text-color)",
+                    "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                    "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                    "padding": "0.15em 0.6em",
+                    "border-radius": "999px",
+                    "white-space": "nowrap"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "state-label",
+              "entity": "sensor.outside_temp_humidity",
+              "style": {
+                "left": "71.21%",
+                "top": "15.65%",
                 "font-size": "clamp(9px, 0.95vw, 17px)",
                 "color": "var(--secondary-text-color)",
                 "white-space": "nowrap"
