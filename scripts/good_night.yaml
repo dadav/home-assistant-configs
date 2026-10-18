@@ -1,0 +1,43 @@
+---
+# Good night script
+#
+# One tap before going to bed: turns off all lights, arms the
+# security alarm for the night and tells me what is still open.
+#
+# The auto security arming automation keeps this night arming
+# until wake-up (see automations/auto_security_arming.yaml).
+#
+alias: "Good night"
+icon: "mdi:weather-night"
+mode: single
+sequence:
+  - alias: "Turn off all lights"
+    action: light.turn_off
+    target:
+      entity_id: light.all_lights
+  - alias: "Arm night"
+    if:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: alarm_control_panel.security_alarm
+            state: armed_night
+    then:
+      - action: alarm_control_panel.alarm_arm_night
+        target:
+          entity_id: alarm_control_panel.security_alarm
+  - alias: "Warn about open windows or doors"
+    if:
+      - condition: state
+        entity_id: binary_sensor.everything_closed
+        state: "off"
+    then:
+      - action: notify.mobile_app_pixel_7
+        data:
+          title: "Good night, but something is still open"
+          message: >-
+            The following entities are still open, you might want to close them:
+              {{ states('sensor.open_windows') }}
+              {{ states('sensor.open_doors') }}
+          data:
+            notification_icon: "mdi:alert"

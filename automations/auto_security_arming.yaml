@@ -11,6 +11,10 @@ description: |-
 
   - When I turned on the away mode
   - When I'm sleeping (no devices online and it's a certain time)
+
+  Night arming (automatic or via the Good night script) is only
+  switched back to home arming at wake-up: when the sleeping
+  state ends or at the wake-up time, whichever comes first.
 mode: queued
 max_exceeded: silent
 triggers:
@@ -26,17 +30,27 @@ triggers:
     from: "on"
     to: "off"
     id: away_off
-  - alias: Sleeping state changed
+  - alias: Sleeping started
     trigger: state
     entity_id: binary_sensor.probably_sleeping
-    to:
-      - "on"
-      - "off"
+    to: "on"
     id: sleeping_check
   - alias: Periodic sleeping check
     trigger: time_pattern
     minutes: "/5"
     id: sleeping_check
+  - alias: Sleeping ended
+    trigger: state
+    entity_id: binary_sensor.probably_sleeping
+    from: "on"
+    to: "off"
+    id: sleeping_ended
+  - alias: Wake-up time reached
+    trigger: time
+    at:
+      - input_datetime.wakeup_time
+      - input_datetime.wakeup_time_workday
+    id: sleeping_ended
   - alias: People are home
     trigger: state
     entity_id: binary_sensor.people_home
@@ -93,13 +107,12 @@ actions:
             action: alarm_control_panel.alarm_arm_night
             target:
               entity_id: alarm_control_panel.security_alarm
-      - alias: "Day time"
+      - alias: "Wake-up"
+        # No probably_sleeping condition here: at the exact wake-up
+        # time the sensor still reports sleeping for up to a minute.
         conditions:
           - condition: trigger
-            id: sleeping_check
-          - condition: state
-            entity_id: binary_sensor.probably_sleeping
-            state: "off"
+            id: sleeping_ended
           - condition: state
             entity_id: alarm_control_panel.security_alarm
             state: armed_night
