@@ -112,19 +112,21 @@ addons:
     options:
       login_server: *secret_headscale_uri
       advertise_exit_node: true
-      taildrop: true
+      advertise_tags: ["tag:homeassistant"]
+      taildrop: false
       accept_dns: true
       accept_routes: true
       advertise_connector: true
       advertise_routes:
-        - local_subnets
+        - 192.168.178.0/24
+        - fd00:1111:2222:3333::/64
       always_use_derp: false
       log_level: info
+      log_suppression: true
       share_homeassistant: disabled
       share_on_port: 443
       snat_subnet_routes: true
       stateful_filtering: false
-      tags: []
       taildrive:
         local_apps: false
         app_configs: false
