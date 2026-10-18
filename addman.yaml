@@ -123,6 +123,7 @@ addons:
       always_use_derp: false
       log_level: info
       log_suppression: true
+      services: []
       share_homeassistant: disabled
       share_on_port: 443
       snat_subnet_routes: true
