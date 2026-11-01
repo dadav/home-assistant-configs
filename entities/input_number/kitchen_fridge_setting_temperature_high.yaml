@@ -1,0 +1,14 @@
+---
+# Input number: Kitchen Fridge Setting Temperature High
+#
+# This is an automation control/setting to indicate when
+# the temperature in the kitchen fridge is too high
+# (door left open or power off).
+#
+name: "Kitchen Fridge Setting Temperature High"
+icon: "mdi:fridge-alert"
+unit_of_measurement: "°C"
+min: 5
+max: 20
+step: 0.5
+mode: slider

@@ -1251,6 +1251,36 @@
                   }
                 }
               ]
+            },
+            {
+              "type": "state-icon",
+              "entity": "sensor.kitchen_fridge_temperature",
+              "state_color": true,
+              "style": {
+                "left": "64.85%",
+                "top": "58.84%",
+                "--mdc-icon-size": "clamp(16px, 1.7vw, 30px)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "border-radius": "50%",
+                "padding": "0.15em"
+              },
+              "icon": "mdi:fridge"
+            },
+            {
+              "type": "state-label",
+              "entity": "sensor.kitchen_fridge_temperature",
+              "style": {
+                "left": "64.85%",
+                "top": "62.11%",
+                "font-size": "clamp(9px, 0.95vw, 17px)",
+                "color": "var(--primary-text-color)",
+                "background": "color-mix(in srgb, var(--card-background-color) 88%, transparent)",
+                "box-shadow": "0 1px 6px rgba(0, 0, 0, 0.18)",
+                "padding": "0.05em 0.4em",
+                "border-radius": "999px",
+                "white-space": "nowrap"
+              }
             }
           ],
           "grid_options": {
