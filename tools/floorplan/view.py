@@ -173,6 +173,12 @@ ICONS = [
         "toggle": True,
         "icon": "mdi:power-socket-eu",
     },
+    {
+        "entity": "switch.storage_power",
+        "at": (1730, 535),
+        "toggle": True,
+        "icon": "mdi:power-socket-eu",
+    },
     # Entrance
     {"entity": "lock.vordereingang_lock", "at": (960, 590)},
     {
