@@ -1,0 +1,107 @@
+---
+# High fridge temperature detection automation
+#
+# This automation detects a too high temperature in my kitchen fridge.
+#
+id: "195d666a-bd3c-4251-b0c1-1ac5620d125d"
+mode: single
+max_exceeded: silent
+alias: "High fridge temperature detection"
+description: |-
+  This automation detects a too high temperature in my kitchen fridge.
+
+  A rising temperature means the door was left open or the
+  fridge has no power. The temperature must stay above the
+  threshold for 10 minutes, so normal short door openings
+  are ignored.
+
+  Reminds me every 30 minutes (or after the chosen snooze time)
+  until the temperature is below the threshold again. Also
+  notifies at night, because food spoils while I'm sleeping.
+
+  Swiping the notification away mutes it until the state changes
+  and the automation triggers again.
+triggers:
+  - trigger: numeric_state
+    entity_id:
+      - sensor.kitchen_fridge_temperature
+    above: input_number.kitchen_fridge_setting_temperature_high
+    for: "00:10:00"
+actions:
+  - variables:
+      action_cooldown15: "{{ 'COOLDOWN15_' ~ context.id }}"
+      action_cooldown60: "{{ 'COOLDOWN60_' ~ context.id }}"
+      action_cooldown180: "{{ 'COOLDOWN180_' ~ context.id }}"
+  - alias: "Keep reminding until the temperature is low again"
+    repeat:
+      until:
+        - alias: "Fridge temperature is not above the threshold (unavailable is ignored)"
+          condition: template
+          value_template: >-
+            {{
+              expand(['sensor.kitchen_fridge_temperature'])
+              | map(attribute='state') | select('is_number') | map('float')
+              | select('>=', states('input_number.kitchen_fridge_setting_temperature_high') | float(100))
+              | list | count == 0
+            }}
+      sequence:
+        - action: notify.mobile_app_pixel_7
+          data:
+            title: "Fridge is getting warm!"
+            message: |-
+              Fridge is at {{ states('sensor.kitchen_fridge_temperature') }} °C
+              (threshold {{ states('input_number.kitchen_fridge_setting_temperature_high') }} °C).
+              Door open or power off?
+            data:
+              tag: high_fridge_temperature
+              color: red
+              notification_icon: mdi:fridge-alert
+              clickAction: "entityId:sensor.kitchen_fridge_temperature"
+              actions:
+                - action: "{{ action_cooldown15 }}"
+                  title: 15 mins
+                - action: "{{ action_cooldown60 }}"
+                  title: 1 h
+                - action: "{{ action_cooldown180 }}"
+                  title: 3 h
+        - wait_for_trigger:
+            - trigger: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown15 }}"
+              id: snooze15
+            - trigger: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown60 }}"
+              id: snooze60
+            - trigger: event
+              event_type: mobile_app_notification_action
+              event_data:
+                action: "{{ action_cooldown180 }}"
+              id: snooze180
+            - trigger: event
+              event_type: mobile_app_notification_cleared
+              event_data:
+                tag: high_fridge_temperature
+              id: dismissed
+          timeout: "00:30:00"
+          continue_on_timeout: true
+        - choose:
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
+              sequence:
+                - stop: "Notification dismissed, muted until the state changes again"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
+              sequence:
+                - delay: "00:15:00"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze60' }}"
+              sequence:
+                - delay: "01:00:00"
+            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze180' }}"
+              sequence:
+                - delay: "03:00:00"
+  - action: notify.mobile_app_pixel_7
+    data:
+      message: clear_notification
+      data:
+        tag: high_fridge_temperature

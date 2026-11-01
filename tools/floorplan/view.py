@@ -194,6 +194,15 @@ ICONS = [
     },
 ]
 
+# Appliances with a sensor inside: icon at the appliance, its reading right below.
+FIXTURES = [
+    {
+        "entity": "sensor.kitchen_fridge_temperature",
+        "at": (1304, 895),
+        "icon": "mdi:fridge",
+    },
+]
+
 HEADING_BADGES = [
     {"entity": "sensor.outside_temp_temperature", "name": "Outside"},
     {"entity": "binary_sensor.everything_closed", "name": "Closed"},
@@ -317,12 +326,34 @@ def icon_element(spec):
     return element
 
 
+def fixture_elements(spec):
+    """Icon plus its reading below. The reading stays visible while unavailable."""
+    x, y = spec["at"]
+    label = {
+        "type": "state-label",
+        "entity": spec["entity"],
+        "style": {
+            **position((x, y + 48)),
+            "font-size": "clamp(9px, 0.95vw, 17px)",
+            "color": "var(--primary-text-color)",
+            "background": PILL_BACKGROUND,
+            "box-shadow": PILL_SHADOW,
+            "padding": "0.05em 0.4em",
+            "border-radius": "999px",
+            "white-space": "nowrap",
+        },
+    }
+    return [icon_element(spec), label]
+
+
 def build_view():
     elements = []
     for reading in ROOM_READINGS:
         elements.extend(room_elements(reading))
     for spec in ICONS:
         elements.append(icon_element(spec))
+    for spec in FIXTURES:
+        elements.extend(fixture_elements(spec))
 
     heading = {
         "type": "heading",
