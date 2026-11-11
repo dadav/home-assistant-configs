@@ -19,10 +19,6 @@ triggers:
     for:
       minutes: 5
 actions:
-  - variables:
-      action_cooldown15: "{{ 'DISK_COOLDOWN15_' ~ context.id }}"
-      action_cooldown60: "{{ 'DISK_COOLDOWN60_' ~ context.id }}"
-      action_cooldown180: "{{ 'DISK_COOLDOWN180_' ~ context.id }}"
   - alias: "Keep reminding until the disk usage is below the threshold"
     repeat:
       until:
@@ -30,58 +26,19 @@ actions:
           entity_id: sensor.disk_use_percent
           below: input_number.low_disk_space_threshold
       sequence:
-        - action: notify.mobile_app_pixel_7
+        - action: script.snooze_notification
           data:
             title: "Low disc space detected!"
             message: |-
               Home Assistant uses {{ states('sensor.disk_use_percent') }}% of its disc.
-            data:
-              tag: low_disk_space
-              color: "yellow"
-              notification_icon: "mdi:harddisk-remove"
-              actions:
-                - action: "{{ action_cooldown15 }}"
-                  title: "15 mins"
-                - action: "{{ action_cooldown60 }}"
-                  title: "1 h"
-                - action: "{{ action_cooldown180 }}"
-                  title: "3 h"
-        - wait_for_trigger:
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown15 }}"
-              id: snooze15
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown60 }}"
-              id: snooze60
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown180 }}"
-              id: snooze180
-            - trigger: event
-              event_type: mobile_app_notification_cleared
-              event_data:
-                tag: low_disk_space
-              id: dismissed
-          timeout: "01:00:00"
-          continue_on_timeout: true
-        - choose:
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
-              sequence:
-                - stop: "Notification dismissed, muted until the state changes again"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
-              sequence:
-                - delay: "00:15:00"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze60' }}"
-              sequence:
-                - delay: "01:00:00"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze180' }}"
-              sequence:
-                - delay: "03:00:00"
+            tag: low_disk_space
+            icon: "mdi:harddisk-remove"
+            color: yellow
+          response_variable: reminder
+        - if:
+            - "{{ reminder.dismissed }}"
+          then:
+            - stop: "Notification dismissed, muted until the state changes again"
   - action: notify.mobile_app_pixel_7
     data:
       message: clear_notification

@@ -17,6 +17,9 @@ description: |-
   state ends or at the wake-up time, whichever comes first.
 mode: queued
 max_exceeded: silent
+# The 5 minute check would push real runs out of the default 5 traces.
+trace:
+  stored_traces: 25
 triggers:
   - alias: Away mode turned on
     trigger: state

@@ -1,0 +1,135 @@
+---
+# Snooze notification script
+#
+# Shared by all reminder automations. Sends one reminder with snooze
+# buttons, waits for my reaction and sleeps for the chosen snooze time.
+# The caller loops around it until its own condition is solved.
+#
+# Response: reply is one of snooze15, snooze60, snooze180, dismissed,
+# resolved or timeout. dismissed is true when I swiped the notification
+# away, the caller then stops reminding.
+#
+# The action ids are derived from the tag, so every reminder needs its
+# own tag.
+#
+alias: "Snooze notification"
+icon: "mdi:bell-sleep"
+description: >-
+  Sends a reminder with 15 min, 1 h and 3 h snooze buttons, waits for the
+  reaction and returns it.
+mode: parallel
+max: 10
+fields:
+  title:
+    description: Title of the notification.
+    required: true
+    selector:
+      text:
+  message:
+    description: Text of the notification.
+    required: true
+    selector:
+      text:
+        multiline: true
+  tag:
+    description: Notification tag, unique per reminder.
+    required: true
+    selector:
+      text:
+  icon:
+    description: Notification icon.
+    default: "mdi:bell"
+    selector:
+      icon:
+  color:
+    description: Notification color.
+    default: yellow
+    selector:
+      text:
+  timeout:
+    description: Time until the script returns without a reaction.
+    default: "01:00:00"
+    selector:
+      text:
+  click_action:
+    description: What a tap on the notification opens.
+    selector:
+      text:
+  resolved_entity:
+    description: Entity that ends the wait when it reaches resolved_state.
+    selector:
+      entity:
+  resolved_state:
+    description: State of resolved_entity that ends the wait.
+    selector:
+      text:
+sequence:
+  - variables:
+      action_snooze15: "{{ 'SNOOZE15_' ~ tag }}"
+      action_snooze60: "{{ 'SNOOZE60_' ~ tag }}"
+      action_snooze180: "{{ 'SNOOZE180_' ~ tag }}"
+      payload: >-
+        {% set base = {
+          'tag': tag,
+          'color': color | default('yellow'),
+          'notification_icon': icon | default('mdi:bell'),
+          'actions': [
+            {'action': action_snooze15, 'title': '15 mins'},
+            {'action': action_snooze60, 'title': '1 h'},
+            {'action': action_snooze180, 'title': '3 h'}
+          ]
+        } %}
+        {{ dict(base, clickAction=click_action) if click_action is defined else base }}
+  - action: notify.mobile_app_pixel_7
+    data:
+      title: "{{ title }}"
+      message: "{{ message }}"
+      data: "{{ payload }}"
+  - wait_for_trigger:
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_snooze15 }}"
+        id: snooze15
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_snooze60 }}"
+        id: snooze60
+      - trigger: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_snooze180 }}"
+        id: snooze180
+      - trigger: event
+        event_type: mobile_app_notification_cleared
+        event_data:
+          tag: "{{ tag }}"
+        id: dismissed
+      - trigger: template
+        value_template: >-
+          {{
+            resolved_entity is defined
+            and is_state(resolved_entity, resolved_state | default('on'))
+          }}
+        id: resolved
+    timeout: "{{ timeout | default('01:00:00') }}"
+    continue_on_timeout: true
+  - variables:
+      reply: "{{ wait.trigger.id if wait.trigger is not none else 'timeout' }}"
+  - choose:
+      - conditions: "{{ reply == 'snooze15' }}"
+        sequence:
+          - delay: "00:15:00"
+      - conditions: "{{ reply == 'snooze60' }}"
+        sequence:
+          - delay: "01:00:00"
+      - conditions: "{{ reply == 'snooze180' }}"
+        sequence:
+          - delay: "03:00:00"
+  - variables:
+      result:
+        reply: "{{ reply }}"
+        dismissed: "{{ reply == 'dismissed' }}"
+  - stop: "Reminder handled"
+    response_variable: result

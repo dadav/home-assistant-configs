@@ -28,10 +28,6 @@ conditions:
     entity_id: input_boolean.light_reminder
     state: "on"
 actions:
-  - variables:
-      action_cooldown15: "{{ 'LIGHT_COOLDOWN15_' ~ context.id }}"
-      action_cooldown60: "{{ 'LIGHT_COOLDOWN60_' ~ context.id }}"
-      action_cooldown180: "{{ 'LIGHT_COOLDOWN180_' ~ context.id }}"
   - alias: "Keep sending notifications until all lights are off"
     repeat:
       until:
@@ -39,63 +35,22 @@ actions:
           entity_id: light.all_lights
           state: "off"
       sequence:
-        - action: notify.mobile_app_pixel_7
+        - action: script.snooze_notification
           data:
             title: "There is still some light turned on..."
             message: |-
               You might want to turn these off:
                 {{ states('sensor.turned_on_lights') }}
-            data:
-              tag: light_still_on
-              color: "yellow"
-              notification_icon: "mdi:lightbulb-on"
-              actions:
-                - action: "{{ action_cooldown15 }}"
-                  title: "15 mins"
-                - action: "{{ action_cooldown60 }}"
-                  title: "1 h"
-                - action: "{{ action_cooldown180 }}"
-                  title: "3 h"
-        - wait_for_trigger:
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown15 }}"
-              id: snooze15
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown60 }}"
-              id: snooze60
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown180 }}"
-              id: snooze180
-            - trigger: state
-              entity_id: light.all_lights
-              to: "off"
-              id: lights_off
-            - trigger: event
-              event_type: mobile_app_notification_cleared
-              event_data:
-                tag: light_still_on
-              id: dismissed
-          timeout: "01:00:00"
-          continue_on_timeout: true
-        - choose:
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
-              sequence:
-                - stop: "Notification dismissed, muted until the state changes again"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
-              sequence:
-                - delay: "00:15:00"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze60' }}"
-              sequence:
-                - delay: "01:00:00"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze180' }}"
-              sequence:
-                - delay: "03:00:00"
+            tag: light_still_on
+            icon: "mdi:lightbulb-on"
+            color: yellow
+            resolved_entity: light.all_lights
+            resolved_state: "off"
+          response_variable: reminder
+        - if:
+            - "{{ reminder.dismissed }}"
+          then:
+            - stop: "Notification dismissed, muted until the state changes again"
   - action: notify.mobile_app_pixel_7
     data:
       message: clear_notification

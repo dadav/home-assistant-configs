@@ -28,10 +28,6 @@ triggers:
     above: input_number.kitchen_fridge_setting_temperature_high
     for: "00:10:00"
 actions:
-  - variables:
-      action_cooldown15: "{{ 'COOLDOWN15_' ~ context.id }}"
-      action_cooldown60: "{{ 'COOLDOWN60_' ~ context.id }}"
-      action_cooldown180: "{{ 'COOLDOWN180_' ~ context.id }}"
   - alias: "Keep reminding until the temperature is low again"
     repeat:
       until:
@@ -45,61 +41,23 @@ actions:
               | list | count == 0
             }}
       sequence:
-        - action: notify.mobile_app_pixel_7
+        - action: script.snooze_notification
           data:
             title: "Fridge is getting warm!"
             message: |-
               Fridge is at {{ states('sensor.kitchen_fridge_temperature') }} °C
               (threshold {{ states('input_number.kitchen_fridge_setting_temperature_high') }} °C).
               Door open or power off?
-            data:
-              tag: high_fridge_temperature
-              color: red
-              notification_icon: mdi:fridge-alert
-              clickAction: "entityId:sensor.kitchen_fridge_temperature"
-              actions:
-                - action: "{{ action_cooldown15 }}"
-                  title: 15 mins
-                - action: "{{ action_cooldown60 }}"
-                  title: 1 h
-                - action: "{{ action_cooldown180 }}"
-                  title: 3 h
-        - wait_for_trigger:
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown15 }}"
-              id: snooze15
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown60 }}"
-              id: snooze60
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown180 }}"
-              id: snooze180
-            - trigger: event
-              event_type: mobile_app_notification_cleared
-              event_data:
-                tag: high_fridge_temperature
-              id: dismissed
-          timeout: "00:30:00"
-          continue_on_timeout: true
-        - choose:
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
-              sequence:
-                - stop: "Notification dismissed, muted until the state changes again"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
-              sequence:
-                - delay: "00:15:00"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze60' }}"
-              sequence:
-                - delay: "01:00:00"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze180' }}"
-              sequence:
-                - delay: "03:00:00"
+            tag: high_fridge_temperature
+            icon: "mdi:fridge-alert"
+            color: red
+            timeout: "00:30:00"
+            click_action: "entityId:sensor.kitchen_fridge_temperature"
+          response_variable: reminder
+        - if:
+            - "{{ reminder.dismissed }}"
+          then:
+            - stop: "Notification dismissed, muted until the state changes again"
   - action: notify.mobile_app_pixel_7
     data:
       message: clear_notification

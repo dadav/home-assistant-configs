@@ -46,7 +46,7 @@ actions:
           - condition: trigger
             id: settled
         sequence:
-          - action: notify.mobile_app_pixel_7
+          - action: notify.all_devices
             data:
               message: clear_notification
               data:
@@ -57,7 +57,7 @@ actions:
           - condition: trigger
             id: pending
         sequence:
-          - action: notify.mobile_app_pixel_7
+          - action: notify.all_devices
             data:
               title: "Security alarm is about to trigger"
               message: >-
@@ -77,7 +77,7 @@ actions:
           - condition: trigger
             id: triggered
         sequence:
-          - action: notify.mobile_app_pixel_7
+          - action: notify.all_devices
             data:
               title: &notify_title "Security alarm triggered"
               message: "{{ notify_message }}"

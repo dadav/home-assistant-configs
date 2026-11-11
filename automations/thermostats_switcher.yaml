@@ -25,6 +25,9 @@ description: >-
   turn off as long as it is still open.
 mode: queued
 max_exceeded: silent
+# The 3 minute poll would push real runs out of the default 5 traces.
+trace:
+  stored_traces: 25
 variables:
   all_thermostats: &all_thermostats
     - climate.bad

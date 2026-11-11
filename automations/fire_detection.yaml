@@ -60,7 +60,7 @@ conditions:
         and is_number(trigger.from_state.state)
       }}
 actions:
-  - action: notify.mobile_app_pixel_7
+  - action: notify.all_devices
     data:
       title: "Possible fire detected!"
       message: >-

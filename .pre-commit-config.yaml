@@ -14,7 +14,6 @@ repos:
       - id: check-symlinks
       - id: detect-private-key
       - id: end-of-file-fixer
-        exclude: ^.HA_VERSION
       - id: forbid-new-submodules
       - id: trailing-whitespace
 
