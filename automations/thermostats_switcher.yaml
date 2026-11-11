@@ -5,9 +5,12 @@
 # when I turned the away mode on.
 #
 # Pattern per room: when the window/door is open for a minute, snapshot
-# the thermostat(s) into a scene and turn them off. When it is closed
-# again, restore the scene and delete it. The 3 minute poll catches
-# transitions that happened while Home Assistant was restarting.
+# the thermostat(s) into a scene, set the thermostat_paused_* marker and
+# turn them off. When it is closed again, restore the scene and clear
+# the marker. Snapshot scenes do not survive a restart, the marker does:
+# without a scene the thermostats are just turned on again. The 3 minute
+# poll catches transitions that happened while Home Assistant was
+# restarting.
 #
 id: 62f17829-bce4-495f-b1d5-b6798a9281a1
 alias: Thermostat switcher
@@ -147,6 +150,10 @@ actions:
               scene_id: office1_thermostat
               snapshot_entities:
                 - climate.buro_1
+          - alias: Remember the pause across restarts
+            action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.thermostat_paused_office1
           - alias: Turn off the thermostat
             action: climate.turn_off
             target:
@@ -168,17 +175,30 @@ actions:
           - condition: state
             entity_id: climate.buro_1
             state: "off"
-          - alias: Snapshot scene exists
-            condition: template
-            value_template: "{{ states.scene.office1_thermostat is not none }}"
+          - alias: Paused by this automation
+            condition: state
+            entity_id: input_boolean.thermostat_paused_office1
+            state: "on"
         sequence:
-          - action: scene.turn_on
+          - alias: Restore the snapshot, or turn on if a restart dropped it
+            if:
+              - condition: template
+                value_template: "{{ states.scene.office1_thermostat is not none }}"
+            then:
+              - action: scene.turn_on
+                target:
+                  entity_id: scene.office1_thermostat
+              - action: scene.delete
+                target:
+                  entity_id: scene.office1_thermostat
+            else:
+              - action: climate.turn_on
+                target:
+                  entity_id: climate.buro_1
+          - alias: Forget the pause so a manual off is not undone by the poll
+            action: input_boolean.turn_off
             target:
-              entity_id: scene.office1_thermostat
-          - alias: Forget the snapshot so a manual off is not undone by the poll
-            action: scene.delete
-            target:
-              entity_id: scene.office1_thermostat
+              entity_id: input_boolean.thermostat_paused_office1
       # Office 2
       - alias: Office 2 door opened
         conditions:
@@ -200,6 +220,10 @@ actions:
               scene_id: office2_thermostat
               snapshot_entities:
                 - climate.buro_2
+          - alias: Remember the pause across restarts
+            action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.thermostat_paused_office2
           - alias: Turn off the thermostat
             action: climate.turn_off
             target:
@@ -221,17 +245,30 @@ actions:
           - condition: state
             entity_id: climate.buro_2
             state: "off"
-          - alias: Snapshot scene exists
-            condition: template
-            value_template: "{{ states.scene.office2_thermostat is not none }}"
+          - alias: Paused by this automation
+            condition: state
+            entity_id: input_boolean.thermostat_paused_office2
+            state: "on"
         sequence:
-          - action: scene.turn_on
+          - alias: Restore the snapshot, or turn on if a restart dropped it
+            if:
+              - condition: template
+                value_template: "{{ states.scene.office2_thermostat is not none }}"
+            then:
+              - action: scene.turn_on
+                target:
+                  entity_id: scene.office2_thermostat
+              - action: scene.delete
+                target:
+                  entity_id: scene.office2_thermostat
+            else:
+              - action: climate.turn_on
+                target:
+                  entity_id: climate.buro_2
+          - alias: Forget the pause so a manual off is not undone by the poll
+            action: input_boolean.turn_off
             target:
-              entity_id: scene.office2_thermostat
-          - alias: Forget the snapshot so a manual off is not undone by the poll
-            action: scene.delete
-            target:
-              entity_id: scene.office2_thermostat
+              entity_id: input_boolean.thermostat_paused_office2
       # Lunch and living
       - alias: Lunch door opened
         conditions:
@@ -259,6 +296,10 @@ actions:
                 - climate.wohnzimmer
                 - climate.esszimmer_1
                 - climate.esszimmer_2
+          - alias: Remember the pause across restarts
+            action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.thermostat_paused_lunch_living
           - alias: Turn off the thermostats
             action: climate.turn_off
             target:
@@ -286,17 +327,33 @@ actions:
               - climate.esszimmer_1
               - climate.esszimmer_2
             state: "off"
-          - alias: Snapshot scene exists
-            condition: template
-            value_template: "{{ states.scene.lunch_living_thermostat is not none }}"
+          - alias: Paused by this automation
+            condition: state
+            entity_id: input_boolean.thermostat_paused_lunch_living
+            state: "on"
         sequence:
-          - action: scene.turn_on
+          - alias: Restore the snapshot, or turn on if a restart dropped it
+            if:
+              - condition: template
+                value_template: "{{ states.scene.lunch_living_thermostat is not none }}"
+            then:
+              - action: scene.turn_on
+                target:
+                  entity_id: scene.lunch_living_thermostat
+              - action: scene.delete
+                target:
+                  entity_id: scene.lunch_living_thermostat
+            else:
+              - action: climate.turn_on
+                target:
+                  entity_id:
+                    - climate.wohnzimmer
+                    - climate.esszimmer_1
+                    - climate.esszimmer_2
+          - alias: Forget the pause so a manual off is not undone by the poll
+            action: input_boolean.turn_off
             target:
-              entity_id: scene.lunch_living_thermostat
-          - alias: Forget the snapshot so a manual off is not undone by the poll
-            action: scene.delete
-            target:
-              entity_id: scene.lunch_living_thermostat
+              entity_id: input_boolean.thermostat_paused_lunch_living
       # Bath 1
       - alias: Bath1 window opened
         conditions:
@@ -318,6 +375,10 @@ actions:
               scene_id: bad_thermostat
               snapshot_entities:
                 - climate.bad
+          - alias: Remember the pause across restarts
+            action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.thermostat_paused_bad
           - alias: Turn off the thermostat
             action: climate.turn_off
             target:
@@ -339,17 +400,30 @@ actions:
           - condition: state
             entity_id: climate.bad
             state: "off"
-          - alias: Snapshot scene exists
-            condition: template
-            value_template: "{{ states.scene.bad_thermostat is not none }}"
+          - alias: Paused by this automation
+            condition: state
+            entity_id: input_boolean.thermostat_paused_bad
+            state: "on"
         sequence:
-          - action: scene.turn_on
+          - alias: Restore the snapshot, or turn on if a restart dropped it
+            if:
+              - condition: template
+                value_template: "{{ states.scene.bad_thermostat is not none }}"
+            then:
+              - action: scene.turn_on
+                target:
+                  entity_id: scene.bad_thermostat
+              - action: scene.delete
+                target:
+                  entity_id: scene.bad_thermostat
+            else:
+              - action: climate.turn_on
+                target:
+                  entity_id: climate.bad
+          - alias: Forget the pause so a manual off is not undone by the poll
+            action: input_boolean.turn_off
             target:
-              entity_id: scene.bad_thermostat
-          - alias: Forget the snapshot so a manual off is not undone by the poll
-            action: scene.delete
-            target:
-              entity_id: scene.bad_thermostat
+              entity_id: input_boolean.thermostat_paused_bad
       # Bedroom (optionally combined with the bath 1 window)
       - alias: Bedroom window opened
         conditions:
@@ -387,6 +461,10 @@ actions:
               snapshot_entities:
                 - climate.schlafzimmer_1
                 - climate.schlafzimmer_2
+          - alias: Remember the pause across restarts
+            action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.thermostat_paused_bedroom
           - alias: Turn off the thermostats
             action: climate.turn_off
             target:
@@ -421,17 +499,32 @@ actions:
               - climate.schlafzimmer_1
               - climate.schlafzimmer_2
             state: "off"
-          - alias: Snapshot scene exists
-            condition: template
-            value_template: "{{ states.scene.bedroom_thermostat is not none }}"
+          - alias: Paused by this automation
+            condition: state
+            entity_id: input_boolean.thermostat_paused_bedroom
+            state: "on"
         sequence:
-          - action: scene.turn_on
+          - alias: Restore the snapshot, or turn on if a restart dropped it
+            if:
+              - condition: template
+                value_template: "{{ states.scene.bedroom_thermostat is not none }}"
+            then:
+              - action: scene.turn_on
+                target:
+                  entity_id: scene.bedroom_thermostat
+              - action: scene.delete
+                target:
+                  entity_id: scene.bedroom_thermostat
+            else:
+              - action: climate.turn_on
+                target:
+                  entity_id:
+                    - climate.schlafzimmer_1
+                    - climate.schlafzimmer_2
+          - alias: Forget the pause so a manual off is not undone by the poll
+            action: input_boolean.turn_off
             target:
-              entity_id: scene.bedroom_thermostat
-          - alias: Forget the snapshot so a manual off is not undone by the poll
-            action: scene.delete
-            target:
-              entity_id: scene.bedroom_thermostat
+              entity_id: input_boolean.thermostat_paused_bedroom
       # Away mode
       - alias: Away mode turned on
         conditions:
@@ -446,6 +539,10 @@ actions:
             data:
               scene_id: before
               snapshot_entities: *all_thermostats
+          - alias: Remember the pause across restarts
+            action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.thermostat_paused_away
           - alias: Turn off the thermostats
             action: climate.turn_off
             target:
@@ -458,17 +555,30 @@ actions:
             entity_id: *all_thermostats
             match: any
             state: "off"
-          - alias: Snapshot scene exists
-            condition: template
-            value_template: "{{ states.scene.before is not none }}"
+          - alias: Paused by this automation
+            condition: state
+            entity_id: input_boolean.thermostat_paused_away
+            state: "on"
         sequence:
-          - action: scene.turn_on
+          - alias: Restore the snapshot, or turn on if a restart dropped it
+            if:
+              - condition: template
+                value_template: "{{ states.scene.before is not none }}"
+            then:
+              - action: scene.turn_on
+                target:
+                  entity_id: scene.before
+              - action: scene.delete
+                target:
+                  entity_id: scene.before
+            else:
+              - action: climate.turn_on
+                target:
+                  entity_id: *all_thermostats
+          - alias: Forget the pause so a manual off is not undone by the poll
+            action: input_boolean.turn_off
             target:
-              entity_id: scene.before
-          - alias: Forget the snapshot so a manual off is not undone by the poll
-            action: scene.delete
-            target:
-              entity_id: scene.before
+              entity_id: input_boolean.thermostat_paused_away
       - alias: People came home, end away mode
         conditions:
           - condition: trigger

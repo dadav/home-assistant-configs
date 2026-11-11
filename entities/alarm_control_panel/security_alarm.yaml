@@ -10,7 +10,9 @@ code_arm_required: false
 arming_time: 300
 
 # The time in seconds of the ‘pending’ state before triggering the alarm.
-delay_time: &delay 20
+# Long enough to tap "Disarm" in the pending notification when I come home
+# before the presence detection noticed me.
+delay_time: &delay 60
 
 # The time in seconds of the ‘triggered’ state in which the alarm is firing.
 trigger_time: 4
@@ -23,7 +25,8 @@ armed_away: &armed_defaults
   delay_time: *delay
 
 armed_night:
-  <<: *armed_defaults
+  # Nobody should come in at night, so keep the entry delay short.
+  delay_time: 20
 
 armed_home:
   <<: *armed_defaults

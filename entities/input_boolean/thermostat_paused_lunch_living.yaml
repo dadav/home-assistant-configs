@@ -1,0 +1,9 @@
+---
+# Input boolean: Thermostat Paused (Lunch and living)
+#
+# Set by the thermostat switcher automation while it has turned the
+# thermostats of this group off. Survives restarts, unlike the snapshot
+# scene, so the automation still knows it has to turn them back on.
+#
+name: "Thermostat Paused Lunch and living"
+icon: "mdi:radiator-off"
