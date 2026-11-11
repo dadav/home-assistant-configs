@@ -29,10 +29,6 @@ triggers:
       - sensor.bath2_temp_humidity
     above: input_number.bathroom_setting_humidity_high
 actions:
-  - variables:
-      action_cooldown15: "{{ 'COOLDOWN15_' ~ context.id }}"
-      action_cooldown60: "{{ 'COOLDOWN60_' ~ context.id }}"
-      action_cooldown180: "{{ 'COOLDOWN180_' ~ context.id }}"
   - alias: "Keep reminding until the humidity is low again"
     repeat:
       until:
@@ -49,7 +45,7 @@ actions:
         - alias: "Wait until I'm awake"
           wait_template: "{{ is_state('binary_sensor.probably_sleeping', 'off') }}"
           timeout: "12:00:00"
-        - action: notify.mobile_app_pixel_7
+        - action: script.snooze_notification
           data:
             title: "High humidity in the bath!"
             message: |-
@@ -59,53 +55,14 @@ actions:
                  and s.state | float >= states('input_number.bathroom_setting_humidity_high') | float %}
               - {{ s.name }} ({{ s.state }}%)
               {% endfor %}
-            data:
-              tag: high_humidity_bath
-              color: yellow
-              notification_icon: mdi:water-percent
-              actions:
-                - action: "{{ action_cooldown15 }}"
-                  title: 15 mins
-                - action: "{{ action_cooldown60 }}"
-                  title: 1 h
-                - action: "{{ action_cooldown180 }}"
-                  title: 3 h
-        - wait_for_trigger:
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown15 }}"
-              id: snooze15
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown60 }}"
-              id: snooze60
-            - trigger: event
-              event_type: mobile_app_notification_action
-              event_data:
-                action: "{{ action_cooldown180 }}"
-              id: snooze180
-            - trigger: event
-              event_type: mobile_app_notification_cleared
-              event_data:
-                tag: high_humidity_bath
-              id: dismissed
-          timeout: "01:00:00"
-          continue_on_timeout: true
-        - choose:
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'dismissed' }}"
-              sequence:
-                - stop: "Notification dismissed, muted until the state changes again"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze15' }}"
-              sequence:
-                - delay: "00:15:00"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze60' }}"
-              sequence:
-                - delay: "01:00:00"
-            - conditions: "{{ wait.trigger and wait.trigger.id == 'snooze180' }}"
-              sequence:
-                - delay: "03:00:00"
+            tag: high_humidity_bath
+            icon: "mdi:water-percent"
+            color: yellow
+          response_variable: reminder
+        - if:
+            - "{{ reminder.dismissed }}"
+          then:
+            - stop: "Notification dismissed, muted until the state changes again"
   - action: notify.mobile_app_pixel_7
     data:
       message: clear_notification

@@ -14,6 +14,7 @@ __pycache__
 deps
 
 # Specific file ignores
+.HA_VERSION
 core
 image
 ip_bans.yaml

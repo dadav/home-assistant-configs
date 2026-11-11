@@ -34,6 +34,12 @@ addons:
       restart_ignore:
         - ui-lovelace.yaml
         - .gitignore
+        - README.md
+        - AGENTS.md
+        - .github/
+        - tools/
+        - www/
+        - esphome/
       git_command: reset
       git_prune: false
       deployment_key: []

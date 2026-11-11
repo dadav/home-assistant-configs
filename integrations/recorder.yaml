@@ -5,8 +5,9 @@
 # https://www.home-assistant.io/integrations/recorder/
 #
 recorder:
-  # I want to see how it went last year
-  purge_keep_days: 400
+  # Detailed history for two months. Older data stays available as
+  # long term statistics (hourly min, mean, max) for sensors.
+  purge_keep_days: 60
   # Batch writes to spare the SD card of the Pi (default is 5s)
   commit_interval: 30
   # exclude some entities
