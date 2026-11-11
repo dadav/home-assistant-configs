@@ -2,6 +2,10 @@
 #
 # Small binary sensor to detect if I am sleeping
 #
+# Sleeping means: nobody is detected at home, away mode is off and the
+# time is inside the sleep window. When the sleep time is before midnight
+# the window wraps around, so it is everything outside wake-up..sleep.
+#
 binary_sensor:
   - name: Probably sleeping
     unique_id: "b4764aef-ecd7-4d7a-9694-3d11f4a70e72"
@@ -18,5 +22,5 @@ binary_sensor:
         and is_state('binary_sensor.people_home', 'off')
         and ((sleeptime < states('sensor.time') < wakeuptime)
             if sleeptime < wakeuptime else
-          (wakeuptime < states('sensor.time') < sleeptime))
+          not (wakeuptime < states('sensor.time') < sleeptime))
       }}

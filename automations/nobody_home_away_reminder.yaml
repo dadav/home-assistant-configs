@@ -1,0 +1,92 @@
+---
+# Nobody home away reminder automation
+#
+# When I leave without turning on the away mode, the security alarm stays
+# armed for home and nothing is watched. This automation offers to turn
+# the away mode on with one tap.
+#
+# It only asks, because the presence detection also reports "nobody home"
+# when our devices go offline in the evening. To keep that case quiet, an
+# outside door must have been used shortly before.
+#
+id: "0b7f5c3e-6a59-4f0e-9d2b-3c1a8e7f4d21"
+mode: restart
+alias: "Nobody home away reminder"
+description: >-
+  Asks me to turn on the away mode when nobody is home for 10 minutes,
+  the away mode is off and an outside door was used in the last 30 minutes.
+triggers:
+  - alias: Nobody home for a while
+    trigger: state
+    entity_id: binary_sensor.people_home
+    from: "on"
+    to: "off"
+    for: "00:10:00"
+    id: nobody_home
+  - alias: Someone came home
+    trigger: state
+    entity_id: binary_sensor.people_home
+    to: "on"
+    id: people_home
+  - alias: Away mode turned on
+    trigger: state
+    entity_id: input_boolean.away_mode
+    to: "on"
+    id: away_on
+variables:
+  action_away: AWAY_MODE_ON
+actions:
+  - choose:
+      - alias: "Nobody home: offer the away mode"
+        conditions:
+          - condition: trigger
+            id: nobody_home
+          - condition: state
+            entity_id: input_boolean.away_mode
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.probably_sleeping
+            state: "off"
+          - alias: "An outside door was used in the last 30 minutes"
+            condition: template
+            value_template: >-
+              {{
+                expand(
+                  'binary_sensor.entrance_door_contact',
+                  'binary_sensor.garage_door_contact'
+                )
+                | selectattr('state', 'in', ['on', 'off'])
+                | selectattr('last_changed', '>', now() - timedelta(minutes=30))
+                | list | count > 0
+              }}
+        sequence:
+          - action: notify.mobile_app_pixel_7
+            data:
+              title: "Nobody home, away mode is off"
+              message: >-
+                The security alarm is only armed for home. Turn on the away mode?
+              data:
+                tag: nobody_home_away
+                notification_icon: "mdi:home-export-outline"
+                color: yellow
+                actions:
+                  - action: "{{ action_away }}"
+                    title: "Turn on away mode"
+          - wait_for_trigger:
+              - trigger: event
+                event_type: mobile_app_notification_action
+                event_data:
+                  action: "{{ action_away }}"
+            timeout: "04:00:00"
+            continue_on_timeout: false
+          - alias: "Turn on away mode"
+            action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.away_mode
+    default:
+      - alias: "Someone is home or away mode is on: remove the question"
+        action: notify.mobile_app_pixel_7
+        data:
+          message: clear_notification
+          data:
+            tag: nobody_home_away

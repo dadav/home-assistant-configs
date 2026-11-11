@@ -1,71 +1,130 @@
 ---
 # Security alarm detection automation
 #
-# This automation gets triggered when a security alarm
-# was issued.
+# This automation gets triggered when the security alarm enters its
+# entry delay (pending) and again when it actually fires (triggered).
+#
+# The notification action id and tag are fixed on purpose: a new run
+# restarts the old one, and the "Disarm" button of the notification
+# that is already on the phone must keep working.
 #
 id: "68229927-07bf-4342-800b-20a291ce5ed4"
 trace:
   stored_traces: 25
 alias: "Security alarm triggered"
 description: >-
-  This automation gets triggered, when a security issue was detected.
-  It notifies my phone, calls me if the notification was not received
-  while I'm probably sleeping and offers a disarm button.
-mode: single
-max_exceeded: silent
+  Notifies my phone with a disarm button as soon as the entry delay of
+  the security alarm starts and again when the alarm fires. When the
+  alarm fired and the notification was not received while I'm probably
+  sleeping or nobody is home, it also calls me.
+mode: restart
 triggers:
-  - trigger: state
+  - alias: Entry delay started
+    trigger: state
+    entity_id: alarm_control_panel.security_alarm
+    to: "pending"
+    id: pending
+  - alias: Alarm fired
+    trigger: state
     entity_id: alarm_control_panel.security_alarm
     to: "triggered"
+    id: triggered
+  - alias: Entry delay ended without an alarm
+    trigger: state
+    entity_id: alarm_control_panel.security_alarm
+    from: "pending"
+    not_to: "triggered"
+    id: settled
+variables:
+  action_disarm: DISARM_SECURITY_ALARM
+  notify_message: >-
+    The entity {{ states('input_text.last_security_alarm_entity') }} triggered the security alarm.
 actions:
-  - variables:
-      action_disarm: "{{ 'DISARM_' ~ context.id }}"
-  - action: notify.mobile_app_pixel_7
-    data:
-      title: &notify_title "Security alarm triggered"
-      message: &notify_message >-
-        The entity {{ states('input_text.last_security_alarm_entity') }} triggered the security alarm.
-      data:
-        ttl: 0
-        priority: high
-        channel: alarm_stream
-        notification_icon: "mdi:alarm-light"
-        color: red
-        confirmation: true
-        actions:
-          - action: "{{ action_disarm }}"
-            title: "Disarm"
-  - wait_for_trigger:
-      - trigger: event
-        event_type: mobile_app_notification_received
-        event_data:
-          title: *notify_title
-    timeout: "00:00:15"
-    continue_on_timeout: true
   - choose:
-      - alias: "When notification wasnt received"
+      - alias: "Disarmed or re-armed in time: remove the notification"
         conditions:
-          - condition: template
-            value_template: "{{ wait.trigger is none }}"
-          - condition: state
-            entity_id: binary_sensor.probably_sleeping
-            state: "on"
+          - condition: trigger
+            id: settled
         sequence:
-          - alias: "Call phone via sip"
-            action: hassio.addon_stdin
+          - action: notify.mobile_app_pixel_7
             data:
-              addon: ad61c150_dss_voip
-              input:
-                call_sip_uri: !secret emergency_sip_uri
-                message_tts: *notify_message
-          - alias: "Turn on lights with breathe effect"
-            action: light.turn_on
+              message: clear_notification
+              data:
+                tag: security_alarm
+          - stop: "Entry delay ended without an alarm"
+      - alias: "Entry delay: offer to disarm before the alarm fires"
+        conditions:
+          - condition: trigger
+            id: pending
+        sequence:
+          - action: notify.mobile_app_pixel_7
             data:
-              effect: breathe
-              brightness_pct: 100
-            target:
-              entity_id: light.all_lights
+              title: "Security alarm is about to trigger"
+              message: >-
+                {{ states('input_text.last_security_alarm_entity') }} was opened.
+                Disarm now if this is you.
+              data:
+                tag: security_alarm
+                ttl: 0
+                priority: high
+                notification_icon: "mdi:shield-alert"
+                color: orange
+                actions:
+                  - action: "{{ action_disarm }}"
+                    title: "Disarm"
+      - alias: "Alarm fired"
+        conditions:
+          - condition: trigger
+            id: triggered
+        sequence:
+          - action: notify.mobile_app_pixel_7
+            data:
+              title: &notify_title "Security alarm triggered"
+              message: "{{ notify_message }}"
+              data:
+                tag: security_alarm
+                ttl: 0
+                priority: high
+                channel: alarm_stream
+                notification_icon: "mdi:alarm-light"
+                color: red
+                confirmation: true
+                actions:
+                  - action: "{{ action_disarm }}"
+                    title: "Disarm"
+          - wait_for_trigger:
+              - trigger: event
+                event_type: mobile_app_notification_received
+                event_data:
+                  title: *notify_title
+            timeout: "00:00:15"
+            continue_on_timeout: true
+          - alias: "Escalate when the notification wasnt received"
+            if:
+              - condition: template
+                value_template: "{{ wait.trigger is none }}"
+              - or:
+                  - condition: state
+                    entity_id: binary_sensor.probably_sleeping
+                    state: "on"
+                  - condition: state
+                    entity_id: binary_sensor.people_home
+                    state: "off"
+            then:
+              - alias: "Call phone via sip"
+                action: hassio.addon_stdin
+                data:
+                  addon: ad61c150_dss_voip
+                  input:
+                    call_sip_uri: !secret emergency_sip_uri
+                    message_tts: "{{ notify_message }}"
+              - alias: "Turn on lights with breathe effect"
+                action: light.turn_on
+                data:
+                  effect: breathe
+                  brightness_pct: 100
+                target:
+                  entity_id: light.all_lights
   - wait_for_trigger:
       - trigger: event
         event_type: mobile_app_notification_action
